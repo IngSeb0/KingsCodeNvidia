@@ -1,0 +1,43 @@
+{
+  "counts": {
+    "fallback_malformed": 3,
+    "mean_preservation_rate": 1.0,
+    "ok": 9,
+    "questions": 12,
+    "with_generated_references": 0
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.22631-SP0",
+    "python": "3.13.2",
+    "runtime": {
+      "torch": "2.14.1+cu126",
+      "transformers": "5.8.1"
+    }
+  },
+  "experiment_id": "5e4c0c1eb5bc0803",
+  "identity": {
+    "backend": {
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "environment": {},
+      "generation": {
+        "do_sample": false,
+        "max_new_tokens": 384,
+        "num_beams": 1,
+        "seed": 0,
+        "temperature": 0.0
+      },
+      "model_alias": "qwen3-8b",
+      "model_id": "Qwen/Qwen3-8B",
+      "model_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "precision": "bf16",
+      "tokenizer_revision": "b968826d9c46dd6066d109eabc6255188de91218"
+    },
+    "planner_prompt_sha256": "c146f9e0f01bb56db77b22b2aed59c6649b699078df3b191d395b5eadc117d8f",
+    "planner_prompt_version": "legal-query-planner-v1",
+    "question_set_sha256": "1444461b29069c6b74366e1737c3b0121e714796b355980596fd0156c2cd74c6",
+    "questions": 12
+  },
+  "plans_sha256": "86addfa2642bc9d956c747347072798815efe7a02dd569198c4175cacc38ce4d"
+}

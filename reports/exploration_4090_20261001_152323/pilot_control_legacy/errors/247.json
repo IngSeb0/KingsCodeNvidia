@@ -1,0 +1,50 @@
+{
+  "id": 247,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 5465,
+          "output_tokens": 1024,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v4",
+          "prompt_sha256": "6f5f9424e32e72deb73abc934ed1ad5a84168f5e19847f8e7f578ddfeddfe628",
+          "max_new_tokens": 1024,
+          "constrained_json": false,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 1024,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"abstencion\": false,\n  \"marco_normativo\": \"La Constitución Política de Colombia de 1991 en su artículo 2 establece que uno de los fines esenciales del Estado es servir a la comunidad, promover la prosperidad general y garantizar la efectividad de los principios, derechos y deberes consagrados en la Constitución. Además, el Código Nacional de Seguridad y Convivencia Ciudadana (Ley 1801 de 2016) en su artículo 124 menciona comportamientos que ponen en riesgo la convivencia por la tenencia de animales, incluyendo el dejar deambular animales en espacios públicos sin medidas de seguridad. El Decreto 780 de 2016 en su artículo 2.8.5.2.43 establece que los dueños o responsables de perros y animales que puedan representar peligro para las personas deben conducirlos mediante el uso de cadenas, correas o traíllas y utilizando bozal, cuando sea del caso.\",\n  \"analisis\": \"La ampliación de la avenida 68, que afecta el parque Simón Bolívar y su entorno, podría violar el marco normativo que garantiza la protección de los animales y el bienestar de la comunidad. La Constitución Política de Colombia de 1991 en su artículo 2 establece que el Estado debe servir a la comunidad y garantizar la efectividad de los principios, derechos y deberes consagrados en la Constitución, lo cual incluye la protección del entorno natural y la convivencia. El Código Nacional de Seguridad y Convivencia Ciudadana (Ley 1801 de 2016) en su artículo 124 menciona que dejar deambular animales en espacios públicos sin medidas de seguridad es un comportamiento que pone en riesgo la convivencia. Además, el Decreto 780 de 2016 en su artículo 2.8.5.2.43 establece que los dueños o responsables de perros y animales que puedan representar peligro para las personas deben conducirlos mediante el uso de cadenas, correas o traíllas y utilizando bozal, cuando sea del caso. Por lo tanto, la ampliación de la avenida 68 podría afectar la convivencia y la protección de los animales, lo cual implica que se debe considerar la posibilidad de presentar una acción legal para proteger los derechos de la comunidad y los animales afectados.\",\n  \"jurisprudencia\": \"La Sentencia C-332 de 2025 establece que los animales no son cosas y merecen un trato libre de sufrimiento, lo cual refuerza el marco normativo que protege a los animales y su bienestar. Además, la Sentencia C-207 de 2019 vincula la actividad contractual con los fines del Estado Social de Derecho, lo cual implica que la ampliación de la avenida 68 debe cumplir con los principios de protección ambiental y respeto a la vida en todas sus formas.\",\n  \"conclusion\": \"Ante la situación descrita, se procede a presentar una acción legal para proteger los derechos de la comunidad y los animales afectados, considerando el marco normativo que garantiza la protección del entorno natural y la convivencia. La ampliación de la avenida 68 debe cumplir con los principios de la Constitución Política de Colombia de 1991 y el Código Nacional de Seguridad y Convivencia Ciudadana (Ley 1801 de 2016), lo cual implica que se debe considerar la posibilidad de presentar una acción legal para proteger los derechos de la comunidad y los animales afectados.\",\n  \"pasajes_usados\": [\n    \"constitucion:00001:2c8ef8b34c21\",\n    \"codigo_nacional_policia:00136:428a543fa8be\",\n    \"decreto_780_de_2016:01689:715ab5b6b79f\",\n    \"sentencia_c_332_de_2025:00006:816fb2db6868\",\n    \"sentencia_c_207_de_2019:00051:70d85b74",
+          "generation_ms": 39771.09659999769,
+          "peak_vram_bytes": 21287500800,
+          "peak_reserved_vram_bytes": 21680357376
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 191, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 194, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 167, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 310, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 108, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 194, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

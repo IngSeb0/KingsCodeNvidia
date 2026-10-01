@@ -1,0 +1,34 @@
+{
+  "candidate_k": 30,
+  "citation_fill": false,
+  "constrained_json": false,
+  "decoder": [
+    "transformers:qwen3-8b",
+    "b968826d9c46dd6066d109eabc6255188de91218"
+  ],
+  "dense_index_dir": null,
+  "embedding_instruction": "Given a question about Colombian law, retrieve official legal passages that provide the evidence needed to answer it.",
+  "embedding_instruction_profile": "baseline",
+  "graph_policy": "router",
+  "k": 8,
+  "native_option_fusion": true,
+  "option_support": false,
+  "plan_roles": null,
+  "plans": null,
+  "prompt_version": "grounded-formats-v4",
+  "questions_sha256": "e71fcb8fd0a4121ad6988fb97619f9da998ced20440761edcfbb8f8eba428425",
+  "reranker_batch_size": 2,
+  "reranker_instruction": "Rank Colombian primary-law passages by how directly and sufficiently they support answering the question. Prefer the exact applicable provision and article over passages that are merely topically related.",
+  "reranker_instruction_profile": "direct_primary_law_support",
+  "reranker_score_cache": false,
+  "retrieval_mode": "option",
+  "retrieval_text_mode": "literal",
+  "retriever": {
+    "corpus_sha256": "dae54b39d80fd413f99ac4644f1cf08a11a4b6603414ece2d008c40d5c70fbbf",
+    "exact_locator": false,
+    "fixture_evidence": false,
+    "graph_budget": 10,
+    "mode": "hybrid",
+    "rerank": true
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": 128,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 6099,
+          "output_tokens": 512,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v4",
+          "prompt_sha256": "6f5f9424e32e72deb73abc934ed1ad5a84168f5e19847f8e7f578ddfeddfe628",
+          "max_new_tokens": 512,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 512,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"abstencion\": false,\n  \"justificacion\": \"El artículo 127-1 del Estatuto Tributario (Decreto 624 de 1989) establece que los contratos de arrendamiento, incluyendo el arrendamiento financiero o leasing, se someten a ciertas reglas. Además, el artículo 26 del Decreto 663 de 1993 menciona que las compañías de financiamiento comercial pueden realizar operaciones de leasing, y el artículo 24 del mismo Decreto 663 de 1993 indica que las compañías de financiamiento comercial pueden realizar operaciones de leasing. Por otro lado, el artículo 13 del Decreto 663 de 1993 menciona que las corporaciones financieras también pueden conceder crédito a las compañías de financiamiento comercial especializadas en leasing para la adquisición de bienes que se colocarán en arrendamiento financiero. Por lo tanto, las compañías de financiamiento comercial tienen la facultad de otorgar contratos de leasing financiero o arrendamiento financiero en Colombia.\",\n  \"respuesta_correcta\": \"B\",\n  \"descarte_opciones\": {\n    \"A\": \"Incluye entidades no mencionadas en la evidencia como Fundaciones y Asociaciones.\",\n    \"C\": \"No menciona las compañías de financiamiento comercial, que son clave en la evidencia.\",\n    \"D\": \"Incluye Fintech, que no se menciona en la evidencia.\"\n  },\n  \"pasajes_usados\": [\n    \"estatuto_tributario:00224:0fea97482b61\",\n    \"decreto_663_de_1993:00204:4acf56878fce\",\n    \"decreto_663_de_1993:00035:8c6a5f6a33f5\",\n    \"decreto_663_de_1993:00205:90c1f38b0893\",\n    \"decreto_663_de_1993:00018:4653fdc0",
+          "generation_ms": 21267.39969999835,
+          "peak_vram_bytes": 21287500800,
+          "peak_reserved_vram_bytes": 21680357376
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 178, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 186, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 159, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 293, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 105, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 181, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

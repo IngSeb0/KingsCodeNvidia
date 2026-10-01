@@ -1,0 +1,182 @@
+{
+  "submission": "reports\\decoder_diagnostic\\qwen3-8b_hybrid_c30_rb2_pv3_20261001_134519\\batch\\submissions.jsonl",
+  "rows": 50,
+  "complete": true,
+  "duplicates": 0,
+  "schema_errors": 0,
+  "fallback_ids": [
+    51,
+    60
+  ],
+  "submission_sha256": "9f3fcd210ed346d7159104de4009c1e769b8b41e3141d3c7ea0fd3d316f14a06",
+  "counts": {
+    "resumed": 0,
+    "answered": 48,
+    "retried_ok": 0,
+    "fallback": 2
+  },
+  "identity": {
+    "decoder": [
+      "transformers:qwen3-8b",
+      "b968826d9c46dd6066d109eabc6255188de91218"
+    ],
+    "retrieval_mode": "option",
+    "k": 8,
+    "candidate_k": 30,
+    "reranker_batch_size": 2,
+    "native_option_fusion": false,
+    "prompt_version": "grounded-formats-v3",
+    "citation_fill": false,
+    "retriever": {
+      "mode": "hybrid",
+      "rerank": false,
+      "exact_locator": false,
+      "fixture_evidence": false,
+      "corpus_sha256": "dae54b39d80fd413f99ac4644f1cf08a11a4b6603414ece2d008c40d5c70fbbf"
+    },
+    "graph_policy": "router",
+    "plans": null,
+    "questions_sha256": "5748d60612843eee116a7ac169be8e087241bc99db6e2294a5926a802d13c03e"
+  },
+  "diagnostics": {
+    "questions": 50,
+    "abstention_source": {
+      "citation_guard_fallback": {
+        "n": 1,
+        "rate": 0.02
+      },
+      "decoder": {
+        "n": 3,
+        "rate": 0.06
+      },
+      "none": {
+        "n": 44,
+        "rate": 0.88
+      },
+      "pipeline_error": {
+        "n": 2,
+        "rate": 0.04
+      }
+    },
+    "attribution_status": {
+      "explicit": {
+        "n": 44,
+        "rate": 0.88
+      },
+      "malformed": {
+        "n": 1,
+        "rate": 0.02
+      },
+      "none": {
+        "n": 2,
+        "rate": 0.04
+      },
+      "not_applicable": {
+        "n": 3,
+        "rate": 0.06
+      }
+    },
+    "abstentions": 6,
+    "abstention_reasons": {
+      "citation_guard_rejected": 1,
+      "pipeline_error": 2,
+      "unspecified": 3
+    },
+    "abstentions_by_format": {
+      "multiple_choice": 3,
+      "semi_open": 3
+    },
+    "normalization_action": {
+      "none": {
+        "n": 48,
+        "rate": 0.96
+      }
+    },
+    "repair_actions": {
+      "renamed_to_evidence_name": 60,
+      "rewritten_to_body": 4,
+      "suppressed_fragment": 48,
+      "suppressed_sentence": 61
+    },
+    "pipeline_error_codes": {
+      "INVALID_MODEL_OUTPUT": 2
+    },
+    "format_warnings": {
+      "semi_open_sentences_outside_3_5": {
+        "n": 7,
+        "rate": 0.14
+      }
+    },
+    "field_coercions": {
+      "inferred_abstencion_false_from_complete_answer": {
+        "n": 29,
+        "rate": 0.58
+      }
+    },
+    "citations_before_repair": 300,
+    "citations_after_repair": 195,
+    "citation_guard_fallback_rate": 0.02,
+    "supported_citations": 195,
+    "unsupported_citations": 0,
+    "citation_support_rate": 1.0,
+    "input_tokens": 271544,
+    "output_tokens": 16561,
+    "generation_ms_p50": 13488.646699999663,
+    "generation_ms_p95": 30023.512899999332,
+    "retrieval_ms_p50": 79.29759999751695,
+    "retrieval_ms_p95": 409.9092999967979,
+    "peak_reserved_vram_gb": 19.0,
+    "rerank_skipped": 0,
+    "retrieval_profile_samples": 56,
+    "retrieval_stage_ms": {
+      "bm25_ms": {
+        "p50": 14.455,
+        "p95": 32.125,
+        "sum": 860.203
+      },
+      "dense_ms": {
+        "p50": 43.143,
+        "p95": 80.118,
+        "sum": 2552.67
+      },
+      "fusion_ms": {
+        "p50": 0.066,
+        "p95": 0.077,
+        "sum": 3.648
+      },
+      "locator_ms": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "sum": 0.0
+      },
+      "graph_ms": {
+        "p50": 0.0,
+        "p95": 0.216,
+        "sum": 7.279
+      },
+      "reranker_ms": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "sum": 0.0
+      },
+      "rerank_skip_recovery_ms": {
+        "p50": null,
+        "p95": null,
+        "sum": null
+      },
+      "total_ms": {
+        "p50": 61.228,
+        "p95": 100.971,
+        "sum": 3426.281
+      }
+    },
+    "dense_query_encodes": 48,
+    "dense_encode_batches": 48,
+    "reranker_pairs": 0,
+    "reranker_batches": 0,
+    "native_option_fusion_questions": 0,
+    "note": "Label-free diagnostics; no thresholds derived from the official 50."
+  },
+  "seconds": 761.9895703000002,
+  "finished_at": "2026-10-01T19:12:36.103173+00:00"
+}

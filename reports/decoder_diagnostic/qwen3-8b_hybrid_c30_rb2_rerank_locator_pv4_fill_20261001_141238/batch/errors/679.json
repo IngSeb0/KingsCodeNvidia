@@ -1,0 +1,51 @@
+{
+  "id": 679,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 6898,
+          "output_tokens": 1024,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v4",
+          "prompt_sha256": "6f5f9424e32e72deb73abc934ed1ad5a84168f5e19847f8e7f578ddfeddfe628",
+          "max_new_tokens": 1024,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 7,
+          "evidence_dropped_for_context": [
+            "sentencia_t_67_de_2025:00068:9162819aaf31"
+          ],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 1024,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"abstencion\": false,\n  \"marco_normativo\": \"El derecho a la salud está consagrado en el artículo 49 de la Constitución Política, el cual dispone que la atención en salud es un servicio público a cargo del Estado que debe ser prestado conforme a los principios de eficiencia, universalidad y solidaridad. Además, el derecho a la salud es desarrollado y protegido por diferentes instrumentos internacionales, entre los cuales se encuentran la Declaración Universal de los Derechos Humanos, el Protocolo Adicional a la Convención Americana sobre Derechos Humanos y el PIDESC. La Ley Estatutaria de Salud 1751 de 2015 (LES) establece unos lineamientos esenciales para la comprensión del derecho a la salud en Colombia. El derecho a la información sobre el estado de salud está regulado en el artículo 2.8.1.5.14 del Decreto 780 de 2016, el cual establece que toda persona tiene derecho a disfrutar de una comunicación plena y clara con el equipo de salud, apropiada a sus condiciones psicológicas y culturales, que le permita obtener toda la información necesaria respecto a la enfermedad que padece, así como a los procedimientos y tratamientos que se le vayan a practicar.\",\n  \"analisis\": \"La Corte Constitucional ha precisado en su jurisprudencia que la protección a la salud abarca una amplia gama de factores socioeconómicos, bienes y servicios, los cuales inciden en que una persona viva una vida bajo condiciones sanas y dignas. Este concepto, a su vez, comprende distintos escenarios constitucionales, entre los cuales se encuentra la prestación y el suministro de servicios y tecnologías en salud. En este contexto, el derecho a la información sobre el estado de salud es fundamental para garantizar el acceso a los tratamientos necesarios. La SIC, al solicitar conceptuar sobre la posibilidad de acceder a los datos en salud de la población colombiana con diagnóstico de esclerosis múltiple, debe considerar el derecho a la información sobre el estado de salud, el derecho a la salud y los derechos humanos reconocidos en la Constitución Política y en los instrumentos internacionales. La SIC debe garantizar que el acceso a los datos se realice de manera que respete los derechos de los pacientes y que contribuya a la garantía del acceso al medicamento Interferón.\",\n  \"jurisprudencia\": \"La Corte Constitucional ha decidido en la Sentencia T-323 de 2024 que el derecho a la salud abarca una amplia gama de factores socioeconómicos, bienes y servicios, los cuales inciden en que una persona viva una vida bajo condiciones sanas y dignas. Asimismo, en la Sentencia T-760 de 2008, la Corte Constitucional ha establecido que la ausencia de regulación clara que permita hacer efectivos los derechos de los usuarios cuando requieren un servicio de salud, diferente a un medicamento, es una de las razones por las cuales la tutela se ha convertido en el mecanismo generalizado para acceder a servicios de salud no incluidos en el POS. En la Sentencia C-748 de 2011, la Corte Constitucional ha establecido que el derecho al habeas data es un derecho fundamental autónomo que comprende el derecho a conocer, actualizar y rectificar las informaciones que se hayan recogido sobre ellas en bancos de datos y en archivos de entidades públicas y privadas.\",\n  \"conclusion\": \"La SIC puede acceder a los datos en salud de la población colombiana con diagnóstico de esclerosis múltiple a fin de producir el medicamento en Colombia y garantizar los derechos de los pacientes, siempre que se respete el derecho a la información sobre el estado de salud, el derecho a la salud y los derechos humanos reconocidos en la Constitución Política y en los instrumentos internacionales. La SIC debe garantizar que el acceso a los datos se realice de manera que respete los derechos de los pacientes y que contribuya a la garantía del acceso al medicamento Interferón.\",\n  \"pasajes_usados\": [\n    \"sentencia_t_323_de_2024:00082:30e4e8301ee6\",\n    \"sentencia_t_760_de_2008:00404:3a83",
+          "generation_ms": 42651.503400000365,
+          "peak_vram_bytes": 21287500800,
+          "peak_reserved_vram_bytes": 21680357376
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 178, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 186, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 159, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 293, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 105, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 181, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

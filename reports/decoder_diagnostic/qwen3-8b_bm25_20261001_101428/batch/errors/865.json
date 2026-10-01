@@ -1,0 +1,12 @@
+{
+  "id": 865,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "CONTEXT_LIMIT_EXCEEDED",
+      "message": "CONTEXT_LIMIT_EXCEEDED",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 101, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 225, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 100, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 124, in generate\n    raise DecoderFailure(\"CONTEXT_LIMIT_EXCEEDED\", {\"usage\": dict(self.last_usage),\n                          \"context_limit\": self.candidate[\"max_context_tokens\"]})\nkingscode.generation.hf_decoder.DecoderFailure: CONTEXT_LIMIT_EXCEEDED\n"
+    }
+  ]
+}

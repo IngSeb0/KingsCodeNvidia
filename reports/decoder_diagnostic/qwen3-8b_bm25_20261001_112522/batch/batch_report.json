@@ -1,0 +1,124 @@
+{
+  "submission": "reports\\decoder_diagnostic\\qwen3-8b_bm25_20261001_112522\\batch\\submissions.jsonl",
+  "rows": 50,
+  "complete": true,
+  "duplicates": 0,
+  "schema_errors": 0,
+  "fallback_ids": [
+    24,
+    51,
+    60,
+    79,
+    190,
+    239,
+    247,
+    253,
+    272,
+    280,
+    290,
+    308,
+    358,
+    472,
+    490,
+    513,
+    589,
+    600,
+    661,
+    671,
+    674,
+    679,
+    857,
+    865,
+    879,
+    946,
+    960,
+    991,
+    1005,
+    1073,
+    1089
+  ],
+  "submission_sha256": "4e06ef69f6d024880345485445a0bee1de853ba2142acfcc9ed36de39d6b531e",
+  "counts": {
+    "resumed": 0,
+    "answered": 19,
+    "retried_ok": 0,
+    "fallback": 31
+  },
+  "identity": {
+    "decoder": [
+      "transformers:qwen3-8b",
+      "b968826d9c46dd6066d109eabc6255188de91218"
+    ],
+    "retrieval_mode": "option",
+    "k": 8,
+    "retriever": {
+      "mode": "bm25",
+      "rerank": false,
+      "exact_locator": false,
+      "fixture_evidence": false,
+      "corpus_sha256": "dae54b39d80fd413f99ac4644f1cf08a11a4b6603414ece2d008c40d5c70fbbf"
+    },
+    "graph_policy": "router",
+    "plans": null,
+    "questions_sha256": "5748d60612843eee116a7ac169be8e087241bc99db6e2294a5926a802d13c03e"
+  },
+  "diagnostics": {
+    "questions": 50,
+    "abstention_source": {
+      "decoder": {
+        "n": 3,
+        "rate": 0.06
+      },
+      "none": {
+        "n": 16,
+        "rate": 0.32
+      },
+      "pipeline_error": {
+        "n": 31,
+        "rate": 0.62
+      }
+    },
+    "attribution_status": {
+      "explicit": {
+        "n": 16,
+        "rate": 0.32
+      },
+      "none": {
+        "n": 31,
+        "rate": 0.62
+      },
+      "not_applicable": {
+        "n": 3,
+        "rate": 0.06
+      }
+    },
+    "normalization_action": {
+      "none": {
+        "n": 19,
+        "rate": 0.38
+      }
+    },
+    "repair_actions": {
+      "suppressed_fragment": 9,
+      "suppressed_sentence": 13
+    },
+    "pipeline_error_codes": {
+      "INVALID_MODEL_OUTPUT": 31
+    },
+    "format_warnings": {
+      "semi_open_sentences_outside_3_5": {
+        "n": 2,
+        "rate": 0.04
+      }
+    },
+    "citations_before_repair": 70,
+    "citations_after_repair": 61,
+    "citation_guard_fallback_rate": 0.0,
+    "input_tokens": 118681,
+    "output_tokens": 4974,
+    "generation_ms_p50": 12350.481699999364,
+    "note": "Label-free diagnostics; no thresholds derived from the official 50."
+  },
+  "seconds": 760.9114788999996,
+  "finished_at": "2026-10-01T16:39:53.629032+00:00"
+}

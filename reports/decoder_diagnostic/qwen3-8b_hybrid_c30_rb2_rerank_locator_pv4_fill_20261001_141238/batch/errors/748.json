@@ -1,0 +1,49 @@
+{
+  "id": 748,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 5190,
+          "output_tokens": 512,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v4",
+          "prompt_sha256": "6f5f9424e32e72deb73abc934ed1ad5a84168f5e19847f8e7f578ddfeddfe628",
+          "max_new_tokens": 512,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 512,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\"abstencion\":false,\"justificacion\":\"La pregunta se refiere a un vicio en un acto administrativo que permite la operación de un relleno sanitario, sin tener en cuenta lo presentado por los pueblos indígenas en la consulta previa. De acuerdo con el artículo 59 del Código General Disciplinario (Ley 1952 de 2019), se establece que omitir o retardar injustificadamente el ejercicio de las funciones propias de su cargo, permitiendo que se origine un riesgo grave o un deterioro de la salud humana, el medio ambiente o los recursos naturales, constituye una falta. Este artículo se relaciona con la necesidad de considerar las preocupaciones de los pueblos indígenas en la toma de decisiones que afectan su entorno. Además, la Sentencia T-760 de 2008 destaca el derecho de las comunidades indígenas a escoger libremente la institución que administrará los recursos del régimen subsidiado de salud, lo cual implica la necesidad de considerar sus opiniones en procesos que afectan su bienestar. Por lo tanto, no tener en cuenta lo presentado por los pueblos indígenas en la consulta previa puede configurar el vicio de desviación de poder, ya que se está actuando fuera del marco legal y de los principios que protegen los derechos de los pueblos indígenas.\",\"respuesta_correcta\":\"C\",\"descarte_opciones\":{\"A\":\"La falsa motivación se refiere a la presentación de motivos falsos en un acto administrativo, lo cual no se menciona directamente en la pregunta.\",\"B\":\"La usurpación de funciones se refiere a la realización de actos que no corresponden al cargo, lo cual tampoco se menciona directamente en la pregunta.\",\"D\":\"No estar basado en las normas necesarias para la emisión del acto se refiere a la falta de fundamentación legal, lo cual no se menciona directamente en la pregunta.\"},\"pasajes_usados\":[\"codigo_disciplinario:00062:bc064d20c468\",\"sentencia_t_760_de_2008:00311:5cf",
+          "generation_ms": 20199.968799999624,
+          "peak_vram_bytes": 21287500800,
+          "peak_reserved_vram_bytes": 21680357376
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 178, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 186, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 159, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 293, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 105, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 181, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

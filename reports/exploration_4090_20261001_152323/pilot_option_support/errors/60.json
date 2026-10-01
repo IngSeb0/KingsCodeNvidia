@@ -1,0 +1,50 @@
+{
+  "id": 60,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 7154,
+          "output_tokens": 512,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v5-option-support",
+          "prompt_sha256": "4af92a35769258eb36797beb8debd97df80932dd60bc40674a8529fa5fb8b7ca",
+          "max_new_tokens": 512,
+          "constrained_json": false,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 512,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"respuesta_correcta\": \"A\",\n  \"justificacion\": \"La afirmación correcta es la opción A: 'Nadie puede ser juzgado sino por un juez o tribunal competente, previamente establecido por la ley.' Esta se fundamenta en el artículo 19 del Código de Procedimiento Penal (Ley 906 de 2004), que establece que nadie podrá ser juzgado por juez o tribunal ad hoc o especial, instituido con posterioridad a la comisión de un delito por fuera de la estructura judicial ordinaria. Además, la Sentencia T-323 de 2024 también refuerza esta idea al señalar que el juez natural es aquel a quien la Constitución o la ley le ha atribuido el conocimiento de determinado asunto, y que la obligación de determinar el juez competente de manera previa por el órgano legislativo es un derecho absoluto que no puede ser objeto de excepción alguna.\",\n  \"descarte_opciones\": {\n    \"B\": \"La opción B es incorrecta porque no hay evidencia en los pasajes suministrados que indique que el juez natural es designado discrecionalmente por el Consejo Superior de la Judicatura. En cambio, se menciona que el juez natural debe ser establecido previamente por la ley.\",\n    \"C\": \"La opción C es incorrecta porque el principio del juez natural no se refiere únicamente a la imparcialidad del funcionario, sino también a su competencia. La evidencia muestra que el juez natural debe ser competente y previamente establecido por la ley.\",\n    \"D\": \"La opción D es incorrecta porque contradice el principio del juez natural, que establece que toda persona debe ser juzgada por un juez o tribunal competente, previamente establecido por la ley, no por cualquier autoridad que tenga competencia general sobre el asunto.\"\n  },\n  \"pasajes_usados\": [\n    \"codigo_procedimiento_penal:00018:e47807c6457c\",\n    \"sentencia_t_323_de_2024:00054:ac1fc23534b8\",\n    \"sentencia_t_323",
+          "generation_ms": 22084.73519999825,
+          "peak_vram_bytes": 21287500800,
+          "peak_reserved_vram_bytes": 21697134592
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 191, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 194, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 167, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 310, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 108, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 194, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

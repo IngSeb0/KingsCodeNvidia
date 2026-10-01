@@ -1,0 +1,50 @@
+{
+  "id": 128,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 5569,
+          "output_tokens": 512,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v4",
+          "prompt_sha256": "6f5f9424e32e72deb73abc934ed1ad5a84168f5e19847f8e7f578ddfeddfe628",
+          "max_new_tokens": 512,
+          "constrained_json": false,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 512,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\"abstencion\":false,\"justificacion\":\"El artículo 127-1 del Estatuto Tributario (Decreto 624 de 1989), modificado por el artículo 76 de la Ley 1819 de 2016, establece que los contratos de arrendamiento financiero o leasing se someten a ciertas reglas para efectos del impuesto sobre la renta. Sin embargo, no se menciona directamente quiénes tienen la facultad de otorgar estos contratos. En cambio, el Decreto 663 de 1993, en su artículo 26, menciona que las compañías de financiamiento comercial pueden recibir créditos para la adquisición de activos objeto de operaciones de leasing, y el artículo 141 del mismo Decreto 663 de 1993 menciona que las compañías de financiamiento comercial pueden realizar operaciones de leasing. Por lo tanto, se puede inferir que las compañías de financiamiento comercial tienen la facultad de otorgar contratos de leasing financiero o arrendamiento financiero. La opción B menciona 'Compañías de Financiamiento y Bancos Comerciales', lo cual se alinea con esta inferencia.\",\"respuesta_correcta\":\"B\",\"descarte_opciones\":{\"A\":\"No se menciona explícitamente que las Fintech, Cooperativas, Fundaciones y Asociaciones tengan la facultad de otorgar contratos de leasing financiero o arrendamiento financiero.\",\"C\":\"No se menciona explícitamente que las Cooperativas, Fundaciones y Asociaciones tengan la facultad de otorgar contratos de leasing financiero o arrendamiento financiero.\",\"D\":\"No se menciona explícitamente que las Fintech tengan la facultad de otorgar contratos de leasing financiero o arrendamiento financiero.\"},\"pasajes_usados\":[\"estatuto_tributario:00224:0fea97482b61\",\"decreto_663_de_1993:00204:4acf56878fce\",\"decreto_663_de_1993:00035:8c6a5f6a33f",
+          "generation_ms": 20934.302599998773,
+          "peak_vram_bytes": 21287500800,
+          "peak_reserved_vram_bytes": 21697134592
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 191, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 194, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 167, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 310, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 108, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 194, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

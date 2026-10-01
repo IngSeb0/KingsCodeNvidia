@@ -1,0 +1,338 @@
+{
+  "status": "passed",
+  "model": "qwen3-8b",
+  "scope": "real GPU smoke only; not a full benchmark",
+  "stages": [
+    {
+      "stage": "bf16_matmul",
+      "seconds": 0.2566194999999425,
+      "peak_vram_bytes": 8536064
+    },
+    {
+      "stage": "embedding",
+      "seconds": 5.621489600000132,
+      "shape": [
+        2,
+        1024
+      ],
+      "query_shape": [
+        1,
+        1024
+      ],
+      "peak_vram_bytes": 1262316032
+    },
+    {
+      "stage": "reranker",
+      "seconds": 3.387302200000704,
+      "scores": [
+        0.24508501589298248,
+        0.9997695088386536
+      ],
+      "peak_vram_bytes": 1286337024
+    },
+    {
+      "stage": "decoder_and_guards",
+      "seconds": 28.41062190000048,
+      "peak_vram_bytes": 18879329280
+    }
+  ],
+  "runtime": {
+    "torch": "2.14.1+cu126",
+    "torch_cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 4090"
+  },
+  "decoder_config": {
+    "repo_id": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "enabled": true,
+    "backend": "transformers",
+    "preferred_dtype": "bfloat16",
+    "max_context_tokens": 8192,
+    "batch_size": 1,
+    "local_files_only": true,
+    "trust_remote_code": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "requirements": [
+      "Disable thinking explicitly. Publisher parameter count is 8,190,735,360: confirm nominal 8B eligibility with organizers before competitive delivery."
+    ]
+  },
+  "precision": "bf16",
+  "assets": [
+    {
+      "repo_id": "Qwen/Qwen3-Embedding-0.6B",
+      "revision": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+      "snapshot": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\models--Qwen--Qwen3-Embedding-0.6B\\snapshots\\97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+      "manifest": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\.kingscode_manifests\\Qwen--Qwen3-Embedding-0.6B-97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3.json",
+      "manifest_sha256": "aabc3c9fdd3e10cc0202d81a6329f74d10ca7abed6684362d3b71230c02efe26",
+      "files_verified": 11
+    },
+    {
+      "repo_id": "Qwen/Qwen3-Reranker-0.6B",
+      "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+      "snapshot": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\models--Qwen--Qwen3-Reranker-0.6B\\snapshots\\e61197ed45024b0ed8a2d74b80b4d909f1255473",
+      "manifest": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\.kingscode_manifests\\Qwen--Qwen3-Reranker-0.6B-e61197ed45024b0ed8a2d74b80b4d909f1255473.json",
+      "manifest_sha256": "063331282cfca4e7a8bc44f2eed97d7353e209189dbea791af9684058860310e",
+      "files_verified": 13
+    },
+    {
+      "repo_id": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "snapshot": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\models--Qwen--Qwen3-8B\\snapshots\\b968826d9c46dd6066d109eabc6255188de91218",
+      "manifest": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\.kingscode_manifests\\Qwen--Qwen3-8B-b968826d9c46dd6066d109eabc6255188de91218.json",
+      "manifest_sha256": "8b0c640fde03fe1a6c6a543285aa4d547c9d116e982bc3036782810195e96640",
+      "files_verified": 14
+    }
+  ],
+  "neural_config": {
+    "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+    "reranker_model": "Qwen/Qwen3-Reranker-0.6B",
+    "device": "cuda:0",
+    "dtype": "bfloat16",
+    "batch_size": 1,
+    "max_length": 4096,
+    "instruction": "Given a question about Colombian law, retrieve official legal passages that provide the evidence needed to answer it.",
+    "local_files_only": true,
+    "seed": 0
+  },
+  "decoder_experiment": {
+    "status": "passed",
+    "model": "qwen3-8b",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "precision": "bf16",
+    "mode": "decoder-smoke",
+    "candidate": {
+      "repo_id": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "enabled": true,
+      "backend": "transformers",
+      "preferred_dtype": "bfloat16",
+      "max_context_tokens": 8192,
+      "batch_size": 1,
+      "local_files_only": true,
+      "trust_remote_code": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "requirements": [
+        "Disable thinking explicitly. Publisher parameter count is 8,190,735,360: confirm nominal 8B eligibility with organizers before competitive delivery."
+      ]
+    },
+    "prompt_version": "grounded-formats-v3",
+    "generation_config": {
+      "temperature": 0.0,
+      "do_sample": false,
+      "seed": 0
+    },
+    "max_new_tokens": {
+      "multiple_choice": 512,
+      "semi_open": 512,
+      "open_ended": 1024
+    },
+    "runtime": {
+      "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+      "platform": "Windows-11-10.0.22631-SP0",
+      "kind": "real_local_transformers",
+      "packages": {
+        "torch": "2.14.1+cu126",
+        "transformers": "5.8.1",
+        "accelerate": "1.15.0",
+        "huggingface-hub": "1.33.0",
+        "bitsandbytes": null
+      }
+    },
+    "paths": {
+      "run": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\reports\\decoder_diagnostic\\qwen3-8b_bm25_20261001_101428\\smoke\\decoder\\20261001T152041132294Z-qwen3-8b-bf16",
+      "submission": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\reports\\decoder_diagnostic\\qwen3-8b_bm25_20261001_101428\\smoke\\decoder\\20261001T152041132294Z-qwen3-8b-bf16\\submissions.jsonl"
+    },
+    "official_evaluation": null,
+    "ragas": {
+      "status": "not_run_requires_separate_authorization_and_key"
+    },
+    "official_hashes": {
+      "Ejemplo de entrega/CORPUS.md": "ea372c8df9ab6818868f0be993035349c4cab90a38a2bec292ce949188ceb4b4",
+      "Ejemplo de entrega/README.md": "804fa1fc6ea011f75d6523f10789fae8d849e3a61624dd025794087995d9db74",
+      "Ejemplo de entrega/corpus_manifest.json": "f9aab3b8d9b0c428c1a2e6acf684e45c584dc2cb9cfc0668992231c86ee68f72",
+      "Ejemplo de entrega/submissions.jsonl": "84c770956e7fc5adf2aeebcc7916fdb0ba9e0fbeb39ae5ab3191f004e90aac6b",
+      "data/sample_50.jsonl": "ab8feef09f4a74f00a4b73fd77b7e0a8f019ae6710eb7cfa543cabf6ec0c1589",
+      "data/seed_targets.json": "4a05f3e3b6c0c7475cae262593e6c8cee7f9f51cadbb075445f89c39e1553193",
+      "entregables/README.md": "8827fbcac38a684e458d6db2afa1ce56bc12ee81c7924bf5913b6bacd28445bd",
+      "entregables/sabado/CORPUS.md": "9300fcd6d5fb49d04cbe363a63e38fdfebc887127220ff9318f83053bd17bcf1",
+      "entregables/sabado/INFORME_TECNICO.md": "8ae359dd4d6026301963db20cba25c49804b00b322853d9be33612f03131632d",
+      "entregables/sabado/README.md": "46aeab127b0aea174a29e8f585b8825f99885cf3f9b3a4f79ec70ab30b121751",
+      "entregables/sabado/README_EQUIPO.md": "b2ec3d5a33ac4d5af2fae414bdcf8fb1c3030dd286eacbc4747c50c4232f31d5",
+      "entregables/sabado/corpus_manifest.ejemplo.json": "a5da89d7c4a03151bfe830ebc6690db754420113a84c5d2e42db22b4cc5408cc",
+      "entregables/viernes/README.md": "1b7421771077e50730afc95191eadd7d77e8d3e9b8be9be5338f5bdc3bebffe6",
+      "entregables/viernes/REPORTE_AVANCE.md": "2d865647728a6e2d0d8207433e565338efa75a6fb61b9006f4aa5ff14eaa8b9f",
+      "schema/submission.schema.json": "84068e6793b7e8a9a58f974cc238524ab631ed6dffc0310475e493dc30060c72",
+      "scripts/citations.py": "87993aba7d21611d1f3730233ac58e4af9334fe86de3f8e86bce46c7cef0bf9f",
+      "scripts/common.py": "52545d1ec2d62c1936150426be9455449d6e5b9157e91beba281852b7783ff34",
+      "scripts/evaluate.py": "6fc8e98abf0675dd2a6bd9a052676f7f52f585f329435bb48fa29c7af711fdbf",
+      "scripts/requirements-evaluador.txt": "13582d3c0350ad2481bccd2a0f1d4d8d3701fad9b5c74f15e9b6de9874c8f21d"
+    },
+    "corpus": {
+      "version": "corpus-v0.1",
+      "hashes": {
+        "passages.jsonl": "49a6926e614cc24eaee7cb74c6d18f5469aeb1ed4b6183533a0422147fd40da5",
+        "graph/nodes.jsonl": "2b7cf92788b6640e174d4cfee75201adaf559e8f44a472f068070aa821bf6d4a",
+        "graph/edges.jsonl": "65ac7a1b050d644c6e55a88caaf87268898bcc7bafdf5cea297c21b510d01513"
+      },
+      "bm25_sha256": "e70e6720798873d90c21da781ca1a88ef6ec630f0aa0b1e0c5e9152e0a54463d"
+    },
+    "evidence": {
+      "sha256": "a144c40247b1bee01fe21e4db32ad63a8d06172de94e00087e7a06ea4f1e8a1c",
+      "scope": "one literal source smoke; not a sample score"
+    },
+    "comparison": {
+      "model": "qwen3-8b",
+      "candidate": {
+        "repo_id": "Qwen/Qwen3-8B",
+        "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "enabled": true,
+        "backend": "transformers",
+        "preferred_dtype": "bfloat16",
+        "max_context_tokens": 8192,
+        "batch_size": 1,
+        "local_files_only": true,
+        "trust_remote_code": false,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        },
+        "requirements": [
+          "Disable thinking explicitly. Publisher parameter count is 8,190,735,360: confirm nominal 8B eligibility with organizers before competitive delivery."
+        ]
+      },
+      "generation": {
+        "temperature": 0.0,
+        "do_sample": false,
+        "seed": 0
+      },
+      "max_new_tokens": {
+        "multiple_choice": 512,
+        "semi_open": 512,
+        "open_ended": 1024
+      },
+      "prompt_version": "grounded-formats-v3",
+      "evidence_sha256": "a144c40247b1bee01fe21e4db32ad63a8d06172de94e00087e7a06ea4f1e8a1c",
+      "corpus": {
+        "version": "corpus-v0.1",
+        "hashes": {
+          "passages.jsonl": "49a6926e614cc24eaee7cb74c6d18f5469aeb1ed4b6183533a0422147fd40da5",
+          "graph/nodes.jsonl": "2b7cf92788b6640e174d4cfee75201adaf559e8f44a472f068070aa821bf6d4a",
+          "graph/edges.jsonl": "65ac7a1b050d644c6e55a88caaf87268898bcc7bafdf5cea297c21b510d01513"
+        },
+        "bm25_sha256": "e70e6720798873d90c21da781ca1a88ef6ec630f0aa0b1e0c5e9152e0a54463d"
+      }
+    },
+    "fallback_from": null,
+    "implementation_sha256": {
+      "kingscode/generation/__init__.py": "b0ca90818a2f7cd87dce394baef72b3c8e8ad8bee264403d9f509091ba1203c6",
+      "kingscode/generation/bakeoff.py": "891bc7bceb590ac2bf5fbd7d200b4594148db8511e1dd36d30c19ee1aa20b970",
+      "kingscode/generation/config.py": "4df05e8329592dbcff8c68ee230334745721d1b9054d9ab22364950d5e61171b",
+      "kingscode/generation/experiments.py": "208203ed7dae33dbc4bf2ee679770dcacc3590718374717bb46753d7456e847a",
+      "kingscode/generation/gpu_smoke.py": "a763af44cc3947267446874ef6328cf6ac7f786ffe486db95aaf15e440810c4d",
+      "kingscode/generation/hf_decoder.py": "67b2d0e9a1d232f9fa899382304af8b07cf3ee603b542b5305531eded1f1aed2",
+      "kingscode/generation/planner_backend.py": "216c8a22e3bceef9a6ed24e1ad6f52248dd6bbdde851d6b4d1fdeab0237106bd",
+      "kingscode/generation/prompts.py": "7f72374cc218dd673f51a717543bfbae95105dab2987c3fe8dd96ed7cea62512",
+      "kingscode/generation/retrieval_experiments.py": "09236b46adaec8cce0f92400010433745e3b21c33a87b5adfad70096690a0c16",
+      "kingscode/reasoning/__init__.py": "77d8af4c830ea11be3ad6567e673af9ced3189eb9125a87387e51ccbdde539dc",
+      "kingscode/reasoning/batch.py": "cea26ce0abec2c9e4540f7bef3fe8fafe5e772b9e1981effa7f64d9360a81a09",
+      "kingscode/reasoning/citation_builder.py": "df116eed1148693ac06cb7fad33a7cc1adcce3f22e5b099762ab154e3abdde28",
+      "kingscode/reasoning/citation_repair.py": "732b5ed67918725ac020e4b04c1f851709620f6271457cfe3ac6e44c2d992610",
+      "kingscode/reasoning/contracts.py": "21785b0aaaff01c9711dec031a7741f89514f6d904fea5559f73e1257393df8c",
+      "kingscode/reasoning/decoder.py": "2c83bc43571de83772b452eec3f0a8c1887b7e7b208907345d6966dc10dccb21",
+      "kingscode/reasoning/evaluation.py": "097b97d2c78ce3659f56d7076ac7a927b79c084e62f99a367c3c41acc3683a7a",
+      "kingscode/reasoning/experiments.py": "2e0d6199e7572b0fc12cb4b2b6eee1b768fc3efa7038fe54f1d67c28be384c98",
+      "kingscode/reasoning/guards.py": "a84428959c7f07e8591edc4068e41f49c21855d573510dfa9ceb3ae073e95e9a",
+      "kingscode/reasoning/legal.py": "6c5d0ba3d47d56d405d080b7dfbd7b6a92709e5d687b9c52be9b0dd277e9229f",
+      "kingscode/reasoning/official.py": "7d23fb5a4be94589b7588e9b45ef3f5788e70d28e3df1d643fb9af2fdaa2d611",
+      "kingscode/reasoning/pipeline.py": "c0f29b986b1c050c4272d1596cbbda89365986cb813e1cc664ba0564e079f56c",
+      "kingscode/reasoning/plan_store.py": "cb2c9947746d992d36fdfe245a8d9d79479a75fcfaa1f594d9f79c43c0217660",
+      "kingscode/reasoning/planner.py": "e6d50e384614c7a351bbb6a739f1d19d7b51e3d6f3c8988820eab1b4294c8773",
+      "kingscode/reasoning/policy.py": "0bd10b0d14cb0766c50c1169da0c8da0f3e452523b55ef9768b7660b2003018b",
+      "kingscode/reasoning/presentation.py": "cee74e996363f74fdd5d13953ab8c6c6ccead4739671c2b947dbd28baeca0215",
+      "kingscode/reasoning/query.py": "2c59d2c5a5110ae5444c5eec8a49d066025382d41a95d64bb071659dd6cfe229",
+      "kingscode/reasoning/routing.py": "4af5e9053ee85453d6b0b869a80fdabe60b9f512745756d85d21dbe41e0c4b01"
+    },
+    "fingerprint": "70ec709321f9519136c57e1c82c8971886a45f9057ad7c922f93f5abec4e1c5f",
+    "submission_sha256": "0dd3a8d17919ae80bd326a19488b35e3e0715e5ecd2554336f0a7ff33ea01fd1",
+    "assets": {
+      "repo_id": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "snapshot": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\models--Qwen--Qwen3-8B\\snapshots\\b968826d9c46dd6066d109eabc6255188de91218",
+      "manifest": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\.kingscode_manifests\\Qwen--Qwen3-8B-b968826d9c46dd6066d109eabc6255188de91218.json",
+      "manifest_sha256": "8b0c640fde03fe1a6c6a543285aa4d547c9d116e982bc3036782810195e96640",
+      "files_verified": 14
+    },
+    "load_ms": 17682.67129999913,
+    "memory": {
+      "peak_vram_bytes": 18879329280,
+      "peak_reserved_vram_bytes": 19174260736
+    },
+    "metrics": {
+      "questions": 1,
+      "attempted": 1,
+      "completed": 1,
+      "model_generation_calls": 1,
+      "valid_json_rate": 1.0,
+      "citation_count": 6,
+      "unsupported_citation_count": 0,
+      "unsupported_citation_rate": 0.0,
+      "zero_citations_note": "Zero citations is not evidence of citation quality.",
+      "abstentions": 0,
+      "latency_p50_ms": 27988.244099999065,
+      "latency_p95_ms": 27988.244099999065,
+      "input_tokens": 866,
+      "output_tokens": 280,
+      "output_tokens_per_generation_second": 27.264771359329366,
+      "completed_questions_per_second": 0.03523481724237827,
+      "total_seconds": 28.38101849999839,
+      "peak_vram_bytes": 18879329280,
+      "errors": 0,
+      "oom_count": 0
+    }
+  },
+  "submission": {
+    "abstencion": false,
+    "formato": "semi_open",
+    "id": 0,
+    "palabras_clave": [
+      "Ley 1010 de 2006",
+      "artículo 1",
+      "objeto de la ley",
+      "bienes jurídicos"
+    ],
+    "pasajes_recuperados": [
+      {
+        "article": "1",
+        "canonical_body": [
+          "ley",
+          "1010",
+          "2006"
+        ],
+        "doc_id": "ley_1010_de_2006",
+        "graph_node_ids": [
+          "doc:ley_1010_de_2006",
+          "doc:ley_1010_de_2006:article:1:v1",
+          "doc:ley_1010_de_2006:article:1:v1:paragraph:7"
+        ],
+        "hierarchy_path": [
+          "Ley 1010 de 2006",
+          "ARTÍCULO 1. Objeto de la ley y bienes protegidos por ella. La presente ley tiene por objeto definir, prevenir, corregir y sancionar las diversas formas de agresión, maltrato, vejám"
+        ],
+        "norm_name": "Ley 1010 de 2006",
+        "passage_id": "ley_1010_de_2006:00000:3a5f84542db4",
+        "retrieved_at": "2026-09-28T01:58:02.193470+00:00",
+        "source_sha256": "9865c0e9b8b0d93aa3d3d9dbd14d91a2b3379cfb75674e0141260b24638429d3",
+        "source_url": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=18843",
+        "texto": "Ley 1010 de 2006.\nARTÍCULO 1. Objeto de la ley y bienes protegidos por ella. La presente ley tiene por objeto definir, prevenir, corregir y sancionar las diversas formas de agresión, maltrato, vejámenes, trato desconsiderado y ofensivo y en general todo ultraje a la dignidad humana que se ejercen sobre quienes realizan sus actividades económicas en el contexto de una relación laboral privada o pública.\n\nSon bienes jurídicos protegidos por la presente ley: el trabajo en condiciones dignas y justas, la libertad, la intimidad, la honra y la salud mental de los trabajadores, empleados, la armonía entre quienes comparten un mismo ambiente laboral y el buen ambiente en la empresa.\n\nPARÁGRAFO : La presente ley no se aplicará en el ámbito de las relaciones civiles y/o comerciales derivadas de los contratos de prestación de servicios en los cuales no se presenta una relación de jerarquía o subordinación. Tampoco se aplica a la contratación administrativa.\n\nNota: (Texto subrayado declarado EXEQUIBLE por la Corte Constitucional, mediante Sentencia C-960 de 2007, en el entendido de que si en realidad existe una relación laboral, se aplicará la Ley 1010 de 2006.)"
+      }
+    ],
+    "referencia_legal": "artículo 1 de la Ley 1010 de 2006",
+    "respuesta": "El objeto del artículo 1 de la Ley 1010 de 2006 es definir, prevenir, corregir y sancionar las diversas formas de agresión, maltrato, vejámenes, trato desconsiderado y ofensivo, así como todo ultraje a la dignidad humana que se ejercen sobre quienes realizan sus actividades económicas en el contexto de una relación laboral privada o pública. Este artículo protege bienes jurídicos como el trabajo en condiciones dignas y justas, la libertad, la intimidad, la honra y la salud mental de los trabajadores, empleados, la armonía entre quienes comparten un mismo ambiente laboral y el buen ambiente en la empresa."
+  },
+  "total_seconds": 53.17259860000013,
+  "peak_vram_bytes": 18879329280,
+  "project_state_modified": false
+}

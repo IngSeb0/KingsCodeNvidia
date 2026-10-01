@@ -1,0 +1,23 @@
+{
+  "candidate_k": 30,
+  "citation_fill": false,
+  "decoder": [
+    "transformers:qwen3-8b",
+    "b968826d9c46dd6066d109eabc6255188de91218"
+  ],
+  "graph_policy": "router",
+  "k": 8,
+  "native_option_fusion": false,
+  "plans": null,
+  "prompt_version": "grounded-formats-v3",
+  "questions_sha256": "5748d60612843eee116a7ac169be8e087241bc99db6e2294a5926a802d13c03e",
+  "reranker_batch_size": 2,
+  "retrieval_mode": "option",
+  "retriever": {
+    "corpus_sha256": "dae54b39d80fd413f99ac4644f1cf08a11a4b6603414ece2d008c40d5c70fbbf",
+    "exact_locator": false,
+    "fixture_evidence": false,
+    "mode": "hybrid",
+    "rerank": false
+  }
+}

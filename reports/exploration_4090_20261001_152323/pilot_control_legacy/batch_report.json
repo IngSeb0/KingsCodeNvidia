@@ -1,0 +1,189 @@
+{
+  "submission": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\reports\\exploration_4090_20261001_152323\\pilot_control_legacy\\submissions.jsonl",
+  "rows": 12,
+  "complete": true,
+  "duplicates": 0,
+  "schema_errors": 0,
+  "fallback_ids": [
+    247
+  ],
+  "submission_sha256": "92063dc904bada70fe6b81467c04c66b6975e8e7358c1849f921a81854b35b11",
+  "counts": {
+    "resumed": 0,
+    "answered": 11,
+    "retried_ok": 0,
+    "fallback": 1
+  },
+  "identity": {
+    "decoder": [
+      "transformers:qwen3-8b",
+      "b968826d9c46dd6066d109eabc6255188de91218"
+    ],
+    "retrieval_mode": "option",
+    "k": 8,
+    "candidate_k": 30,
+    "reranker_batch_size": 2,
+    "native_option_fusion": false,
+    "retrieval_text_mode": "literal",
+    "dense_index_dir": null,
+    "embedding_instruction_profile": "baseline",
+    "embedding_instruction": "Given a question about Colombian law, retrieve official legal passages that provide the evidence needed to answer it.",
+    "reranker_instruction_profile": "baseline",
+    "reranker_instruction": "Given a question about Colombian law, retrieve official legal passages that provide the evidence needed to answer it.",
+    "reranker_score_cache": false,
+    "option_support": false,
+    "constrained_json": false,
+    "plan_roles": null,
+    "prompt_version": "grounded-formats-v4",
+    "citation_fill": false,
+    "retriever": {
+      "mode": "hybrid",
+      "rerank": true,
+      "graph_budget": 10,
+      "exact_locator": false,
+      "fixture_evidence": false,
+      "corpus_sha256": "dae54b39d80fd413f99ac4644f1cf08a11a4b6603414ece2d008c40d5c70fbbf"
+    },
+    "graph_policy": "router",
+    "plans": null,
+    "questions_sha256": "e71fcb8fd0a4121ad6988fb97619f9da998ced20440761edcfbb8f8eba428425"
+  },
+  "diagnostics": {
+    "questions": 12,
+    "abstention_source": {
+      "citation_guard_fallback": {
+        "n": 1,
+        "rate": 0.08333333333333333
+      },
+      "none": {
+        "n": 10,
+        "rate": 0.8333333333333334
+      },
+      "pipeline_error": {
+        "n": 1,
+        "rate": 0.08333333333333333
+      }
+    },
+    "attribution_status": {
+      "explicit": {
+        "n": 10,
+        "rate": 0.8333333333333334
+      },
+      "malformed": {
+        "n": 1,
+        "rate": 0.08333333333333333
+      },
+      "none": {
+        "n": 1,
+        "rate": 0.08333333333333333
+      }
+    },
+    "abstentions": 2,
+    "abstention_reasons": {
+      "citation_guard_rejected": 1,
+      "pipeline_error": 1
+    },
+    "abstentions_by_format": {
+      "multiple_choice": 1,
+      "open_ended": 1
+    },
+    "normalization_action": {
+      "none": {
+        "n": 11,
+        "rate": 0.9166666666666666
+      }
+    },
+    "repair_actions": {
+      "suppressed_fragment": 4,
+      "suppressed_sentence": 10
+    },
+    "pipeline_error_codes": {
+      "INVALID_MODEL_OUTPUT": 1
+    },
+    "format_warnings": {
+      "semi_open_sentences_outside_3_5": {
+        "n": 2,
+        "rate": 0.16666666666666666
+      }
+    },
+    "field_coercions": {},
+    "citations_before_repair": 75,
+    "citations_after_repair": 68,
+    "citation_guard_fallback_rate": 0.08333333333333333,
+    "supported_citations": 68,
+    "unsupported_citations": 0,
+    "citation_support_rate": 1.0,
+    "input_tokens": 63833,
+    "output_tokens": 4929,
+    "generation_ms_p50": 16272.741000000678,
+    "generation_ms_p95": 34458.32280000104,
+    "retrieval_ms_p50": 694.4414999998116,
+    "retrieval_ms_p95": 3476.257900001656,
+    "peak_reserved_vram_gb": 20.2,
+    "rerank_skipped": 0,
+    "retrieval_profile_samples": 12,
+    "retrieval_stage_ms": {
+      "bm25_ms": {
+        "p50": 28.449,
+        "p95": 90.545,
+        "sum": 408.965
+      },
+      "dense_ms": {
+        "p50": 49.155,
+        "p95": 395.993,
+        "sum": 1419.38
+      },
+      "fusion_ms": {
+        "p50": 0.071,
+        "p95": 0.389,
+        "sum": 1.974
+      },
+      "locator_ms": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "sum": 0.0
+      },
+      "graph_ms": {
+        "p50": 0.0,
+        "p95": 0.216,
+        "sum": 0.216
+      },
+      "reranker_ms": {
+        "p50": 605.923,
+        "p95": 3002.867,
+        "sum": 15161.139
+      },
+      "reranker_tokenization_ms": {
+        "p50": 7.161,
+        "p95": 11.649,
+        "sum": 79.134
+      },
+      "reranker_forward_ms": {
+        "p50": 567.244,
+        "p95": 633.268,
+        "sum": 6506.782
+      },
+      "rerank_skip_recovery_ms": {
+        "p50": null,
+        "p95": null,
+        "sum": null
+      },
+      "total_ms": {
+        "p50": 650.466,
+        "p95": 3471.463,
+        "sum": 16993.788
+      }
+    },
+    "dense_query_encodes": 27,
+    "dense_encode_batches": 27,
+    "reranker_pairs": 842,
+    "reranker_computed_pairs": 362,
+    "reranker_cache_hits": 0,
+    "reranker_duplicate_pairs": 0,
+    "reranker_batches": 421,
+    "native_option_fusion_questions": 0,
+    "note": "Label-free diagnostics; no thresholds derived from the official 50."
+  },
+  "seconds": 277.3707241000011,
+  "finished_at": "2026-10-01T20:44:37.298137+00:00"
+}

@@ -1,0 +1,197 @@
+{
+  "status": "passed",
+  "model": "qwen3-8b",
+  "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "precision": "bf16",
+  "mode": "decoder-smoke",
+  "candidate": {
+    "repo_id": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "enabled": true,
+    "backend": "transformers",
+    "preferred_dtype": "bfloat16",
+    "max_context_tokens": 8192,
+    "batch_size": 1,
+    "local_files_only": true,
+    "trust_remote_code": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    },
+    "requirements": [
+      "Disable thinking explicitly. Publisher parameter count is 8,190,735,360: confirm nominal 8B eligibility with organizers before competitive delivery."
+    ]
+  },
+  "prompt_version": "grounded-formats-v3",
+  "generation_config": {
+    "temperature": 0.0,
+    "do_sample": false,
+    "seed": 0
+  },
+  "max_new_tokens": {
+    "multiple_choice": 512,
+    "semi_open": 512,
+    "open_ended": 1024
+  },
+  "runtime": {
+    "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "kind": "real_local_transformers",
+    "packages": {
+      "torch": "2.14.1+cu126",
+      "transformers": "5.8.1",
+      "accelerate": "1.15.0",
+      "huggingface-hub": "1.33.0",
+      "bitsandbytes": null
+    }
+  },
+  "paths": {
+    "run": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\reports\\decoder_diagnostic\\qwen3-8b_bm25_20261001_112522\\smoke\\decoder\\20261001T162643475776Z-qwen3-8b-bf16",
+    "submission": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\reports\\decoder_diagnostic\\qwen3-8b_bm25_20261001_112522\\smoke\\decoder\\20261001T162643475776Z-qwen3-8b-bf16\\submissions.jsonl"
+  },
+  "official_evaluation": null,
+  "ragas": {
+    "status": "not_run_requires_separate_authorization_and_key"
+  },
+  "official_hashes": {
+    "Ejemplo de entrega/CORPUS.md": "ea372c8df9ab6818868f0be993035349c4cab90a38a2bec292ce949188ceb4b4",
+    "Ejemplo de entrega/README.md": "804fa1fc6ea011f75d6523f10789fae8d849e3a61624dd025794087995d9db74",
+    "Ejemplo de entrega/corpus_manifest.json": "f9aab3b8d9b0c428c1a2e6acf684e45c584dc2cb9cfc0668992231c86ee68f72",
+    "Ejemplo de entrega/submissions.jsonl": "84c770956e7fc5adf2aeebcc7916fdb0ba9e0fbeb39ae5ab3191f004e90aac6b",
+    "data/sample_50.jsonl": "ab8feef09f4a74f00a4b73fd77b7e0a8f019ae6710eb7cfa543cabf6ec0c1589",
+    "data/seed_targets.json": "4a05f3e3b6c0c7475cae262593e6c8cee7f9f51cadbb075445f89c39e1553193",
+    "entregables/README.md": "8827fbcac38a684e458d6db2afa1ce56bc12ee81c7924bf5913b6bacd28445bd",
+    "entregables/sabado/CORPUS.md": "9300fcd6d5fb49d04cbe363a63e38fdfebc887127220ff9318f83053bd17bcf1",
+    "entregables/sabado/INFORME_TECNICO.md": "8ae359dd4d6026301963db20cba25c49804b00b322853d9be33612f03131632d",
+    "entregables/sabado/README.md": "46aeab127b0aea174a29e8f585b8825f99885cf3f9b3a4f79ec70ab30b121751",
+    "entregables/sabado/README_EQUIPO.md": "b2ec3d5a33ac4d5af2fae414bdcf8fb1c3030dd286eacbc4747c50c4232f31d5",
+    "entregables/sabado/corpus_manifest.ejemplo.json": "a5da89d7c4a03151bfe830ebc6690db754420113a84c5d2e42db22b4cc5408cc",
+    "entregables/viernes/README.md": "1b7421771077e50730afc95191eadd7d77e8d3e9b8be9be5338f5bdc3bebffe6",
+    "entregables/viernes/REPORTE_AVANCE.md": "2d865647728a6e2d0d8207433e565338efa75a6fb61b9006f4aa5ff14eaa8b9f",
+    "schema/submission.schema.json": "84068e6793b7e8a9a58f974cc238524ab631ed6dffc0310475e493dc30060c72",
+    "scripts/citations.py": "87993aba7d21611d1f3730233ac58e4af9334fe86de3f8e86bce46c7cef0bf9f",
+    "scripts/common.py": "52545d1ec2d62c1936150426be9455449d6e5b9157e91beba281852b7783ff34",
+    "scripts/evaluate.py": "6fc8e98abf0675dd2a6bd9a052676f7f52f585f329435bb48fa29c7af711fdbf",
+    "scripts/requirements-evaluador.txt": "13582d3c0350ad2481bccd2a0f1d4d8d3701fad9b5c74f15e9b6de9874c8f21d"
+  },
+  "corpus": {
+    "version": "corpus-v0.1",
+    "hashes": {
+      "passages.jsonl": "49a6926e614cc24eaee7cb74c6d18f5469aeb1ed4b6183533a0422147fd40da5",
+      "graph/nodes.jsonl": "2b7cf92788b6640e174d4cfee75201adaf559e8f44a472f068070aa821bf6d4a",
+      "graph/edges.jsonl": "65ac7a1b050d644c6e55a88caaf87268898bcc7bafdf5cea297c21b510d01513"
+    },
+    "bm25_sha256": "e70e6720798873d90c21da781ca1a88ef6ec630f0aa0b1e0c5e9152e0a54463d"
+  },
+  "evidence": {
+    "sha256": "a144c40247b1bee01fe21e4db32ad63a8d06172de94e00087e7a06ea4f1e8a1c",
+    "scope": "one literal source smoke; not a sample score"
+  },
+  "comparison": {
+    "model": "qwen3-8b",
+    "candidate": {
+      "repo_id": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "enabled": true,
+      "backend": "transformers",
+      "preferred_dtype": "bfloat16",
+      "max_context_tokens": 8192,
+      "batch_size": 1,
+      "local_files_only": true,
+      "trust_remote_code": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "requirements": [
+        "Disable thinking explicitly. Publisher parameter count is 8,190,735,360: confirm nominal 8B eligibility with organizers before competitive delivery."
+      ]
+    },
+    "generation": {
+      "temperature": 0.0,
+      "do_sample": false,
+      "seed": 0
+    },
+    "max_new_tokens": {
+      "multiple_choice": 512,
+      "semi_open": 512,
+      "open_ended": 1024
+    },
+    "prompt_version": "grounded-formats-v3",
+    "evidence_sha256": "a144c40247b1bee01fe21e4db32ad63a8d06172de94e00087e7a06ea4f1e8a1c",
+    "corpus": {
+      "version": "corpus-v0.1",
+      "hashes": {
+        "passages.jsonl": "49a6926e614cc24eaee7cb74c6d18f5469aeb1ed4b6183533a0422147fd40da5",
+        "graph/nodes.jsonl": "2b7cf92788b6640e174d4cfee75201adaf559e8f44a472f068070aa821bf6d4a",
+        "graph/edges.jsonl": "65ac7a1b050d644c6e55a88caaf87268898bcc7bafdf5cea297c21b510d01513"
+      },
+      "bm25_sha256": "e70e6720798873d90c21da781ca1a88ef6ec630f0aa0b1e0c5e9152e0a54463d"
+    }
+  },
+  "fallback_from": null,
+  "implementation_sha256": {
+    "kingscode/generation/__init__.py": "b0ca90818a2f7cd87dce394baef72b3c8e8ad8bee264403d9f509091ba1203c6",
+    "kingscode/generation/bakeoff.py": "891bc7bceb590ac2bf5fbd7d200b4594148db8511e1dd36d30c19ee1aa20b970",
+    "kingscode/generation/config.py": "4df05e8329592dbcff8c68ee230334745721d1b9054d9ab22364950d5e61171b",
+    "kingscode/generation/experiments.py": "208203ed7dae33dbc4bf2ee679770dcacc3590718374717bb46753d7456e847a",
+    "kingscode/generation/gpu_smoke.py": "a763af44cc3947267446874ef6328cf6ac7f786ffe486db95aaf15e440810c4d",
+    "kingscode/generation/hf_decoder.py": "5c713278ccc094de2e049bb379feba782590a2b477b4ec3f7c1e421c2fb0d07d",
+    "kingscode/generation/planner_backend.py": "216c8a22e3bceef9a6ed24e1ad6f52248dd6bbdde851d6b4d1fdeab0237106bd",
+    "kingscode/generation/prompts.py": "7f72374cc218dd673f51a717543bfbae95105dab2987c3fe8dd96ed7cea62512",
+    "kingscode/generation/retrieval_experiments.py": "09236b46adaec8cce0f92400010433745e3b21c33a87b5adfad70096690a0c16",
+    "kingscode/reasoning/__init__.py": "77d8af4c830ea11be3ad6567e673af9ced3189eb9125a87387e51ccbdde539dc",
+    "kingscode/reasoning/batch.py": "ac98adcbb6a04d457d3e57351bd5d53e950e6cc1d192b2b44017b5ba50579bef",
+    "kingscode/reasoning/citation_builder.py": "df116eed1148693ac06cb7fad33a7cc1adcce3f22e5b099762ab154e3abdde28",
+    "kingscode/reasoning/citation_repair.py": "732b5ed67918725ac020e4b04c1f851709620f6271457cfe3ac6e44c2d992610",
+    "kingscode/reasoning/contracts.py": "21785b0aaaff01c9711dec031a7741f89514f6d904fea5559f73e1257393df8c",
+    "kingscode/reasoning/decoder.py": "2c83bc43571de83772b452eec3f0a8c1887b7e7b208907345d6966dc10dccb21",
+    "kingscode/reasoning/evaluation.py": "097b97d2c78ce3659f56d7076ac7a927b79c084e62f99a367c3c41acc3683a7a",
+    "kingscode/reasoning/experiments.py": "2e0d6199e7572b0fc12cb4b2b6eee1b768fc3efa7038fe54f1d67c28be384c98",
+    "kingscode/reasoning/guards.py": "a84428959c7f07e8591edc4068e41f49c21855d573510dfa9ceb3ae073e95e9a",
+    "kingscode/reasoning/legal.py": "6c5d0ba3d47d56d405d080b7dfbd7b6a92709e5d687b9c52be9b0dd277e9229f",
+    "kingscode/reasoning/official.py": "7d23fb5a4be94589b7588e9b45ef3f5788e70d28e3df1d643fb9af2fdaa2d611",
+    "kingscode/reasoning/pipeline.py": "c0f29b986b1c050c4272d1596cbbda89365986cb813e1cc664ba0564e079f56c",
+    "kingscode/reasoning/plan_store.py": "cb2c9947746d992d36fdfe245a8d9d79479a75fcfaa1f594d9f79c43c0217660",
+    "kingscode/reasoning/planner.py": "e6d50e384614c7a351bbb6a739f1d19d7b51e3d6f3c8988820eab1b4294c8773",
+    "kingscode/reasoning/policy.py": "0bd10b0d14cb0766c50c1169da0c8da0f3e452523b55ef9768b7660b2003018b",
+    "kingscode/reasoning/presentation.py": "cee74e996363f74fdd5d13953ab8c6c6ccead4739671c2b947dbd28baeca0215",
+    "kingscode/reasoning/query.py": "2c59d2c5a5110ae5444c5eec8a49d066025382d41a95d64bb071659dd6cfe229",
+    "kingscode/reasoning/routing.py": "4af5e9053ee85453d6b0b869a80fdabe60b9f512745756d85d21dbe41e0c4b01"
+  },
+  "fingerprint": "bce1aee603ed7519e4e473e349688d8e19e3b672212b51ae7515ff05c744b4d6",
+  "submission_sha256": "0dd3a8d17919ae80bd326a19488b35e3e0715e5ecd2554336f0a7ff33ea01fd1",
+  "assets": {
+    "repo_id": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "snapshot": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\models--Qwen--Qwen3-8B\\snapshots\\b968826d9c46dd6066d109eabc6255188de91218",
+    "manifest": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\models\\.kingscode_manifests\\Qwen--Qwen3-8B-b968826d9c46dd6066d109eabc6255188de91218.json",
+    "manifest_sha256": "8b0c640fde03fe1a6c6a543285aa4d547c9d116e982bc3036782810195e96640",
+    "files_verified": 14
+  },
+  "load_ms": 17328.584399998363,
+  "memory": {
+    "peak_vram_bytes": 18879329280,
+    "peak_reserved_vram_bytes": 19174260736
+  },
+  "metrics": {
+    "questions": 1,
+    "attempted": 1,
+    "completed": 1,
+    "model_generation_calls": 1,
+    "valid_json_rate": 1.0,
+    "citation_count": 6,
+    "unsupported_citation_count": 0,
+    "unsupported_citation_rate": 0.0,
+    "zero_citations_note": "Zero citations is not evidence of citation quality.",
+    "abstentions": 0,
+    "latency_p50_ms": 26209.03609999914,
+    "latency_p95_ms": 26209.03609999914,
+    "input_tokens": 866,
+    "output_tokens": 280,
+    "output_tokens_per_generation_second": 31.638109920330216,
+    "completed_questions_per_second": 0.03762019846212199,
+    "total_seconds": 26.581465299999763,
+    "peak_vram_bytes": 18879329280,
+    "errors": 0,
+    "oom_count": 0
+  }
+}

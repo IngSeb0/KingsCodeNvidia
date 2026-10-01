@@ -1,0 +1,169 @@
+{
+  "submission": "reports\\decoder_diagnostic\\qwen3-8b_bm25_locator_rerank_pv4_fill_20261001_132857\\batch\\submissions.jsonl",
+  "rows": 50,
+  "complete": true,
+  "duplicates": 0,
+  "schema_errors": 0,
+  "fallback_ids": [
+    51,
+    60,
+    748
+  ],
+  "submission_sha256": "dd4680228a507fb307d06309dfb6afb5c21b1917e0596210ff02daf9a00bd9a1",
+  "counts": {
+    "resumed": 0,
+    "answered": 47,
+    "retried_ok": 0,
+    "fallback": 3
+  },
+  "identity": {
+    "decoder": [
+      "transformers:qwen3-8b",
+      "b968826d9c46dd6066d109eabc6255188de91218"
+    ],
+    "retrieval_mode": "option",
+    "k": 8,
+    "candidate_k": 30,
+    "reranker_batch_size": 2,
+    "native_option_fusion": false,
+    "prompt_version": "grounded-formats-v4",
+    "citation_fill": true,
+    "retriever": {
+      "mode": "bm25",
+      "rerank": true,
+      "exact_locator": true,
+      "fixture_evidence": false,
+      "corpus_sha256": "dae54b39d80fd413f99ac4644f1cf08a11a4b6603414ece2d008c40d5c70fbbf"
+    },
+    "graph_policy": "router",
+    "plans": null,
+    "questions_sha256": "5748d60612843eee116a7ac169be8e087241bc99db6e2294a5926a802d13c03e"
+  },
+  "diagnostics": {
+    "questions": 50,
+    "abstention_source": {
+      "none": {
+        "n": 47,
+        "rate": 0.94
+      },
+      "pipeline_error": {
+        "n": 3,
+        "rate": 0.06
+      }
+    },
+    "attribution_status": {
+      "explicit": {
+        "n": 47,
+        "rate": 0.94
+      },
+      "none": {
+        "n": 3,
+        "rate": 0.06
+      }
+    },
+    "abstentions": 3,
+    "abstention_reasons": {
+      "pipeline_error": 3
+    },
+    "abstentions_by_format": {
+      "multiple_choice": 3
+    },
+    "normalization_action": {
+      "none": {
+        "n": 47,
+        "rate": 0.94
+      }
+    },
+    "repair_actions": {
+      "emptied": 1,
+      "renamed_to_evidence_name": 21,
+      "rewritten_to_body": 5,
+      "suppressed_fragment": 48,
+      "suppressed_sentence": 52
+    },
+    "pipeline_error_codes": {
+      "INVALID_MODEL_OUTPUT": 3
+    },
+    "format_warnings": {
+      "open_ended_analysis_sentences_outside_5_8": {
+        "n": 1,
+        "rate": 0.02
+      },
+      "semi_open_sentences_outside_3_5": {
+        "n": 5,
+        "rate": 0.1
+      }
+    },
+    "field_coercions": {
+      "truncated_to_limit:respuesta": {
+        "n": 1,
+        "rate": 0.02
+      }
+    },
+    "citations_before_repair": 305,
+    "citations_after_repair": 413,
+    "citation_guard_fallback_rate": 0.0,
+    "supported_citations": 413,
+    "unsupported_citations": 0,
+    "citation_support_rate": 1.0,
+    "input_tokens": 286985,
+    "output_tokens": 16959,
+    "generation_ms_p50": 13322.980599998118,
+    "generation_ms_p95": 32604.982500000915,
+    "retrieval_ms_p50": 1260.5496999967727,
+    "retrieval_ms_p95": 10961.425999998028,
+    "peak_reserved_vram_gb": 19.1,
+    "rerank_skipped": 0,
+    "retrieval_profile_samples": 54,
+    "retrieval_stage_ms": {
+      "bm25_ms": {
+        "p50": 14.146,
+        "p95": 34.273,
+        "sum": 867.171
+      },
+      "dense_ms": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "sum": 0.0
+      },
+      "fusion_ms": {
+        "p50": 0.101,
+        "p95": 0.35,
+        "sum": 7.4
+      },
+      "locator_ms": {
+        "p50": 0.112,
+        "p95": 1.749,
+        "sum": 16.121
+      },
+      "graph_ms": {
+        "p50": 0.0,
+        "p95": 0.833,
+        "sum": 10.484
+      },
+      "reranker_ms": {
+        "p50": 657.088,
+        "p95": 9371.973,
+        "sum": 77381.181
+      },
+      "rerank_skip_recovery_ms": {
+        "p50": null,
+        "p95": null,
+        "sum": null
+      },
+      "total_ms": {
+        "p50": 683.854,
+        "p95": 9390.67,
+        "sum": 78288.443
+      }
+    },
+    "dense_query_encodes": 0,
+    "dense_encode_batches": 0,
+    "reranker_pairs": 3972,
+    "reranker_batches": 1990,
+    "native_option_fusion_questions": 0,
+    "note": "Label-free diagnostics; no thresholds derived from the official 50."
+  },
+  "seconds": 923.041188799998,
+  "finished_at": "2026-10-01T18:45:16.799016+00:00"
+}

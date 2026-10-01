@@ -1,0 +1,18 @@
+{
+  "decoder": [
+    "transformers:qwen3-8b",
+    "b968826d9c46dd6066d109eabc6255188de91218"
+  ],
+  "graph_policy": "router",
+  "k": 8,
+  "plans": null,
+  "questions_sha256": "5748d60612843eee116a7ac169be8e087241bc99db6e2294a5926a802d13c03e",
+  "retrieval_mode": "option",
+  "retriever": {
+    "corpus_sha256": "dae54b39d80fd413f99ac4644f1cf08a11a4b6603414ece2d008c40d5c70fbbf",
+    "exact_locator": true,
+    "fixture_evidence": false,
+    "mode": "bm25",
+    "rerank": false
+  }
+}

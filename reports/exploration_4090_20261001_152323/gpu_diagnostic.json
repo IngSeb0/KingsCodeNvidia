@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-10-01T20:23:24.803315+00:00",
+  "platform": "Windows-11-10.0.22631-SP0",
+  "system": "Windows",
+  "python": "3.13.2 (tags/v3.13.2:4f8bb39, Feb  4 2025, 15:23:48) [MSC v.1942 64 bit (AMD64)]",
+  "gpus": [
+    {
+      "name": "NVIDIA GeForce RTX 4090",
+      "driver_version": "566.36",
+      "memory_total_mib": 24564,
+      "memory_free_mib": 23323
+    }
+  ],
+  "gpu_validated": false,
+  "scope": "Inventory only; no matmul or model loading",
+  "nvidia_smi_returncode": 0,
+  "torch": {
+    "installed": true,
+    "version": "2.14.1+cu126",
+    "built_with_cuda": "12.6",
+    "cuda_available": true,
+    "bf16_supported": true,
+    "devices": [
+      {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 4090",
+        "total_memory_bytes": 25756696576
+      }
+    ]
+  }
+}

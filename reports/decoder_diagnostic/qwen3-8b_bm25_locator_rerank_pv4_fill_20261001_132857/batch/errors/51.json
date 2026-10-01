@@ -1,0 +1,51 @@
+{
+  "id": 51,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 6896,
+          "output_tokens": 512,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v4",
+          "prompt_sha256": "6f5f9424e32e72deb73abc934ed1ad5a84168f5e19847f8e7f578ddfeddfe628",
+          "max_new_tokens": 512,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 7,
+          "evidence_dropped_for_context": [
+            "sentencia_c_335_de_2008:00009:c796e8683590"
+          ],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 512,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"abstencion\": false,\n  \"justificacion\": \"La acción de grupo se define como una figura procesal que permite a un número plural o conjunto de personas que reúnen condiciones uniformes respecto de una misma causa, persiguen la declaratoria de responsabilidad patrimonial del Estado y el reconocimiento y pago de indemnización de los perjuicios sufridos. Esto se establece en el artículo 88 de la Constitución Política y se regula en la Ley 472 de 1998 y en el Código de Procedimiento Administrativo y de lo Contencioso Administrativo (Ley 1437 de 2011). En particular, el artículo 145 del Código de Procedimiento Administrativo y de lo Contencioso Administrativo establece que cualquier persona perteneciente a un número plural o conjunto de personas que reúnan condiciones uniformes respecto de una misma causa que les originó perjuicios individuales puede solicitar en nombre del conjunto la declaratoria de responsabilidad patrimonial del Estado y el reconocimiento y pago de indemnización de los perjuicios causados al grupo. Por lo tanto, la acción de grupo procede cuando un conjunto de personas resulta afectado por un mismo hecho que les causa perjuicios individuales derivados de una causa común, lo cual corresponde a la opción C.\",\n  \"respuesta_correcta\": \"C\",\n  \"descarte_opciones\": {\n    \"A\": \"La opción A se refiere a derechos fundamentales individuales de aplicación inmediata, lo cual no es el enfoque de la acción de grupo, que se centra en perjuicios causados por una causa común.\",\n    \"B\": \"La opción B menciona el interés colectivo ambiental o del espacio público, lo cual no se aborda directamente en la definición de la acción de grupo.\",\n    \"D\": \"La opción D se refiere a la declaración de inconstitucionalidad de una norma con fuerza de ley, lo cual no es el objeto de la acción de grupo.\"\n  },\n  \"pasajes_usados\": [\n    \"sentencia_su_429_de_2024:00047:68a4ea674a1b\",\n    \"sentencia_su_429_de_2024:00049:",
+          "generation_ms": 21364.24249999982,
+          "peak_vram_bytes": 20095932416,
+          "peak_reserved_vram_bytes": 20432551936
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 178, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 186, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 159, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 242, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 100, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 181, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": 528,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 4736,
+          "output_tokens": 512,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v4",
+          "prompt_sha256": "6f5f9424e32e72deb73abc934ed1ad5a84168f5e19847f8e7f578ddfeddfe628",
+          "max_new_tokens": 512,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 512,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"abstencion\": false,\n  \"justificacion\": \"Según el artículo 25 del Código General del Proceso (Ley 1564 de 2012), los procesos son de mínima cuantía cuando versan sobre pretensiones patrimoniales que no excedan el equivalente a cuarenta salarios mínimos legales mensuales vigentes (40 smlmv). Para determinar si el monto de 30.000.000 COP corresponde a esta categoría, se debe calcular el valor equivalente en salarios mínimos legales mensuales vigentes. Sin embargo, la evidencia no proporciona el valor exacto del salario mínimo legal mensual vigente en el momento de la presentación de la demanda. Por lo tanto, no se puede determinar con certeza si el monto corresponde a mínima cuantía, menor cuantía o mayor cuantía. Sin embargo, el artículo 13 de la Ley 2452 de 2025 establece que los jueces laborales municipales conocen en primera instancia de los procesos de mínima cuantía cuyo monto no exceda del equivalente a cuarenta (40) veces el salario mínimo legal mensual vigente (SMLMV). Dado que el monto de 30.000.000 COP es significativamente mayor que el valor de 40 smlmv, se puede inferir que no corresponde a mínima cuantía. Por lo tanto, la opción correcta es D: Mayor cuantía.\",\n  \"respuesta_correcta\": \"D\",\n  \"descarte_opciones\": {\n    \"A\": \"La alta cuantía no se menciona explícitamente en la evidencia y no se puede inferir con base en los datos proporcionados.\",\n    \"B\": \"El monto de 30.000.000 COP excede el valor de 40 smlmv, por lo que no corresponde a menor cuantía.\",\n    \"C\": \"El monto de 30.000.000 COP excede el valor de 40 smlmv, por lo que no corresponde a mínima cuantía.\"\n  },\n  \"pasajes_usados\": [\n    \"codigo_general",
+          "generation_ms": 19239.310600001772,
+          "peak_vram_bytes": 21287500800,
+          "peak_reserved_vram_bytes": 21680357376
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 178, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 186, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 159, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 293, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 105, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 181, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}
