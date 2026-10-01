@@ -1,0 +1,251 @@
+﻿{
+    "captured_at_utc":  "2026-10-01T21:19:16.2676003Z",
+    "source_branch":  "main",
+    "source_commit":  "93f99a102608dc1cb708ae878e30571653d9c64d",
+    "active_hybrid_python_pids":  [
+
+                                  ],
+    "file_count":  48,
+    "files":  [
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/pilot_12_public_only.jsonl",
+                      "bytes":  5066,
+                      "sha256":  "90916045996ed964cfe7c6b4d00bfc18806dbd474f7c1fda052b660bc7ffccc1"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/batch_report.json",
+                      "bytes":  4239,
+                      "sha256":  "5f176f655c2b23426dc98cfca9d2a99a27ed752c8153077a4bb7208c02711b8c"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/errors/253.json",
+                      "bytes":  7196,
+                      "sha256":  "1f629a1777aa4126da3caf1644d7d0c1bbf76efdf68c5cf9d8750d26e92210ec"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/errors/679.json",
+                      "bytes":  7928,
+                      "sha256":  "f207cca27c588397eaf7870df9f68b66bd08afc8b90d1fde691ec9c303f1b866"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/identity.json",
+                      "bytes":  636,
+                      "sha256":  "1be18d73729e2453e5aadbeae45cb5a90b93f1a2eb62e0bcc25d5e4533ccf930"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/1015.json",
+                      "bytes":  47277,
+                      "sha256":  "fcfa806a94196856cbe5f20f065614c7b7f6fde25c607b07b77a405e9216e876"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/142.json",
+                      "bytes":  26816,
+                      "sha256":  "7f9740177db5a5e4d6784f5606b7cd97ac20ced2acb1d81884d27d4a3e204e34"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/247.json",
+                      "bytes":  32579,
+                      "sha256":  "9478504c20bac1681dc06758899888c7484769abdb730754e08a09592b0819b4"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/253.json",
+                      "bytes":  339,
+                      "sha256":  "54fe58a13d38dcec36bf1922dca4b3f8d0ca245f8d625d3c79e4dff91d9e8ab4"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/308.json",
+                      "bytes":  25032,
+                      "sha256":  "89fc360f8d0bd57d9f6c62dbd6ed15e26974b84c0cd4b0cb9f7242ce24012d54"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/472.json",
+                      "bytes":  34902,
+                      "sha256":  "12d0dec8054fd94beda73bdd97491f012c98528c0c50e94fe901bc26c401186f"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/513.json",
+                      "bytes":  34618,
+                      "sha256":  "d5c454c3ba0c6b27da9e2f259a9c2883dfd2ab0e204a4b642e85f1ac3c7fd04d"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/528.json",
+                      "bytes":  33619,
+                      "sha256":  "15e3e7de3c5a7664ab1f50f393eace9e0355de3b8f12cd3d58815bc4ff75cf80"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/58.json",
+                      "bytes":  23843,
+                      "sha256":  "abeab0c6520ec445e0de6de1bba021fac30f29609544165c8fb63a627659f55c"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/671.json",
+                      "bytes":  28929,
+                      "sha256":  "48d09491bbeb03a8a56cb316101a1a9304b91125a5e1e1db0bc79d7c786f5ac5"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/679.json",
+                      "bytes":  339,
+                      "sha256":  "81d3dc7e057e61af34ca2d706f201bc62ffb3976f041466d5dc2b791d041d8ef"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/items/857.json",
+                      "bytes":  33611,
+                      "sha256":  "ce5503a8870502f33d1e5f59f2943f82e11912a8a6ca45e3e82247ff664387cf"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3/batch/submissions.jsonl",
+                      "bytes":  228206,
+                      "sha256":  "a09721e6e655210570ae82dff0b6f1f76cf2ad10aa276018830be2710e7aece4"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/identity.json",
+                      "bytes":  635,
+                      "sha256":  "2f80607359e5249e33283b03a66d1d4b5bf57e8ac7958a08bd6b3b4ae7be3c47"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/1015.json",
+                      "bytes":  47278,
+                      "sha256":  "6827d4ec19ac3596ba6de014a95ff9f201b2bcf17811881347a0318525d1c323"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/142.json",
+                      "bytes":  26810,
+                      "sha256":  "01dc2aaaea2e7713412a452c2abe18d9f9f860f5a9e6efb29c4b559cc69483b1"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/247.json",
+                      "bytes":  32577,
+                      "sha256":  "4034debe0ed86c6df5e3f8c30e2c80f6c513ac6a87a223919989e61d05cd2f30"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/308.json",
+                      "bytes":  25343,
+                      "sha256":  "1cca906d03788470d567a83433260b6f6ed0af2b5dcf17189bd1ac8c230c6b32"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/472.json",
+                      "bytes":  34898,
+                      "sha256":  "16fea7d657016718a33e39fc65dd8f480946ac9461cf879979c51c2b78719961"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/528.json",
+                      "bytes":  35675,
+                      "sha256":  "5d294c4557c6b68ad8c90a90e0a8bfcae73ec367b9745b20aceb600f15c3e15c"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/58.json",
+                      "bytes":  25811,
+                      "sha256":  "fb3ce45ec3aac55582cd861591cca9f833ba239c23a49e2530976de173d50cd9"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/671.json",
+                      "bytes":  27706,
+                      "sha256":  "1d613463bf5f99e58113faa67e7ab4951ba94d6c6fc94f197ee33850a8122656"
+                  },
+                  {
+                      "path":  "reports/cuda_experiment_matrix/qwen3_8b_hybrid_20261001_133659/qwen3_8b_hybrid_20261001_133659_native_c30_b2_pilot12_pv3/batch/items/857.json",
+                      "bytes":  33608,
+                      "sha256":  "fac2fbd2c35adbab30e9c7c9d67c32a6a8193c8357afeaab7d2e1a404d768267"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/errors/128.json",
+                      "bytes":  2336,
+                      "sha256":  "7a2ba54a21e67debeebd6044d24d87fc73bcc91c8ed346cec66d8b08830f717d"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/errors/352.json",
+                      "bytes":  1381,
+                      "sha256":  "b9c9065634eaae5679bbb0e64f134f0d7eb8723b9091cb824b99d78c781ce501"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/errors/358.json",
+                      "bytes":  2295,
+                      "sha256":  "1649dad837ae2340ce9df747b3c59659be30f8843cf019fff7a3dc556e5a8bd5"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/errors/51.json",
+                      "bytes":  2335,
+                      "sha256":  "3509209bd30fd507a8f0c53666442a841fd3f0e4cc05d98e376fb5a84c046f9c"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/errors/60.json",
+                      "bytes":  2274,
+                      "sha256":  "0f6ca694f97ed67f4d5e695d3612541c58c1103152b4533402d32b961e7ca6a1"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/errors/600.json",
+                      "bytes":  2275,
+                      "sha256":  "a03cb9c6ffd1149ba32f6344a511eb675c185a89aea65faab67a76c8abc0fc98"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/errors/617.json",
+                      "bytes":  2336,
+                      "sha256":  "a955eb22d247b4817ba5dedcc1b601935f9c02dc33ccb9d7694cb72874663e8a"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/identity.json",
+                      "bytes":  485,
+                      "sha256":  "240542ae15b406f636f63c248393741e71c780c24d6794398a1bbb109bf3ad8e"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/128.json",
+                      "bytes":  468,
+                      "sha256":  "2fd9eba72575ab09c137c4d8e4782343af8a1ead8abc403c0ea24163ebb9a22a"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/290.json",
+                      "bytes":  29249,
+                      "sha256":  "c5253e92e1137c337a93343df2c329b9a1d3797a40031bfe5e394064e81441d6"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/308.json",
+                      "bytes":  24651,
+                      "sha256":  "4f8e0db4af68def0d31d8840675bad82cd224c6f87a836ca51165bf1509d03d2"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/352.json",
+                      "bytes":  470,
+                      "sha256":  "962ae87a68fc1aed53a006c9f077b527a5585d3c26427c09276f2018fbd68c5b"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/358.json",
+                      "bytes":  468,
+                      "sha256":  "5748de3abd84c91594c56c08c25f62d487a95bf307ac8bb32c3693783ac9bafb"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/487.json",
+                      "bytes":  28513,
+                      "sha256":  "198b1c982e22b0a3f9bcf19af772194c1bbc0941b530fcd14fed626867d8efc0"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/51.json",
+                      "bytes":  467,
+                      "sha256":  "530e36f75f04634d9e2fcfa65778c228a36366be8d65ea574c8c26719a80b017"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/528.json",
+                      "bytes":  32398,
+                      "sha256":  "e66287b3d847eac71e22102f665d885f13c25f8c48f540ae171c1077633a3695"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/58.json",
+                      "bytes":  22560,
+                      "sha256":  "a83e20e744e56748c80baac444dd191e969b079fdd5494124b0e568aa1dfef05"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/60.json",
+                      "bytes":  467,
+                      "sha256":  "b7b0e217145a8f6e1de36ba704871a210718067b5d5acccf9ee26a8feb2eab49"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/600.json",
+                      "bytes":  468,
+                      "sha256":  "314ecf650190fc5d8b6cfbab02c8767bb0306f14eb16249381f0361cf6e31481"
+                  },
+                  {
+                      "path":  "reports/decoder_diagnostic/qwen3_8b_hybrid_rerank_sample50_d1fda83/batch/items/617.json",
+                      "bytes":  468,
+                      "sha256":  "036ee9cb837175c90642fe3d3375263db86ca93a943eb37b000014372de58349"
+                  }
+              ]
+}

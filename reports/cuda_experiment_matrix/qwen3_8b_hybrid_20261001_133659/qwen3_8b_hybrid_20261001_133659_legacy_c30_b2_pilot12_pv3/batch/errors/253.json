@@ -1,0 +1,49 @@
+{
+  "id": 253,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 5438,
+          "output_tokens": 1024,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v3",
+          "prompt_sha256": "0cd843eedb6c6b3a0b7dfa344caec1ef23d1dfd664e3394619d746fd4cc1f0fe",
+          "max_new_tokens": 1024,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 1024,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"marco_normativo\": \"El marco normativo se basa en la Ley 1562 de 2012, el Código Sustantivo del Trabajo (Decreto 2663 de 1950) y la Sentencia SL-3385 de 2022. La Ley 1562 de 2012 define el accidente de trabajo como todo suceso repentino que sobrevenga por causa o con ocasión del trabajo, y que produzca en el trabajador una lesión orgánica, una perturbación funcional o psiquiátrica, una invalidez o la muerte. Además, se establece que se considera accidente de trabajo aquel que se produce durante el traslado de los trabajadores o contratistas desde su residencia a los lugares de trabajo o viceversa, cuando el transporte lo suministre el empleador. La Sentencia SL-3385 de 2022 reafirma esta definición y aclara que el simple traslado que realice un trabajador por sus propios medios no constituye accidente de trabajo. Por otro lado, el Código Sustantivo del Trabajo (Decreto 2663 de 1950) establece que el empleador debe prestar los primeros auxilios en caso de accidente o enfermedad, y que puede asegurar los riesgos por accidentes de trabajo y enfermedad profesional de sus trabajadores.\",\n  \"analisis\": \"Según la Ley 1562 de 2012, el accidente de trabajo se considera aquel que se produce durante el traslado de los trabajadores desde su residencia a los lugares de trabajo o viceversa, siempre que el transporte lo suministre el empleador. En el caso de Rodolfo Gómez, el traslado se realizó en un bus, pero no se especifica si el empleador suministró el transporte. La Sentencia SL-3385 de 2022 aclara que el simple traslado que realice un trabajador por sus propios medios no constituye accidente de trabajo. Por lo tanto, si el transporte no fue suministrado por el empleador, el accidente no se considera laboral. En cuanto a las prestaciones económicas y asistenciales, el Código Sustantivo del Trabajo (Decreto 2663 de 1950) establece que el empleador debe prestar los primeros auxilios en caso de accidente o enfermedad, y que puede asegurar los riesgos por accidentes de trabajo y enfermedad profesional de sus trabajadores. Sin embargo, si el accidente se produce por fuerza mayor o caso fortuito, el empleador sigue siendo responsable de las prestaciones económicas y asistenciales, ya que el seguro por riesgos profesionales debe cubrir estas situaciones.\",\n  \"jurisprudencia\": \"La Sentencia SL-3385 de 2022 establece que el simple traslado que realice un trabajador por sus propios medios no constituye accidente de trabajo. Además, la Corte Constitucional en Sentencia C-509 de 2014 declara EXEQUIBLE las expresiones \\\"o contratante\\\" y \\\"o contratista\\\" en la Ley 1562 de 2012.\",\n  \"conclusion\": \"Los accidentes ocurridos en el traslado de los trabajadores a su lugar de trabajo se reconocen como accidentes laborales solo si el transporte lo suministra el empleador. En el caso de Rodolfo Gómez, si el transporte no fue suministrado por el empleador, el accidente no se considera laboral. Quien responde por las prestaciones económicas y asistenciales que generan de un hecho de fuerza mayor o caso fortuito es el empleador, ya que debe prestar los primeros auxilios y puede asegurar los riesgos por accidentes de trabajo y enfermedad profesional de sus trabajadores.\",\n  \"pasajes_usados\": [\n    \"ley_1562_de_2012:00003:8ac383162212\",\n    \"sentencia_sl_3385_de_2022:00005:32e27c260a2f\",\n    \"codigo_sustantivo_trabajo:00201:bbc3196f1393\",\n    \"codigo_sustantivo_trabajo:00206:165ad45af47b",
+          "generation_ms": 138804.11789999926,
+          "peak_vram_bytes": 33762311168,
+          "peak_reserved_vram_bytes": 57069797376
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 178, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 186, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 159, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 242, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 100, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 181, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

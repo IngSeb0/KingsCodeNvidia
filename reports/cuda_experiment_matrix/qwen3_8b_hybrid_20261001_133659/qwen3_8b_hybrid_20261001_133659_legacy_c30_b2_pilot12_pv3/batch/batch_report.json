@@ -1,0 +1,171 @@
+{
+  "submission": "C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\reports\\cuda_experiment_matrix\\qwen3_8b_hybrid_20261001_133659\\qwen3_8b_hybrid_20261001_133659_legacy_c30_b2_pilot12_pv3\\batch\\submissions.jsonl",
+  "rows": 12,
+  "complete": true,
+  "duplicates": 0,
+  "schema_errors": 0,
+  "fallback_ids": [
+    253,
+    679
+  ],
+  "submission_sha256": "a09721e6e655210570ae82dff0b6f1f76cf2ad10aa276018830be2710e7aece4",
+  "counts": {
+    "resumed": 0,
+    "answered": 10,
+    "retried_ok": 0,
+    "fallback": 2
+  },
+  "identity": {
+    "decoder": [
+      "transformers:qwen3-8b",
+      "b968826d9c46dd6066d109eabc6255188de91218"
+    ],
+    "retrieval_mode": "option",
+    "k": 8,
+    "candidate_k": 30,
+    "reranker_batch_size": 2,
+    "native_option_fusion": false,
+    "prompt_version": "grounded-formats-v3",
+    "citation_fill": false,
+    "retriever": {
+      "mode": "hybrid",
+      "rerank": true,
+      "exact_locator": false,
+      "fixture_evidence": false,
+      "corpus_sha256": "0b9ecafdcf414672eade96e9d7987a22027f3146c789ea8141e30b43fd5cea9e"
+    },
+    "graph_policy": "router",
+    "plans": null,
+    "questions_sha256": "efb00bef0b2471f0883249b9b3209dd33d8a3f2be7414963537cf09a636a8dc4"
+  },
+  "diagnostics": {
+    "questions": 12,
+    "abstention_source": {
+      "decoder": {
+        "n": 1,
+        "rate": 0.08333333333333333
+      },
+      "none": {
+        "n": 9,
+        "rate": 0.75
+      },
+      "pipeline_error": {
+        "n": 2,
+        "rate": 0.16666666666666666
+      }
+    },
+    "attribution_status": {
+      "explicit": {
+        "n": 9,
+        "rate": 0.75
+      },
+      "none": {
+        "n": 2,
+        "rate": 0.16666666666666666
+      },
+      "not_applicable": {
+        "n": 1,
+        "rate": 0.08333333333333333
+      }
+    },
+    "abstentions": 3,
+    "abstention_reasons": {
+      "pipeline_error": 2,
+      "unspecified": 1
+    },
+    "abstentions_by_format": {
+      "open_ended": 2,
+      "semi_open": 1
+    },
+    "normalization_action": {
+      "none": {
+        "n": 10,
+        "rate": 0.8333333333333334
+      }
+    },
+    "repair_actions": {
+      "suppressed_fragment": 8,
+      "suppressed_sentence": 14
+    },
+    "pipeline_error_codes": {
+      "INVALID_MODEL_OUTPUT": 2
+    },
+    "format_warnings": {
+      "open_ended_analysis_sentences_outside_5_8": {
+        "n": 1,
+        "rate": 0.08333333333333333
+      }
+    },
+    "field_coercions": {
+      "inferred_abstencion_false_from_complete_answer": {
+        "n": 4,
+        "rate": 0.3333333333333333
+      }
+    },
+    "citations_before_repair": 67,
+    "citations_after_repair": 52,
+    "citation_guard_fallback_rate": 0.0,
+    "supported_citations": 52,
+    "unsupported_citations": 0,
+    "citation_support_rate": 1.0,
+    "input_tokens": 51739,
+    "output_tokens": 3909,
+    "generation_ms_p50": 108701.61759999974,
+    "generation_ms_p95": 895713.6580000005,
+    "retrieval_ms_p50": 3747.562900000048,
+    "retrieval_ms_p95": 7966.508299999987,
+    "peak_reserved_vram_gb": 53.2,
+    "rerank_skipped": 0,
+    "retrieval_profile_samples": 11,
+    "retrieval_stage_ms": {
+      "bm25_ms": {
+        "p50": 25.571,
+        "p95": 39.435,
+        "sum": 250.675
+      },
+      "dense_ms": {
+        "p50": 121.752,
+        "p95": 914.374,
+        "sum": 2047.394
+      },
+      "fusion_ms": {
+        "p50": 0.08,
+        "p95": 0.269,
+        "sum": 1.228
+      },
+      "locator_ms": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "sum": 0.0
+      },
+      "graph_ms": {
+        "p50": 0.0,
+        "p95": 0.192,
+        "sum": 0.192
+      },
+      "reranker_ms": {
+        "p50": 1223.92,
+        "p95": 2981.515,
+        "sum": 16504.408
+      },
+      "rerank_skip_recovery_ms": {
+        "p50": null,
+        "p95": null,
+        "sum": null
+      },
+      "total_ms": {
+        "p50": 1459.4,
+        "p95": 3029.78,
+        "sum": 18805.282
+      }
+    },
+    "dense_query_encodes": 10,
+    "dense_encode_batches": 10,
+    "reranker_pairs": 332,
+    "reranker_batches": 166,
+    "native_option_fusion_questions": 0,
+    "note": "Label-free diagnostics; no thresholds derived from the official 50."
+  },
+  "seconds": 4297.751081900002,
+  "finished_at": "2026-10-01T19:48:52.268829+00:00"
+}

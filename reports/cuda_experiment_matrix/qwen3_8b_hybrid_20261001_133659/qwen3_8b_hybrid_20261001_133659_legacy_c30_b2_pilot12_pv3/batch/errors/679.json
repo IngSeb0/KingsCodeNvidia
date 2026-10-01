@@ -1,0 +1,51 @@
+{
+  "id": 679,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 7079,
+          "output_tokens": 1024,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v3",
+          "prompt_sha256": "0cd843eedb6c6b3a0b7dfa344caec1ef23d1dfd664e3394619d746fd4cc1f0fe",
+          "max_new_tokens": 1024,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 7,
+          "evidence_dropped_for_context": [
+            "sentencia_t_323_de_2024:00036:a214d74be9f6"
+          ],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 1024,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"marco_normativo\": \"El derecho a la salud está consagrado en el artículo 49 de la Constitución Política de Colombia, el cual establece que la atención en salud es un servicio público a cargo del Estado, y debe ser prestada conforme a los principios de eficiencia, universalidad y solidaridad. Además, el derecho a la salud es desarrollado y protegido por instrumentos internacionales, entre los cuales se encuentra la Declaración Universal de los Derechos Humanos, el Protocolo Adicional a la Convención Americana sobre Derechos Humanos y el PIDESC. La Ley Estatutaria de Salud 1751 de 2015 (LES) establece lineamientos esenciales para la comprensión del derecho a la salud en Colombia. Por otro lado, el derecho a la información sobre el estado de salud está regulado en el artículo 2.8.1.5.14 del Decreto 780 de 2016, el cual establece que toda persona tiene derecho a obtener información necesaria sobre su enfermedad, así como sobre los procedimientos y tratamientos que se le vayan a practicar.\",\n  \"analisis\": \"La Corte Constitucional ha precisado que la protección a la salud abarca una amplia gama de factores socioeconómicos, incluyendo el acceso a servicios y tecnologías en salud. En la Sentencia SU-475 de 2023, se establece que el ámbito de protección del derecho a la salud comprende componentes esenciales, derechos de los usuarios y obligaciones del Estado. La LES establece que los componentes del derecho a la salud son la disponibilidad, aceptabilidad, calidad y accesibilidad. Además, el derecho a la información sobre el estado de salud está regulado en el Decreto 780 de 2016, el cual garantiza que toda persona tenga derecho a obtener información necesaria sobre su enfermedad, así como sobre los procedimientos y tratamientos que se le vayan a practicar. La Superintendencia de Industria y Comercio (SIC) tiene funciones relacionadas con la protección de datos personales, incluyendo la posibilidad de ordenar el acceso, la rectificación, la actualización o la supresión de datos personales, según lo establecido en la Sentencia C-748 de 2011. En este contexto, la SIC puede acceder a los datos en salud de la población colombiana con diagnóstico de esclerosis múltiple para producir el medicamento en Colombia y garantizar los derechos de los pacientes, siempre que se respeten los principios de protección de la información personal y los derechos constitucionales de los usuarios.\",\n  \"jurisprudencia\": \"La Corte Constitucional ha establecido que el derecho a la salud abarca una amplia gama de factores socioeconómicos, incluyendo el acceso a servicios y tecnologías en salud. En la Sentencia SU-475 de 2023, se establece que el ámbito de protección del derecho a la salud comprende componentes esenciales, derechos de los usuarios y obligaciones del Estado. La Corte también ha establecido que el derecho a la información sobre el estado de salud está regulado en el Decreto 780 de 2016, el cual garantiza que toda persona tenga derecho a obtener información necesaria sobre su enfermedad, así como sobre los procedimientos y tratamientos que se le vayan a practicar. Además, en la Sentencia C-748 de 2011, se establece que la Superintendencia de Industria y Comercio tiene funciones relacionadas con la protección de datos personales, incluyendo la posibilidad de ordenar el acceso, la rectificación, la actualización o la supresión de datos personales.\",\n  \"conclusion\": \"La SIC puede acceder a los datos en salud de la población colombiana con diagnóstico de esclerosis múltiple a fin de producir el medicamento en Colombia y garantizar los derechos de los pacientes, siempre que se respeten los principios de protección de la información personal y los derechos constitucionales de los usuarios. Esta acción debe estar fundamentada en el derecho a la salud, el derecho a la información sobre el estado de salud y los principios de protección de la información personal establecidos en la Constitución Política de Colombia, la LES y el Decreto 780 de 2016.\",\n  \"pasajes_usados\": [\n    \"sentencia_t_323_de_2024:00083:30e4e830",
+          "generation_ms": 2248882.597099997,
+          "peak_vram_bytes": 35234736128,
+          "peak_reserved_vram_bytes": 57069797376
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 178, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 186, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 159, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 242, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 100, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ls.contreras\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 181, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}
