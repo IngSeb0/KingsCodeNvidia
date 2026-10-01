@@ -1,0 +1,52 @@
+{
+  "id": 51,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 6835,
+          "output_tokens": 512,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v4",
+          "prompt_sha256": "6f5f9424e32e72deb73abc934ed1ad5a84168f5e19847f8e7f578ddfeddfe628",
+          "max_new_tokens": 512,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 6,
+          "evidence_dropped_for_context": [
+            "sentencia_c_259_de_2015:00009:1a0174281fcf",
+            "sentencia_su_429_de_2024:00011:94c8dade2af9"
+          ],
+          "effective_generation_config": {
+            "do_sample": false,
+            "temperature": 0.0,
+            "num_beams": 1,
+            "top_p": 1.0,
+            "top_k": 0,
+            "max_new_tokens": 512,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"abstencion\": false,\n  \"justificacion\": \"La acción de grupo se define como un mecanismo judicial que permite a un conjunto de personas afectadas por un mismo hecho, que les causa perjuicios individuales derivados de una causa común, presentar una demanda colectiva. Esto se fundamenta en la Sentencia SU-429 de 2024, donde se menciona que la acción de grupo se aplica en casos donde se persigue el reconocimiento y pago de un daño atribuible al Estado por su participación en un crimen de lesa humanidad. Además, se establece que la acción de grupo tiene como finalidad la reparación integral de las víctimas de desplazamiento forzado, lo cual implica que el daño afecta a un conjunto de personas con perjuicios individuales derivados de una causa común. Por lo tanto, la opción C se alinea con esta definición.\",\n  \"respuesta_correcta\": \"C\",\n  \"descarte_opciones\": {\n    \"A\": \"La opción A se refiere a la protección de derechos fundamentales individuales de aplicación inmediata, lo cual no se corresponde con la definición de la acción de grupo, que se enfoca en perjuicios colectivos.\",\n    \"B\": \"La opción B menciona el interés colectivo ambiental o del espacio público, lo cual no se aborda en la evidencia proporcionada, que se centra en casos de desplazamiento forzado y reparación integral.\",\n    \"D\": \"La opción D se refiere a la declaración de inconstitucionalidad de una norma con fuerza de ley, lo cual no es el enfoque de la acción de grupo, que se centra en la protección de derechos fundamentales de un grupo de personas afectadas por un mismo hecho.\"\n  },\n  \"pasajes_usados\": [\n    \"sentencia_su_429_de_2024:00037:107e51e4d8bb\",\n    \"sentencia_su_429_de_2024:00061:860f569e5e39\",\n    \"sentencia_su_429_de_2024:00001:c6f8eb4a737f\"\n  ]\n",
+          "generation_ms": 22180.303500001173,
+          "peak_vram_bytes": 18870809600,
+          "peak_reserved_vram_bytes": 19144900608
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 178, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used)\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 186, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 159, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 102, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 228, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill)\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 100, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 181, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

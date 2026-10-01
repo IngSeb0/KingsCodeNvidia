@@ -1,0 +1,110 @@
+{
+  "submission": "reports\\decoder_diagnostic\\qwen3-8b_bm25_pv4_fill_20261001_131500\\batch\\submissions.jsonl",
+  "rows": 50,
+  "complete": true,
+  "duplicates": 0,
+  "schema_errors": 0,
+  "fallback_ids": [
+    51,
+    617
+  ],
+  "submission_sha256": "4448902b9f08461e7916d800fadc86198dd637283f4072a2bf4fe10098182582",
+  "counts": {
+    "resumed": 0,
+    "answered": 48,
+    "retried_ok": 0,
+    "fallback": 2
+  },
+  "identity": {
+    "decoder": [
+      "transformers:qwen3-8b",
+      "b968826d9c46dd6066d109eabc6255188de91218"
+    ],
+    "retrieval_mode": "option",
+    "k": 8,
+    "prompt_version": "grounded-formats-v4",
+    "citation_fill": true,
+    "retriever": {
+      "mode": "bm25",
+      "rerank": false,
+      "exact_locator": false,
+      "fixture_evidence": false,
+      "corpus_sha256": "dae54b39d80fd413f99ac4644f1cf08a11a4b6603414ece2d008c40d5c70fbbf"
+    },
+    "graph_policy": "router",
+    "plans": null,
+    "questions_sha256": "5748d60612843eee116a7ac169be8e087241bc99db6e2294a5926a802d13c03e"
+  },
+  "diagnostics": {
+    "questions": 50,
+    "abstention_source": {
+      "citation_repair": {
+        "n": 1,
+        "rate": 0.02
+      },
+      "none": {
+        "n": 47,
+        "rate": 0.94
+      },
+      "pipeline_error": {
+        "n": 2,
+        "rate": 0.04
+      }
+    },
+    "attribution_status": {
+      "explicit": {
+        "n": 47,
+        "rate": 0.94
+      },
+      "malformed": {
+        "n": 1,
+        "rate": 0.02
+      },
+      "none": {
+        "n": 2,
+        "rate": 0.04
+      }
+    },
+    "normalization_action": {
+      "none": {
+        "n": 48,
+        "rate": 0.96
+      }
+    },
+    "repair_actions": {
+      "emptied": 2,
+      "renamed_to_evidence_name": 80,
+      "rewritten_to_body": 2,
+      "suppressed_fragment": 47,
+      "suppressed_sentence": 57
+    },
+    "pipeline_error_codes": {
+      "INVALID_MODEL_OUTPUT": 2
+    },
+    "format_warnings": {
+      "open_ended_analysis_sentences_outside_5_8": {
+        "n": 1,
+        "rate": 0.02
+      },
+      "semi_open_sentences_outside_3_5": {
+        "n": 10,
+        "rate": 0.2
+      }
+    },
+    "field_coercions": {},
+    "citations_before_repair": 267,
+    "citations_after_repair": 391,
+    "citation_guard_fallback_rate": 0.0,
+    "input_tokens": 296672,
+    "output_tokens": 16511,
+    "generation_ms_p50": 12461.806200000865,
+    "generation_ms_p95": 34340.84100000109,
+    "retrieval_ms_p50": 26.481900000362657,
+    "retrieval_ms_p95": 104.4977999990806,
+    "peak_reserved_vram_gb": 17.8,
+    "rerank_skipped": 0,
+    "note": "Label-free diagnostics; no thresholds derived from the official 50."
+  },
+  "seconds": 780.8231751999992,
+  "finished_at": "2026-10-01T18:28:54.854699+00:00"
+}
