@@ -20,6 +20,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import threading
 from time import perf_counter
 import traceback
 
@@ -75,6 +76,42 @@ def _valid_checkpoint(path: Path, question: Question):
         return None
 
 
+def _gpu_note() -> str:
+    """VRAM in use by this process, only if torch is already loaded (never imports it)."""
+    torch = sys.modules.get("torch")
+    try:
+        if torch is not None and torch.cuda.is_available():
+            return f" | VRAM reservada {torch.cuda.memory_reserved() / 2**30:.1f} GB"
+    except Exception:
+        pass
+    return ""
+
+
+class _Heartbeat:
+    """Prints a line every `every` seconds while one item is being generated, so a slow or
+    stuck item (VRAM spilled to shared memory by another Windows session) is never silent.
+    Output only: it does not touch the pipeline, its inputs or its results."""
+
+    def __init__(self, label: str, every: float = 30.0):
+        self.label, self.every, self.stop = label, every, threading.Event()
+        self.started = perf_counter()
+        self.thread = threading.Thread(target=self._run, daemon=True)
+
+    def _run(self):
+        while not self.stop.wait(self.every):
+            print(f"[batch]    {self.label} sigue generando: {perf_counter() - self.started:.0f} s{_gpu_note()}",
+                  file=sys.stderr, flush=True)
+
+    def __enter__(self):
+        self.thread.start()
+        return self
+
+    def __exit__(self, *exc):
+        self.stop.set()
+        self.thread.join(timeout=1)
+        return False
+
+
 class BatchRunner:
     def __init__(self, pipeline, run_dir: Path, *, identity: dict | None = None, retries: int = 2):
         if type(retries) is not int or not 0 <= retries <= 2:
@@ -126,7 +163,8 @@ class BatchRunner:
             # is visible immediately instead of a silent console until the item finishes.
             print(f"[batch] -> {sum(counts.values()) + 1}/{len(questions)} id={question.id} {question.format} generando...",
                   file=sys.stderr, flush=True)
-            row, trace, errors = self._attempt(question)
+            with _Heartbeat(f"id={question.id}"):
+                row, trace, errors = self._attempt(question)
             status = "ok"
             if errors:
                 atomic_write_text(self.run_dir / "errors" / f"{question.id}.json",

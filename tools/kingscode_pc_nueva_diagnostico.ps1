@@ -321,7 +321,10 @@ if ($ExactLocator) { $CommonArgs += "--exact-locator" }
 if ($CitationFill) { $CommonArgs += "--citation-fill" }
 if ($CiteMentions -gt 0) { $CommonArgs += @("--cite-mentions", [string]$CiteMentions) }
 if ($DocCap -gt 0) { $CommonArgs += @("--doc-cap", [string]$DocCap) }
-if ($MaxContext -gt 0) { $CommonArgs += @("--max-context", [string]$MaxContext) }
+if ($MaxContext -gt 0) {
+    Warn "-MaxContext $MaxContext es EXPERIMENTAL: prompts de hasta ~12k tokens pueden desbordar la VRAM de 24 GB (la atencion determinista no cabe) y la corrida se vuelve casi congelada. Si [batch] muestra sigue generando > 120 s por pregunta, cortar con Ctrl+C."
+    $CommonArgs += @("--max-context", [string]$MaxContext)
+}
 $PlanSeconds = 0
 if ($RetrievalMode -eq "option_plan") {
     # Frozen query plans (Qwen planner, public question text only) for the free-text questions.

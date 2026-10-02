@@ -6,8 +6,8 @@
 # La verificacion en vivo se hace solo en la configuracion final (sin -SkipVerify).
 #
 # Uso (2026-10-02 noche: experimentos sobre la configuracion final 37,46/50):
-#   PC #1:  powershell -ExecutionPolicy Bypass -File tools\kingscode_variantes.ps1 -Pc 1 -Pull   (ctx16k y despues v6_ctx16k)
-#   PC #2:  powershell -ExecutionPolicy Bypass -File tools\kingscode_variantes.ps1 -Pc 2 -Pull   (option_plan y despues doccap3)
+#   PC #1:  powershell -ExecutionPolicy Bypass -File tools\kingscode_variantes.ps1 -Pc 1 -Pull   (v6 y despues doccap3)
+#   PC #2:  powershell -ExecutionPolicy Bypass -File tools\kingscode_variantes.ps1 -Pc 2 -Pull   (option_plan)
 #   Al final: tabla de esta tanda + proxy de RAGAS (ROUGE-1/BLEU-4/legibilidad, sin credito) + taxonomia.
 #   powershell -ExecutionPolicy Bypass -File tools\kingscode_variantes.ps1
 #   ... -Variantes prompt_v4,citas            (solo esas)
@@ -23,7 +23,8 @@
 #   v6              -Recomendada -PromptVersion v6           (prompt de razonamiento juridico; ~15 min)
 #   option_plan     -Recomendada -RetrievalMode option_plan  (planner Qwen para texto libre; ~20 min)
 #   doccap3         -Recomendada -DocCap 3                   (max 3 pasajes por documento; ~15 min)
-#   ctx16k          -Recomendada -MaxContext 16384           (el modelo ve los 8 pasajes: hoy 22/50 prompts recortan evidencia)
+#   ctx16k          -Recomendada -MaxContext 16384           (EXPERIMENTAL: con prompts de ~12k tokens la atencion puede desbordar
+#                   la VRAM y quedar casi congelada; NO esta en la tanda por defecto)
 #   v6_ctx16k       -Recomendada -PromptVersion v6 -MaxContext 16384 (v6 necesita 16k: con 8k recorta pasajes en 30/50)
 # =====================================================================
 param(
@@ -37,7 +38,7 @@ $ErrorActionPreference = "Continue"
 # With powershell -File, "a,b,c" arrives as ONE string: split it here.
 $Variantes = @($Variantes | ForEach-Object { $_ -split "," } | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 if (-not $Variantes) {
-    $Variantes = switch ($Pc) { "1" { @("ctx16k", "v6_ctx16k") } "2" { @("option_plan", "doccap3") } default { @("ctx16k", "v6_ctx16k", "option_plan", "doccap3") } }
+    $Variantes = switch ($Pc) { "1" { @("v6", "doccap3") } "2" { @("option_plan") } default { @("v6", "option_plan", "doccap3") } }
 }
 Set-Location $Work
 if ($Pull) { git pull --ff-only origin main }
