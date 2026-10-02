@@ -9,7 +9,8 @@
 # <carpeta compartida>: una ruta que vean los dos PCs (OneDrive sincronizado, carpeta de red o USB).
 # La fuente deja ahi el respaldo del corpus; el destino espera a que aparezca, lo restaura y verifica.
 # Despues cada PC corre su mitad de las pruebas contra la base 39,02 y muestra la tabla final.
-#   fuente : v6, doccap3            destino: recomendada (debe reproducir 39,02), option_plan
+#   fuente : v6, doccap3            destino: v6 (debe dar EXACTAMENTE lo mismo que la fuente), option_plan
+#   v6 es la mejor version medida (38,08 vs 37,46 con el mismo corpus); base = v4 con el corpus nuevo (39,02).
 # El respaldo de la fuente es tambien el respaldo para el sabado.
 # =====================================================================
 param(
@@ -58,7 +59,7 @@ if ($Rol -eq "fuente") {
     Start-Sleep -Seconds 20   # deja terminar la sincronizacion del tar.gz
     powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\kingscode_snapshot.ps1 -Accion restaurar -Origen $Compartida
     if ($LASTEXITCODE -ne 0) { throw "la restauracion o la verificacion del corpus fallo (copia incompleta o corrupta: repetir cuando termine de sincronizar)" }
-    if (-not $Variantes) { $Variantes = @("recomendada", "option_plan") }
+    if (-not $Variantes) { $Variantes = @("v6", "option_plan") }
 }
 
 Paso "4. Pruebas contra la base $Base : $($Variantes -join ', ')"
@@ -67,5 +68,5 @@ $p = Start-Process -FilePath "powershell.exe" -NoNewWindow -Wait -PassThru -Argu
     "-Variantes", ($Variantes -join ","), "-Base", [string]$Base)
 Write-Host ""
 Write-Host "Listo ($Rol). Pegar la tabla final y las lineas del proxy y de alineacion de citas." -ForegroundColor Green
-if ($Rol -eq "destino") { Write-Host "'recomendada' debe dar ${Base}; si coincide, los dos PCs son intercambiables (sabado: repartir las 992 y verificar en cualquiera)." -ForegroundColor Green }
+Write-Host "v6 debe dar el MISMO total y el mismo submission_sha256 en los dos PCs: si coincide, son intercambiables (sabado: repartir las 992 y verificar en cualquiera)." -ForegroundColor Green
 Write-Host "Respaldo del corpus para el sabado: $Compartida (copiarlo tambien a una USB)." -ForegroundColor Green
