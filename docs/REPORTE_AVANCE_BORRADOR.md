@@ -17,15 +17,15 @@ Resultado de `python scripts/evaluate.py --submission <corrida>/submissions.json
 | Componente | Puntos obtenidos | Puntos posibles |
 |---|---:|---:|
 | Exactitud en cerradas | 12,00 (9/15) | 20 |
-| Calidad de citación | 17,14 (recall ponderado 0,86; **0 citas sin respaldo**) | 20 |
-| Abstención calibrada | 7,79 | 10 |
-| **Total automático sin RAGAS** | **36,93** | **50** |
+| Calidad de citación | 17,55 (recall ponderado 0,88; **0 citas sin respaldo**) | 20 |
+| Abstención calibrada | 7,91 | 10 |
+| **Total automático sin RAGAS** | **37,46** | **50** |
 | Corrección RAGAS (juez oficial, medida una vez) | 12,82 (correctness 0,4275) | 30 |
-| **Total automático con RAGAS** | **≈ 49,75** (48,00 medido en la corrida anterior) | **80** |
+| **Total automático con RAGAS** | **≈ 50,3** (48,00 medido en una corrida anterior) | **80** |
 
 Observaciones sobre el resultado:
 
-Configuración medida: Qwen3-8B (BF16, temperatura 0) + BM25 + router de grafo, k = 8, prompt `grounded-formats-v4`, citas completadas con evidencia verificada y citas a nivel de norma para normas mencionadas en los pasajes recuperados. Partimos de 26,63 el 1 de octubre. RAGAS se midió una sola vez con el juez oficial sobre la corrida anterior (35,18 sin RAGAS → 48,00/80); la corrida actual solo cambió citas y corpus, que RAGAS no lee directamente, por lo que el total con RAGAS es una estimación. Probamos además híbrido BM25 + denso con reranker y locator exacto: 36,59/50 a 19,1 s/pregunta, sin mejora y más lento, así que no se adopta. Ninguna cita queda sin respaldo en la evidencia recuperada: una guarda determinista repara o suprime toda cita no respaldada. Dos corridas completas dieron un `submissions.jsonl` idéntico byte a byte, lo que respalda la verificación en vivo.
+Configuración medida: Qwen3-8B (BF16, temperatura 0) + BM25 + router de grafo, k = 8, prompt `grounded-formats-v4`, citas completadas con evidencia verificada y hasta 5 citas a nivel de norma para normas mencionadas en los pasajes recuperados; 0 preguntas caen en el respaldo de abstención. Partimos de 26,63 el 1 de octubre. La misma configuración dio 37,46 en dos computadores distintos (con 8 y con 10 pasajes). RAGAS se midió una sola vez con el juez oficial sobre la corrida anterior (35,18 sin RAGAS → 48,00/80); la corrida actual solo cambió citas y corpus, que RAGAS no lee directamente, y un proxy local con el mismo encoder del evaluador la ubica igual o ligeramente por encima; por eso el total con RAGAS es una estimación. Evaluamos también ALIA Legal 7B como decoder alternativo: no produjo salidas válidas con nuestro formato (5/50) y se descartó. Probamos además híbrido BM25 + denso con reranker y locator exacto: 36,59/50 a 19,1 s/pregunta, sin mejora y más lento, así que no se adopta. Ninguna cita queda sin respaldo en la evidencia recuperada: una guarda determinista repara o suprime toda cita no respaldada. Dos corridas completas dieron un `submissions.jsonl` idéntico byte a byte, lo que respalda la verificación en vivo.
 
 ## 2. Estado del corpus
 
@@ -51,5 +51,5 @@ Fuentes consultadas: Función Pública – Gestor Normativo (68 documentos), rel
 ## 4. Riesgos identificados
 
 1. **RAGAS es el componente más bajo (0,43 frente a 0,45 de referencia).** Las respuestas semiabiertas deben ser más directas y las abiertas más completas en conclusión y análisis; lo mejoramos con un proxy local gratuito (mismo encoder del evaluador) y volveremos a medir con el juez solo la configuración final.
-2. **Tiempo de ejecución.** Hoy son 15,9 s/pregunta (≈ 4,4 h para 992, en una ventana de 6 h). Mitigación: checkpoints por pregunta con reanudación, alarma si una configuración pasa de 20 s/pregunta, y ninguna técnica nueva sin medir su costo.
+2. **Tiempo de ejecución.** Hoy son 16,4 s/pregunta (≈ 4,5 h para 992, en una ventana de 6 h). Mitigación: checkpoints por pregunta con reanudación, alarma si una configuración pasa de 20 s/pregunta, y ninguna técnica nueva sin medir su costo.
 3. **Corpus y reproducibilidad de fuentes.** Al volver a descargar las fuentes oficiales, 67 de 163 documentos cambiaron; por eso el índice se congela como snapshot (hashes por archivo) y se publica con licencia abierta. La cobertura de procedimiento y derecho de los mercados es la más delgada.

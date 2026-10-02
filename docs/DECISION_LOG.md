@@ -849,3 +849,11 @@ Detalle en `docs/ANALISIS_CORRIDAS_2026-10-01.md`.
 - **ALIA Legal 7B** (`alia-legal-7b_bm25_..._20261002_123339`, PC #1): 50/50 fallback a abstención → 5,00/50, 24,5 s/pregunta (una pregunta con contexto de 10.600 tokens > 8.192). No apto; se descarta. (El paso [6b] falla con `--only` vacío cuando todas son fallback; cosmético.)
 - **Menciones 3 → 5** (replay sin GPU sobre `115609`, misma salida cruda y evidencia): 36,81 → **37,46** (citas 17,14 → 17,55; abstención 7,67 → 7,91). 8 = 5 (satura). Solo toca `referencia_legal`/`justificacion`, que RAGAS no lee en semiabiertas ni cerradas. `-Recomendada` usa ahora 5.
 - **`-K`** (1–10, por defecto 8) en `kingscode_pc_nueva_diagnostico.ps1`: el evaluador mira los 10 primeros pasajes; el prompt ya recorta por presupuesto de contexto sin reordenar. Experimento: `-Recomendada -K 10` frente a `-Recomendada`.
+
+## 2026-10-02 (tarde) — Configuración final del día: `-Recomendada` (k = 8, 5 menciones) = 37,46/50
+
+- PC #1 `qwen3-8b_bm25_c30_rb2_gb10_pv4_fill_men5_20261002_130759` (k = 8): **37,46/50** sin RAGAS (cerradas 12,00; citas 17,55, recall 0,878, 0 sin respaldo; abstención 7,91), 0 fallbacks, 16,4 s/pregunta → 4,52 h para 992, verificación en vivo coincide.
+- PC #2 `qwen3-8b_bm25_k10_c30_rb2_gb10_pv4_fill_men5_20261002_130450` (k = 10): 37,46/50 idéntico por componente, 16,7 s/pregunta. k = 10 no aporta: queda k = 8.
+- El replay sin GPU había predicho exactamente 37,46: el replay es confiable para cambios de post-proceso.
+- `docs/REPORTE_AVANCE_BORRADOR.md` actualizado (37,46/50; con RAGAS ≈ 50,3/80, estimado).
+- Riesgo detectado: el `passages.jsonl` descargado difiere entre PCs (#2 `a91236e4…`, #1 `2956bf2d…` en la corrida de ALIA). Para el sábado se debe usar UN snapshot congelado copiado a ambas máquinas.
