@@ -52,6 +52,7 @@ param(
     [string]$RunName = "",
     [ValidateSet("v01+v02", "v01")] [string]$CorpusSet = "v01+v02",
     [switch]$AllowKnownLocalCorpusDrift,
+    [switch]$AllowBusyGpu,   # no detenerse si otra sesion/proceso ya ocupa la VRAM
     [ValidateSet("bm25", "dense", "hybrid")] [string]$RetrieverMode = "bm25",
     [ValidateRange(1, 500)] [int]$CandidateK = 30,
     [ValidateRange(1, 10)] [int]$K = 8,
@@ -287,6 +288,19 @@ if (-not $SkipSmoke) {
 
 # ---------------------------------------------------------------------
 Step "[6] Diagnostico sample_50: $Model + $RetrieverMode (k=$K) + router, guardas (sin seleccion)"
+# Busy GPU check (2026-10-02): another Windows session (e.g. a Streamlit UI with Qwen loaded) keeps
+# ~18 GB of VRAM; the run then spills to shared memory and crawls with NO error and no [batch] line.
+try {
+    $Gpu = (& nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | Select-Object -First 1) -split ","
+    $UsedMiB = [int]$Gpu[0].Trim(); $TotalMiB = [int]$Gpu[1].Trim()
+    Write-Host "VRAM ocupada antes de empezar: $UsedMiB / $TotalMiB MiB"
+    if ($UsedMiB -gt 3000) {
+        & nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+        $Msg = "La GPU ya tiene $UsedMiB MiB ocupados por otro proceso o sesion (lista arriba; los de otra sesion de Windows pueden no aparecer). Cierra la interfaz/corrida que la usa o cierra la sesion del otro usuario (query user / logoff <ID>)."
+        if (-not $AllowBusyGpu) { throw "STOP: $Msg Para correr igual: -AllowBusyGpu." }
+        Warn $Msg
+    }
+} catch [System.Management.Automation.CommandNotFoundException] { Warn "nvidia-smi no disponible: no se pudo comprobar la VRAM libre." }
 $Run = "$Out\batch"
 if ($ExactLocator -and -not $Rerank) {
     # A's Retriever adds locator candidates to the pool but orders by BM25/fused score: a locator-only
