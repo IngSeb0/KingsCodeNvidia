@@ -96,3 +96,8 @@ Source-page caveat: the current JEP `/preguntas` page is mixed-edition and retai
 - Extended ranking reports with Candidate@30 metrics, candidate duplication diagnostics, execution identity, synchronous per-query timing, and correctly scoped initialization/total timings. Added a fail-closed invariant for duplicate or missing indexed `passage_id` values.
 - Preregistered the maximum-two shortlist rule in `docs/experiments/KC_COL_IR_CUJ2026_SHORTLIST_V1.json`; Javeriana validation remains unparsed, so independent validation is not ready.
 - `CUDA_READY=false`; no C0-C3, retrieval, CUDA, validation scoring, decoder, or tests were run in this continuation. Next exact action on the target machine: restore the frozen profile and pinned tokenizers, run `python tools/audit_kc_col_ir_tokens.py`, then complete the target-runtime handoff. The upstream handoff's stop-before-ranking instruction remains in force.
+## 2026-10-02 — Regresión de extracción y aviso editorial (sin reconstruir snapshot)
+
+`kingscode/corpus_v02.py` ahora reconoce un encabezado `Artículo N` separado de un cuerpo que empieza directamente con palabras. Un aviso editorial de derogación junto al encabezado del propio artículo queda trazado en `publisher_repeal_notice` y excluye esa unidad del índice ordinario v0.2. Las referencias incidentales a derogaciones de terceros permanecen sin ese efecto. El parser lleva identificador `legal-blocks-v02-audit-2`.
+
+Verificado: `python -m pytest tests/test_corpus_v02.py tests/test_member_b_gpu_findings.py -q` (35 pruebas). Pendiente: reconstruir v0.2 desde raw oficial, revisar cada exclusión y vigencia con fecha, medir cobertura y el resultado end-to-end. El corpus-v0.1 y los artefactos oficiales no se tocaron.

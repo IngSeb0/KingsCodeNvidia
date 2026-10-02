@@ -116,6 +116,7 @@ class CorpusV02SourceRepairTests(unittest.TestCase):
         blocks = (FIXTURES / "p02_ley137_articles.txt").read_text(encoding="utf-8-sig").splitlines()
         joined = join_split_article_headings(blocks)
         self.assertEqual(len(joined), 2)
+        self.assertEqual(len(join_split_article_headings(["Artículo 40", "CAPÍTULO IV", "Artículo 41"])), 3)
         self.assertTrue(str(joined[0]).startswith("Artículo 40 . Concepto favorable"))
         source = "<html><body><div class=\"descripcion-contenido\">" + "".join(f"<p>{b}</p>" for b in blocks) + "</div></body></html>"
         _, passages, _, _, _ = parse_document_v02(
@@ -124,6 +125,53 @@ class CorpusV02SourceRepairTests(unittest.TestCase):
             source.encode("utf-8"),
         )
         self.assertEqual([p["article"] for p in passages], ["40", "41"])
+
+    def test_split_heading_without_leading_punctuation(self):
+        blocks = ["Artículo 40", "Concepto favorable del Senado para una decisión.",
+                  "Artículo 41", "La autoridad deberá motivar el acto."]
+        joined = join_split_article_headings(blocks)
+        self.assertEqual(len(joined), 2)
+        source = "<html><body><div class='descripcion-contenido'>" + "".join(f"<p>{b}</p>" for b in blocks) + "</div></body></html>"
+        _, passages, _, _, _ = parse_document_v02(
+            meta("ley_demo", "law", "Ley Demo", "1", 2024,
+                 ["ley", "1", "2024"], "https://www.funcionpublica.gov.co/"), source.encode())
+        self.assertEqual([p["article"] for p in passages], ["40", "41"])
+
+    def test_explicit_publisher_repeal_excludes_only_its_article(self):
+        source = ("<html><body><div class='descripcion-contenido'><p>ARTÍCULO 76. Derogado por el artículo 1 de la Ley 2 de 2011.</p>"
+                  "<p>Texto anterior extenso.</p><p>ARTÍCULO 77. Esta regla sigue en el texto.</p>"
+                  "</div></body></html>")
+        _, passages, _, _, info = parse_document_v02(
+            meta("ley_demo", "law", "Ley Demo", "1", 2024,
+                 ["ley", "1", "2024"], "https://www.funcionpublica.gov.co/"), source.encode())
+        article76 = [p for p in passages if p["article"] == "76"]
+        article77 = [p for p in passages if p["article"] == "77"]
+        self.assertTrue(article76)
+        self.assertTrue(all(not p["retrieval_eligible"] for p in article76))
+        self.assertTrue(all(p["retrieval_eligible"] for p in article77))
+        self.assertEqual(info["n_publisher_repeal_excluded"], len(article76))
+
+    def test_incidental_repeal_reference_does_not_exclude_containing_article(self):
+        source = ("<html><body><div class='descripcion-contenido'><p>ARTÍCULO 69. La contratación se regirá por estas reglas.</p>"
+                  "<p>El artículo 227 del Decreto 1818 de 1998 fue derogado por otra ley.</p>"
+                  "<p>La referencia anterior no modifica este artículo.</p>"
+                  "</div></body></html>")
+        _, passages, _, _, info = parse_document_v02(
+            meta("ley_demo", "law", "Ley Demo", "1", 2024,
+                 ["ley", "1", "2024"], "https://www.funcionpublica.gov.co/"), source.encode())
+        self.assertTrue(all(p["retrieval_eligible"] for p in passages))
+        self.assertEqual(info["n_publisher_repeal_excluded"], 0)
+
+    def test_publisher_repeal_notice_after_angle_title(self):
+        source = ("<html><body><div class='descripcion-contenido'>"
+                  "<p>ARTÍCULO 2131. &lt;DERECHOS&gt;. &lt;Artículo derogado por el artículo 242 de la Ley 222 de 1995&gt;</p>"
+                  "<p>Texto editorial adicional.</p><p>ARTÍCULO 2132. Otro precepto.</p>"
+                  "</div></body></html>")
+        _, passages, _, _, info = parse_document_v02(
+            meta("ley_demo", "law", "Ley Demo", "1", 2024,
+                 ["ley", "1", "2024"], "https://www.funcionpublica.gov.co/"), source.encode())
+        self.assertEqual(info["n_publisher_repeal_excluded"], 1)
+        self.assertFalse(next(p for p in passages if p["article"] == "2131")["retrieval_eligible"])
 
     def test_p01_major_heading_closes_prior_article(self):
         blocks = (FIXTURES / "p01_ley137_heading_boundary.txt").read_text(encoding="utf-8-sig").splitlines()

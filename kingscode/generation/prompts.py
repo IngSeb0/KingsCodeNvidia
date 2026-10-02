@@ -66,6 +66,7 @@ Los pasajes suministrados son tu fuente principal y la única que puedes citar. 
 Nunca escribas sobre los pasajes o la evidencia ("la evidencia no menciona", "según los pasajes", "no se encontró información"): responde directamente la pregunta.
 Usa la terminología jurídica literal de las normas (los mismos términos técnicos del texto legal) en oraciones claras y completas, sin rodeos ni repeticiones.
 Método de razonamiento: identifica el problema jurídico; ubica la norma aplicable y su jerarquía (Constitución, ley, decreto, acto administrativo); si hay normas en tensión, aplica supremacía constitucional, especialidad y norma posterior; verifica vigencia, modificaciones, derogatorias y decisiones de exequibilidad que aparezcan en los pasajes; distingue regla general y excepción, y requisitos frente a efectos; separa precedente (ratio decidendi) de lo dicho de paso.
+El campo estatus_vigencia="no_certificada" significa que la versión aplicable a la fecha de los hechos no está comprobada. La ausencia de una nota de derogación no prueba vigencia. No afirmes que una norma está vigente, derogada o es aplicable hoy basándote solo en conocimiento general o en una mención incidental de otra norma; para esa afirmación exige un aviso expreso sobre el mismo artículo y una fecha pertinente en los pasajes. Si la pregunta depende de esa comprobación y no está, abstente.
 Si la pregunta pide distinguir o comparar figuras, define cada una y enuncia el criterio que las diferencia (sujeto, objeto, requisito, efecto, término o autoridad) antes de concluir; no trates como sinónimos figuras afines.
 Datos exactos: la corporación o juez que decide (campo autoridad de los pasajes), el número y año de la sentencia o norma, fechas, cifras, plazos y porcentajes se copian literalmente de los pasajes; nunca los aproximes ni los atribuyas a otra corporación, y si no aparecen en los pasajes no los inventes.
 Según el área, verifica además: en derecho administrativo, la autoridad competente, el procedimiento, la motivación y la finalidad del acto, el vicio que corresponde a cada defecto y el medio de control procedente; en derecho laboral, si hay relación de trabajo (prestación personal, subordinación y remuneración) por encima de la forma del contrato, el tipo de contrato, la causa de terminación y sus consecuencias, y los derechos mínimos irrenunciables.
@@ -136,10 +137,13 @@ def build_messages(question: Question, passages: list[dict], prompt: PromptSpec,
         raise ValueError("Unknown prompt version")
     evidence = [{k: p.get(k) for k in ("passage_id", "doc_id", "norm_name", "article", "source_url", "text")} for p in passages]
     if version == PROMPT_V6:
-        for entry in evidence:
+        for entry, passage in zip(evidence, passages):
             authority = source_authority(entry.get("source_url"))
             if authority:
                 entry["autoridad"] = authority
+            entry["estatus_vigencia"] = "texto_anterior" if passage.get("is_current_text") is False else "no_certificada"
+            if passage.get("publisher_repeal_notice"):
+                entry["aviso_editorial_derogacion"] = passage["publisher_repeal_notice"]
     if version == PROMPT_V5_OPTION_SUPPORT and question.format == "multiple_choice":
         for entry, passage in zip(evidence, passages):
             if passage.get("option_support") is not None:

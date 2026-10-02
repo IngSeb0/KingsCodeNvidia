@@ -178,6 +178,8 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         passage["source_url"] = "https://www.corteconstitucional.gov.co/relatoria/2007/C-960-07.htm"
         user = lambda v: json.loads(build_messages(Q, [deepcopy(passage)], PromptSpec("semi_open"), version=v)[1]["content"])
         self.assertEqual(user(PROMPT_V6)["evidencia"][0]["autoridad"], "Corte Constitucional")
+        self.assertEqual(user(PROMPT_V6)["evidencia"][0]["estatus_vigencia"], "no_certificada")
+        self.assertNotIn("estatus_vigencia", user(PROMPT_V4)["evidencia"][0])
         self.assertNotIn("autoridad", user(PROMPT_V4)["evidencia"][0])  # v4 evidence unchanged
 
     def test_citation_fill_adds_verified_ranked_citations_only_where_ragas_does_not_read(self):

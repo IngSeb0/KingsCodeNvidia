@@ -36,6 +36,12 @@
     "target_evidence": "reports/gpu_freeze_4090; RTX 4090 retrieval executed externally and preserved at 60ebf7e; this session is CPU only"
   },
   "phase": "integrated_sample50_runtime_optimization",
+  "temporal_safety_candidate": {
+    "status": "experimental_not_competitive_freeze",
+    "scope": "v0.2 parser and opt-in prompt v6 only; corpus-v0.1 unchanged",
+    "finding": "Of 26558 v0.1 passages, 26251 have unknown source-snapshot currency, 307 are prior text, and 0 certify current validity. Raw DEROGA/MODIFICA edges do not certify the target article.",
+    "next_action": "Review official publisher repeal notices by article and effective date; rebuild a separate v0.2 snapshot, inspect exclusions and retrieval coverage, then run paired scoring/latency/RAGAS before adoption."
+  },
   "architecture_version": "0.5",
   "retrieval": {
     "chunking_primary": "legal_structure_aware",

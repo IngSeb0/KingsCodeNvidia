@@ -9,10 +9,14 @@ from __future__ import annotations
 import re
 from html import escape
 
-from .corpus import SourceBlock, blocks_from_html, blocks_from_pdf, parse_document
+from .common import indexable
+from .corpus import HEADING, SourceBlock, blocks_from_html, blocks_from_pdf, parse_document
 
 PAGINATED_TOC_ROW = re.compile(r"\s+\d{1,3}\s*$")
 STANDALONE_ARTICLE = re.compile(r"^art[ií]culo\s+\d+(?:\s*[.,]\s*\d+)*(?:[a-z])?$", re.I)
+PUBLISHER_REPEAL = re.compile(
+    r"^\s*(?:<[^>]{1,120}>\s*[.]?\s*)?(?:[<(]\s*)?"
+    r"(?:art[ií]culo\s+)?derogad[oa]\s+por\b", re.I)
 
 
 def remove_decision_table_of_contents(blocks: list[str]) -> tuple[list[str], list[dict]]:
@@ -47,7 +51,9 @@ def join_split_article_headings(blocks: list[str]) -> list[str]:
         block = blocks[i]
         if i + 1 < len(blocks) and STANDALONE_ARTICLE.fullmatch(str(block).strip()):
             following = str(blocks[i + 1]).strip()
-            if following.startswith((".", "°", "º")):
+            # Some publishers put the complete first sentence in the next DOM
+            # element without a leading dot. Never consume a second heading.
+            if following and not STANDALONE_ARTICLE.fullmatch(following) and not HEADING.match(following):
                 merged = SourceBlock(f"{str(block).strip()} {following}",
                                      anchored=getattr(block, "anchored", False),
                                      page=getattr(block, "page", None))
@@ -83,9 +89,29 @@ def parse_document_v02(meta: dict, data: bytes) -> tuple[str, list[dict], list[d
     clean, passages, nodes, edges, info = parse_document(
         meta, sanitized, source_blocks=blocks, source_title=title,
         source_is_pdf=data.startswith(b"%PDF-"), end_units_at_headings=not decision)
-    info["parser_version"] = "legal-blocks-v02-audit-1"
+    info["parser_version"] = "legal-blocks-v02-audit-2"
     info["source_excluded_ranges"] = exclusions
+    repealed_units = {}
     for passage in passages:
         passage["corpus_version"] = "corpus-v0.2"
-        passage["parser_version"] = "legal-blocks-v02-audit-1"
+        passage["parser_version"] = "legal-blocks-v02-audit-2"
+        # Only a notice about this very article, close to its heading, is
+        # actionable. A repeal mentioned later in a judgment or cross-reference
+        # is not a status assertion about the containing article.
+        body = passage["text"][len(passage["text_prefix"]):]
+        heading = re.match(r"^\s*art[ií]culo\s+\S+\s*[.°º:ª-]?\s*([^\n]{0,220})", body, re.I)
+        notice = PUBLISHER_REPEAL.search(heading.group(1)) if heading else None
+        if notice and passage.get("article") is not None:
+            repealed_units[passage["graph_node_ids"][1]] = heading.group(1)[notice.start():notice.end()]
+    for passage in passages:
+        notice = repealed_units.get(passage["graph_node_ids"][1])
+        if notice:
+            passage["publisher_repeal_notice"] = notice
+            reasons = passage.setdefault("index_exclusion_reasons", [])
+            if "publisher_repeal_notice" not in reasons:
+                reasons.append("publisher_repeal_notice")
+            passage["retrieval_eligible"] = False
+    info["n_publisher_repeal_excluded"] = sum(
+        "publisher_repeal_notice" in p.get("index_exclusion_reasons", []) for p in passages)
+    info["n_indexed"] = sum(indexable(p) for p in passages)
     return clean, passages, nodes, edges, info
