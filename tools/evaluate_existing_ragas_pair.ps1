@@ -65,6 +65,10 @@ try {
     $CandidateReport = Get-Content $CandidateOut -Raw | ConvertFrom-Json
     $A = $ControlReport.correccion_ragas
     $B = $CandidateReport.correccion_ragas
+    $ControlWithoutRagas = [double]$ControlReport.cerradas.puntos +
+        [double]$ControlReport.citas.puntos + [double]$ControlReport.abstencion.puntos
+    $CandidateWithoutRagas = [double]$CandidateReport.cerradas.puntos +
+        [double]$CandidateReport.citas.puntos + [double]$CandidateReport.abstencion.puntos
     $Comparable = (
         [int]$A.n_fallidos -eq 0 -and [int]$B.n_fallidos -eq 0 -and
         [int]$A.n_juzgados -eq [int]$B.n_juzgados -and
@@ -72,11 +76,12 @@ try {
     )
 
     Write-Host "`n===== COMPARACIÓN PAREADA =====" -ForegroundColor Green
-    Write-Host ("Control: RAGAS {0}/30, correctness {1}, respondidos {2}/{3}, fallos {4}; total automático {5}/80" -f `
-        $A.puntos, $A.correctness, $A.n_respondidos, $A.n_juzgados, $A.n_fallidos, $ControlReport.total_automatico.obtenidos)
-    Write-Host ("DocCap 3: RAGAS {0}/30, correctness {1}, respondidos {2}/{3}, fallos {4}; total automático {5}/80" -f `
-        $B.puntos, $B.correctness, $B.n_respondidos, $B.n_juzgados, $B.n_fallidos, $CandidateReport.total_automatico.obtenidos)
-    Write-Host ("Delta DocCap 3 - control: {0:+0.00;-0.00;0.00} puntos RAGAS; {1:+0.00;-0.00;0.00} puntos totales" -f `
+    Write-Host ("Control: sin RAGAS {0}/50; RAGAS {1}/30 (correctness {2}, {3}/{4} respondidos, {5} fallos); total {6}/80" -f `
+        $ControlWithoutRagas, $A.puntos, $A.correctness, $A.n_respondidos, $A.n_juzgados, $A.n_fallidos, $ControlReport.total_automatico.obtenidos)
+    Write-Host ("DocCap 3: sin RAGAS {0}/50; RAGAS {1}/30 (correctness {2}, {3}/{4} respondidos, {5} fallos); total {6}/80" -f `
+        $CandidateWithoutRagas, $B.puntos, $B.correctness, $B.n_respondidos, $B.n_juzgados, $B.n_fallidos, $CandidateReport.total_automatico.obtenidos)
+    Write-Host ("Delta DocCap 3 - control: {0:+0.00;-0.00;0.00}/50 sin RAGAS; {1:+0.00;-0.00;0.00}/30 RAGAS; {2:+0.00;-0.00;0.00}/80 total" -f `
+        ($CandidateWithoutRagas - $ControlWithoutRagas),
         ([double]$B.puntos - [double]$A.puntos),
         ([double]$CandidateReport.total_automatico.obtenidos - [double]$ControlReport.total_automatico.obtenidos))
     Write-Host "Comparación válida, sin fallos del juez: $Comparable"
