@@ -1,6 +1,6 @@
 {
   "project": "KingsCode - Hackathon AI Week 2026",
-  "last_updated": "2026-10-01",
+  "last_updated": "2026-10-02",
   "source_of_truth": "KINGSCODE_MASTER_KNOWLEDGE.md",
   "team": {
     "size": 2,
@@ -100,6 +100,8 @@
     "shared": "The A and B development PCs are separate from the integration RTX 4090. Run the official evaluator for complete paired profiles, then RAGAS once on one selected complete profile. Keep combined v0.1+v0.2 results diagnostic and separate from KC-COL-IR and any competitive freeze. See docs/EXPLORATION_ROUTES_2026-10-01.md."
   },
   "next_actions": [
+    "Recovered A's exact corpus-v0.1 snapshot locally: 163/163 source hashes, passages SHA-256 3b2b7a7beae2abe0abd14480be887a86ad933902c9735a21e02719a12daac3c0. Transfer the verified 60,196,977-byte tar.gz plus snapshot-files.sha256.json to the integration GPU and install via -CorpusArchive. The resulting v0.1+v0.2 passages SHA-256 must equal 8bfd072e1027dedd795ab768f3628b90eba507e4fdd1743d1d73e893013b9442. Existing GPU rebuilt corpus with 67 changed source bytes must be backed up; c1 score on it is not comparable to this restored freeze.",
+    "Final sample50 priority: run one complete Qwen3-8B BF16 + BM25 + router + prompt v4 + citation-fill profile on the integration RTX 4090 with an exact checkout SHA and active combined-corpus passages SHA gate. Evaluate all 50 with the untouched official evaluator and RAGAS, inspect per-item citation relevance, abstentions, fallbacks, timing, VRAM and three-question live replay before choosing the delivery configuration. Cite-mentions and hybrid/reranker remain optional experiments, not the default winner.",
     "After the active integration-GPU run finishes, execute the paired sample50 exploration in docs/EXPLORATION_ROUTES_2026-10-01.md. Include native option fusion, reranker-score-cache OFF/ON, exact encoder/reranker instruction profiles, and graph_budget=0/10 as separate ablations; hold other settings constant. Use the pilot for runtime screening only, then compare complete runs with official evaluation. Run RAGAS once on a selected complete profile.",
     "The historical ICFES intake is superseded for benchmark split purposes: retain its provenance but keep ICFES SEALED_FUTURE in KC-COL-IR-v0.1.",
     "Acquire seven cited target/modifier primary instruments and review G01 replacements; keep zero semantic edges active until verified.",

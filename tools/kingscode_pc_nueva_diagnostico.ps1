@@ -34,6 +34,7 @@
 #   ... -CitationFill -CitationFillExtra 1                 (a lo sumo una fuente adicional)
 #   ... -CiteMentions 3                                    (citas a nivel de cuerpo de normas NOMBRADAS en la evidencia)
 #   ... -Recomendada                                       (c1: v4 + CitationFill; CiteMentions sigue opt-in)
+#   ... -ExpectedCommit <40 hex> -ExpectedCorpusSha256 <64 hex>  (detiene una corrida no comparable)
 #   ... -SkipVerify                                        (omite regenerar 3 preguntas para comprobar reproducibilidad)
 #   SABADO (set ciego, misma configuracion elegida):
 #   ... -InputFile data\test_992.jsonl -RunName final_992 <flags elegidos>      -> copia submissions.jsonl a la raiz
@@ -67,6 +68,8 @@ param(
     [switch]$Ragas,
     [switch]$SkipSmoke,
     [switch]$PilotRun,
+    [string]$ExpectedCommit = "",
+    [string]$ExpectedCorpusSha256 = "",
     [switch]$NoPull   # congela el codigo actual (comparaciones y sabado): no hace git pull
 )
 $ErrorActionPreference = "Stop"
@@ -124,6 +127,10 @@ if ($NoPull) { Write-Host "-NoPull: se usa el commit local sin actualizar." -For
 else { git checkout main; Check "checkout main"; git pull --ff-only origin main; Check "pull main" }
 $Sha = (git rev-parse HEAD).Trim()
 Write-Host "checkout @ $Sha"
+if ($ExpectedCommit) {
+    if ($ExpectedCommit -cnotmatch '^[0-9a-fA-F]{40}$') { throw "STOP: -ExpectedCommit debe ser un SHA Git completo de 40 caracteres." }
+    if ($Sha -ne $ExpectedCommit.ToLowerInvariant()) { throw "STOP: commit distinto del esperado ($ExpectedCommit); checkout actual: $Sha." }
+}
 # Si esta copia (p. ej. bajada de raw.githubusercontent, que cachea minutos) difiere de la del
 # repo recien actualizado, se relanza la del repo con los mismos parametros.
 $RepoScript = "$Work\tools\kingscode_pc_nueva_diagnostico.ps1"
@@ -155,6 +162,54 @@ if ($Rt.vram_gb -lt 20) { Warn "menos de 20 GB de VRAM: Qwen3-8B en BF16 usa ~19
 # ---------------------------------------------------------------------
 Step "[3] Corpus v0.1: archivo local > release > descarga oficial (acquire de A)"
 $CorpusOrigin = "existente"
+if ($CorpusArchive) {
+    # An explicit snapshot takes precedence over an existing rebuilt corpus. Keep
+    # both old corpus directories as a recoverable backup before installing it.
+    $Archive = (Resolve-Path -LiteralPath $CorpusArchive -ErrorAction Stop).Path
+    $Files = Join-Path (Split-Path $Archive) 'snapshot-files.sha256.json'
+    if (-not (Test-Path -LiteralPath $Files)) { throw "STOP: falta snapshot-files.sha256.json junto a $Archive." }
+    & $Py tools\package_corpus_snapshot.py verify $Archive --files $Files | Out-Null
+    Check 'verificacion del archivo local'
+    $Frozen = Get-Content corpus_manifest.json -Raw | ConvertFrom-Json
+    $Stage = Join-Path $Work "dist\snapshot_import_$Stamp"
+    if (Test-Path -LiteralPath $Stage) { throw "STOP: ya existe la carpeta temporal $Stage." }
+    New-Item -ItemType Directory -Path $Stage -Force | Out-Null
+    tar -xzf $Archive -C $Stage; Check 'extraccion temporal del snapshot'
+    $StagedCorpus = Join-Path $Stage 'corpus'
+    if (-not (Test-Path -LiteralPath (Join-Path $StagedCorpus 'manifest.json'))) { throw 'STOP: el archivo no contiene corpus/manifest.json.' }
+    $StagedManifest = Get-Content (Join-Path $StagedCorpus 'manifest.json') -Raw | ConvertFrom-Json
+    $FrozenDocs = @{}; $Frozen.documentos | ForEach-Object { $FrozenDocs[$_.doc_id] = $_.source_sha256 }
+    if (@($StagedManifest.documentos).Count -ne $FrozenDocs.Count) { throw 'STOP: el snapshot no tiene los 163 documentos congelados.' }
+    foreach ($Doc in $StagedManifest.documentos) {
+        if (-not $FrozenDocs.ContainsKey($Doc.doc_id) -or $FrozenDocs[$Doc.doc_id] -ne $Doc.source_sha256) {
+            throw "STOP: fuente congelada distinta en $($Doc.doc_id)."
+        }
+    }
+    foreach ($Entry in $Frozen.hashes.PSObject.Properties) {
+        if ((Get-FileHash (Join-Path $StagedCorpus $Entry.Name) -Algorithm SHA256).Hash.ToLowerInvariant() -ne $Entry.Value) {
+            throw "STOP: salida v0.1 distinta en $($Entry.Name)."
+        }
+    }
+    if ((Get-FileHash (Join-Path $StagedCorpus 'index\bm25.json') -Algorithm SHA256).Hash.ToLowerInvariant() -ne $Frozen.bm25_sha256) {
+        throw 'STOP: BM25 del snapshot no coincide con el freeze v0.1.'
+    }
+    $Backup = Join-Path $Work "dist\corpus_previous_$Stamp"
+    $SafeRoot = (Resolve-Path -LiteralPath $Work).Path.TrimEnd('\') + '\'
+    foreach ($Target in @($Stage, $Backup, (Join-Path $Work 'corpus'), (Join-Path $Work 'corpus_v01_v02'))) {
+        if (-not [IO.Path]::GetFullPath($Target).StartsWith($SafeRoot, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "STOP: ruta de movimiento fuera del repositorio: $Target"
+        }
+    }
+    New-Item -ItemType Directory -Path $Backup -Force | Out-Null
+    foreach ($Name in @('corpus', 'corpus_v01_v02')) {
+        $Old = Join-Path $Work $Name
+        if (Test-Path -LiteralPath $Old) { Move-Item -LiteralPath $Old -Destination (Join-Path $Backup $Name) }
+    }
+    Move-Item -LiteralPath $StagedCorpus -Destination (Join-Path $Work 'corpus')
+    $CorpusOrigin = "archivo $Archive"
+    $CorpusOrigin | Out-File -Encoding ascii "$Work\.kingscode_corpus_origin.txt"
+    Write-Host "Snapshot congelado instalado. Corpus anterior conservado en $Backup" -ForegroundColor Green
+}
 if (-not (Test-Path "corpus\manifest.json")) {
     $Archive = $null
     if ($CorpusArchive) {
@@ -226,10 +281,24 @@ Write-Host ("Corpus ({0}): {1}/{2} documentos con bytes identicos a v0.1; cambia
 # verify_member_a_v02 compara contra corpus\manifest.json (el propio); un corpus reconstruido
 # lo pasaria aunque difiera de v0.1. "Exacto" exige ademas los 163 documentos identicos a v0.1.
 & $Py tools\verify_member_a_v02.py | Out-Null
-$CorpusExact = ($LASTEXITCODE -eq 0) -and ($Cmp.identical_raw -eq $Cmp.v01_docs)
+$CorpusSelfVerified = ($LASTEXITCODE -eq 0)
 # Referencias conocidas de passages.jsonl: 3b2b7a7b... (corpus_manifest.json versionado = tmp\benchmark_corpus_v1
 # del freeze 4090) y f048d303... (corpus\ de la 4090 de Luis, 2026-10-01). Se registra, no se decide aqui.
 $PassagesSha = (Get-FileHash corpus\passages.jsonl -Algorithm SHA256).Hash.ToLower()
+$FrozenManifest = Get-Content corpus_manifest.json -Raw | ConvertFrom-Json
+$FrozenOutputsMatch = $true
+foreach ($Entry in $FrozenManifest.hashes.PSObject.Properties) {
+    $Path = Join-Path 'corpus' $Entry.Name
+    if (-not (Test-Path $Path) -or (Get-FileHash $Path -Algorithm SHA256).Hash.ToLowerInvariant() -ne $Entry.Value) {
+        $FrozenOutputsMatch = $false
+        break
+    }
+}
+if (-not (Test-Path 'corpus\index\bm25.json') -or
+    (Get-FileHash 'corpus\index\bm25.json' -Algorithm SHA256).Hash.ToLowerInvariant() -ne $FrozenManifest.bm25_sha256) {
+    $FrozenOutputsMatch = $false
+}
+$CorpusExact = $CorpusSelfVerified -and ($Cmp.identical_raw -eq $Cmp.v01_docs) -and $FrozenOutputsMatch
 $PassagesRef = $(if ($PassagesSha -like "3b2b7a7b*") { "igual a corpus_manifest.json (benchmark_corpus_v1)" } elseif ($PassagesSha -like "f048d303*") { "igual al corpus de la 4090 de Luis" } else { "distinto de ambas referencias" })
 Write-Host "passages.jsonl $($PassagesSha.Substring(0,12))... : $PassagesRef"
 git checkout -- reports/member_a_v02/verification.json 2>$null  # el verificador reescribe este archivo versionado
@@ -246,8 +315,19 @@ Step "[3b] Corpus combinado v0.1 + v0.2 (corpora\corpus-v0.2, provisional)"
 if ($CorpusSet -eq "v01+v02") {
     if (-not (Test-Path "corpus_v01_v02\manifest.json")) { & $Py tools\build_combined_corpus.py | Out-Null; Check "build_combined_corpus" }
     $CorpusDir = "corpus_v01_v02"
+    & $Py tools\verify_combined_corpus.py | Out-Null
+    Check "corpus combinado obsoleto o con hashes distintos; revisa sus entradas y reconstruyelo en una carpeta nueva"
 } else { $CorpusDir = "corpus" }
 Write-Host "Corpus para el diagnostico: $CorpusDir"
+if (-not (Test-Path "$CorpusDir\passages.jsonl")) { throw "STOP: falta $CorpusDir\passages.jsonl." }
+$ActivePassagesSha = (Get-FileHash "$CorpusDir\passages.jsonl" -Algorithm SHA256).Hash.ToLowerInvariant()
+Write-Host "Corpus activo passages.jsonl SHA-256: $ActivePassagesSha"
+if ($ExpectedCorpusSha256) {
+    if ($ExpectedCorpusSha256 -cnotmatch '^[0-9a-fA-F]{64}$') { throw "STOP: -ExpectedCorpusSha256 debe tener 64 caracteres hexadecimales." }
+    if ($ActivePassagesSha -ne $ExpectedCorpusSha256.ToLowerInvariant()) {
+        throw "STOP: el corpus activo no coincide con el esperado ($ExpectedCorpusSha256); SHA actual: $ActivePassagesSha."
+    }
+}
 if ($RetrieverMode -in @("dense", "hybrid")) {
     & $Py tools\prepare_models.py --download-retrieval; Check "preparacion de modelos de retrieval"
     & $Py tools\prepare_models.py --verify Qwen/Qwen3-Embedding-0.6B; Check "verificacion del encoder Qwen"
@@ -368,18 +448,22 @@ if ($Ragas -and $IsSample) {
 Step "Resumen"
 $Br = Get-Content "$Run\batch_report.json" -Raw | ConvertFrom-Json
 $Ev = $(if ($IsSample) { Get-Content "$Out\evaluation_official.json" -Raw | ConvertFrom-Json } else { $null })
+$RagasEv = $(if ($Ragas -and $IsSample -and (Test-Path "$Out\evaluation_ragas.json")) {
+    Get-Content "$Out\evaluation_ragas.json" -Raw | ConvertFrom-Json
+} else { $null })
 # Seconds of this session over the items generated in it (resumed items are not re-timed).
 $Processed = [math]::Max(1, [int]$Br.rows - [int]$Br.counts.resumed)
 $Spq = [math]::Round($Br.seconds / $Processed, 1)
 $Summary = [ordered]@{
-    main_sha = $Sha; model = $Model; gpu = $Rt.gpu; vram_gb = $Rt.vram_gb; torch = $Rt.torch
+    main_sha = $Sha; checkout_sha = $Sha; model = $Model; gpu = $Rt.gpu; vram_gb = $Rt.vram_gb; torch = $Rt.torch
     retrieval = "$RetrieverMode$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($ExactLocator) { ' + locator exacto' }) k=8 graph router (diagnostico, no freeze)"
     prompt_version = "grounded-formats-$PromptVersion"; citation_fill = [bool]$CitationFill; citation_fill_extra = $CitationFillExtra; cite_mentions = $CiteMentions; verificacion_en_vivo = $Verify
     corpus = $CorpusDir; corpus_origin = $CorpusOrigin; corpus_v01_raw_identical_and_verified = $CorpusExact; corpus_v01_comparison = $Cmp
     corpus_diagnostic_override = ($AllowKnownLocalCorpusDrift -and -not $CorpusExact)
-    passages_sha256 = $PassagesSha; passages_reference = $PassagesRef
+    passages_sha256 = $PassagesSha; active_passages_sha256 = $ActivePassagesSha; passages_reference = $PassagesRef
     input = $InputFile; filas = $Br.rows; completo = $Br.complete; reanudadas = $Br.counts.resumed
     automatico_sin_ragas = $(if ($Ev) { "$($Ev.total_automatico.obtenidos) / $($Ev.total_automatico.posibles)" } else { "n/a (set ciego)" })
+    automatico_con_ragas = $(if ($RagasEv) { "$($RagasEv.total_automatico.obtenidos) / $($RagasEv.total_automatico.posibles)" } else { "no ejecutado" })
     cerradas = $Ev.cerradas.puntos; citas = $Ev.citas.puntos; abstencion = $Ev.abstencion.puntos
     errores_validacion = $Ev.validacion.errores
     fallbacks_pipeline_error = @($Br.fallback_ids).Count
@@ -390,6 +474,7 @@ $Summary = [ordered]@{
 $Summary | ConvertTo-Json -Depth 8 | Out-File -Encoding utf8 "$Out\RESUMEN.json"
 Write-Host ("{0}: {1} automatico sin RAGAS | cerradas {2}, citas {3}, abstencion {4} | {5} s/pregunta -> 992 en {6} h | fallbacks {7}" -f `
     $Model, $Summary.automatico_sin_ragas, $Summary.cerradas, $Summary.citas, $Summary.abstencion, $Spq, $Summary.proyeccion_992_horas, $Summary.fallbacks_pipeline_error) -ForegroundColor Green
+if ($RagasEv) { Write-Host "Automatico con RAGAS: $($Summary.automatico_con_ragas) | correccion libre $($RagasEv.correccion_ragas.puntos)/30" -ForegroundColor Green }
 if ($Summary.proyeccion_992_horas -gt 5) { Warn "la proyeccion para 992 supera 5 h: la ventana del sabado es de 6 h." }
 # Presupuesto del enunciado (B.5): ~22 s/pregunta para 992 en 6 h. Margen de seguridad: 20 s.
 if ($Spq -gt 20) { Warn "$Spq s/pregunta supera el margen de 20 s (presupuesto 22 s): esta configuracion NO es apta para el sabado." }
