@@ -11,6 +11,15 @@ from kingscode.evaluation import ranking_metrics, supports
 from kingscode.retrieval import BM25Index, Retriever, reciprocal_rank_fusion, tokenize
 
 
+def timing_free(value):
+    """Drop wall-clock *_ms telemetry (differs between identical calls) before comparing results."""
+    if isinstance(value, dict):
+        return {k: timing_free(v) for k, v in value.items() if not k.endswith("_ms")}
+    if isinstance(value, list):
+        return [timing_free(v) for v in value]
+    return value
+
+
 class SparseTests(unittest.TestCase):
     def test_bm25_hand_calculation_and_stable_tie(self):
         import math
@@ -127,13 +136,13 @@ class IntegrationTests(unittest.TestCase):
         expected = deepcopy(result)
         result[0]["scores"]["bm25"] = -100
         result[0]["graph_node_ids"].clear()
-        self.assertEqual(expected, r.retrieve("salario contrato trabajo", 3, "off"))
+        self.assertEqual(timing_free(expected), timing_free(r.retrieve("salario contrato trabajo", 3, "off")))
 
     def test_repeated_queries_and_graph_modes(self):
         r = self.retriever
         for mode in ["off", "auto", "on"]:
             a = r.retrieve("artículo modificado contrato trabajo", 5, mode)
-            self.assertEqual(a, r.retrieve("artículo modificado contrato trabajo", 5, mode))
+            self.assertEqual(timing_free(a), timing_free(r.retrieve("artículo modificado contrato trabajo", 5, mode)))
             self.assertTrue(all(p["is_current_text"] is not False for p in a))
             self.assertTrue(all(p["retrieval_eligible"] for p in a))
             self.assertEqual(len(a), len({p["passage_id"] for p in a}))
