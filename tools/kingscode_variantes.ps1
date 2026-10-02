@@ -30,6 +30,7 @@
 param(
     [string[]]$Variantes = @(),
     [ValidateSet("", "1", "2")] [string]$Pc = "",
+    [double]$Base = 37.46,   # total sin RAGAS de -Recomendada con el corpus de ESTA maquina (39.02 con el corpus nuevo)
     [string]$Final = "",
     [string]$Work = "$HOME\KingsCodeGPU\KingsCodeNvidia",
     [switch]$Pull   # por defecto NO actualiza durante la tanda: todas las variantes usan el mismo commit
@@ -85,7 +86,6 @@ foreach ($v in $Variantes) {
 }
 
 # ---------------------------------------------------------------------
-$Base = 37.46   # -Recomendada (k=8, 5 menciones), 2026-10-02, sha 3ef9de8d...
 $Filas = Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Where-Object { $_.LastWriteTime -ge $Inicio } | Sort-Object LastWriteTime | ForEach-Object {
     $f = "$($_.FullName)\RESUMEN.json"
     if (Test-Path $f) {
