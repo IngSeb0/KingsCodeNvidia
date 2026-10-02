@@ -843,3 +843,9 @@ Detalle en `docs/ANALISIS_CORRIDAS_2026-10-01.md`.
 - Corrida `qwen3-8b_hybrid_c30_rb2_gb10_rerank_locator_pv4_fill_men3_20261002_115712` (PC #2, `5994024`, `corpus_v01_v02_a1`, índice denso de 26.447 vectores): **36,59/50 sin RAGAS** (cerradas 12,00; citas 16,33, recall 0,816, 0 sin respaldo; abstención 8,26), 1 fallback (528), **19,1 s/pregunta → 5,26 h para 992** (retrieval p95 12,2 s, VRAM reservada 20,2 GB). Verificación en vivo simulada: coincide.
 - Frente a BM25 (`..._115609`, mismo commit y corpus): 36,93/50 a 15,9 s/pregunta (4,38 h). El híbrido no gana puntaje y cuesta casi 1 h más en la ventana de 6 h: **no se adopta**. Configuración candidata final: `-Recomendada` con BM25.
 - `docs/REPORTE_AVANCE_BORRADOR.md` actualizado con 36,93/50 y RAGAS 0,4275 (medido una vez sobre `111603`; el total con RAGAS de `115609` es estimación y así se declara).
+
+## 2026-10-02 (tarde) — ALIA descartado; `-Recomendada` pasa a 5 citas por menciones; `-K` en el script
+
+- **ALIA Legal 7B** (`alia-legal-7b_bm25_..._20261002_123339`, PC #1): 50/50 fallback a abstención → 5,00/50, 24,5 s/pregunta (una pregunta con contexto de 10.600 tokens > 8.192). No apto; se descarta. (El paso [6b] falla con `--only` vacío cuando todas son fallback; cosmético.)
+- **Menciones 3 → 5** (replay sin GPU sobre `115609`, misma salida cruda y evidencia): 36,81 → **37,46** (citas 17,14 → 17,55; abstención 7,67 → 7,91). 8 = 5 (satura). Solo toca `referencia_legal`/`justificacion`, que RAGAS no lee en semiabiertas ni cerradas. `-Recomendada` usa ahora 5.
+- **`-K`** (1–10, por defecto 8) en `kingscode_pc_nueva_diagnostico.ps1`: el evaluador mira los 10 primeros pasajes; el prompt ya recorta por presupuesto de contexto sin reordenar. Experimento: `-Recomendada -K 10` frente a `-Recomendada`.

@@ -31,7 +31,8 @@
 #   ... -PromptVersion v4                                  (prompt v4: abstencion listada, minimos de extension, justificacion primero)
 #   ... -CitationFill                                      (hasta 5 citas verificadas en referencia_legal/justificacion)
 #   ... -CiteMentions 3                                    (citas a nivel de cuerpo de normas NOMBRADAS en la evidencia)
-#   ... -Recomendada                                       (configuracion recomendada: v4 + CitationFill + CiteMentions 3)
+#   ... -Recomendada                                       (configuracion recomendada: v4 + CitationFill + CiteMentions 5)
+#   ... -Recomendada -K 10                                 (entrega 10 pasajes: los que mira el evaluador)
 #   ... -SkipVerify                                        (omite regenerar 3 preguntas para comprobar reproducibilidad)
 #   SABADO (set ciego, misma configuracion elegida):
 #   ... -InputFile data\test_992.jsonl -RunName final_992 <flags elegidos>      -> copia submissions.jsonl a la raiz
@@ -49,6 +50,7 @@ param(
     [switch]$AllowKnownLocalCorpusDrift,
     [ValidateSet("bm25", "dense", "hybrid")] [string]$RetrieverMode = "bm25",
     [ValidateRange(1, 500)] [int]$CandidateK = 30,
+    [ValidateRange(1, 10)] [int]$K = 8,   # pasajes entregados; el evaluador mira los 10 primeros
     [ValidateSet("1", "2")] [int]$RerankerBatchSize = 2,
     [ValidateRange(0, 100)] [int]$GraphBudget = 10,
     [switch]$Rerank,
@@ -75,8 +77,8 @@ function Warn($m) { Write-Host "AVISO: $m" -ForegroundColor Yellow }
 function Check($w) { if ($LASTEXITCODE -ne 0) { throw "STOP: $w (exit $LASTEXITCODE)" } }
 function RefreshPath { $env:Path = [Environment]::GetEnvironmentVariable("Path", "User") + ";" + [Environment]::GetEnvironmentVariable("Path", "Machine") }
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
-if ($Recomendada) { $PromptVersion = "v4"; $CitationFill = [switch]::new($true); if ($CiteMentions -eq 0) { $CiteMentions = 3 } }
-if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
+if ($Recomendada) { $PromptVersion = "v4"; $CitationFill = [switch]::new($true); if ($CiteMentions -eq 0) { $CiteMentions = 5 } }
+if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
 
 # ---------------------------------------------------------------------
 Step "[0] Herramientas: Git, Python 3.12, GPU"
@@ -277,7 +279,7 @@ if (-not $SkipSmoke) {
 }
 
 # ---------------------------------------------------------------------
-Step "[6] Diagnostico sample_50: $Model + $RetrieverMode (k=8) + router, guardas (sin seleccion)"
+Step "[6] Diagnostico sample_50: $Model + $RetrieverMode (k=$K) + router, guardas (sin seleccion)"
 $Run = "$Out\batch"
 if ($ExactLocator -and -not $Rerank) {
     # A's Retriever adds locator candidates to the pool but orders by BM25/fused score: a locator-only
@@ -289,7 +291,7 @@ if ($ExactLocator -and -not $Rerank) {
 $CommonArgs = @(
     "--input", $InputFile, "--retrieval-mode", "option",
     "--retriever-mode", $RetrieverMode, "--graph-policy", "router",
-    "--k", "8", "--candidate-k", "$CandidateK", "--graph-budget", "$GraphBudget", "--corpus", $CorpusDir, "--model", $Model,
+    "--k", "$K", "--candidate-k", "$CandidateK", "--graph-budget", "$GraphBudget", "--corpus", $CorpusDir, "--model", $Model,
     "--reranker-batch-size", "$RerankerBatchSize", "--precision", "bf16", "--prompt-version", $PromptVersion
 )
 if ($Rerank) { $CommonArgs += "--rerank" }
@@ -369,7 +371,7 @@ $Processed = [math]::Max(1, [int]$Br.rows - [int]$Br.counts.resumed)
 $Spq = [math]::Round($Br.seconds / $Processed, 1)
 $Summary = [ordered]@{
     main_sha = $Sha; model = $Model; gpu = $Rt.gpu; vram_gb = $Rt.vram_gb; torch = $Rt.torch
-    retrieval = "$RetrieverMode$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($ExactLocator) { ' + locator exacto' }) k=8 graph router (diagnostico, no freeze)"
+    retrieval = "$RetrieverMode$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($ExactLocator) { ' + locator exacto' }) k=$K graph router (diagnostico, no freeze)"
     prompt_version = "grounded-formats-$PromptVersion"; citation_fill = [bool]$CitationFill; cite_mentions = $CiteMentions; verificacion_en_vivo = $Verify
     corpus = $CorpusDir; corpus_origin = $CorpusOrigin; corpus_v01_raw_identical_and_verified = $CorpusExact; corpus_v01_comparison = $Cmp
     corpus_diagnostic_override = ($AllowKnownLocalCorpusDrift -and -not $CorpusExact)
