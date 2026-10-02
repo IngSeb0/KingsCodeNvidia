@@ -1,24 +1,24 @@
 # Guion del sábado 3 de octubre — KingsCode (09:00, salón 617)
 
-Para el equipo: qué decir cuando pregunten y qué comandos correr. Configuración vigente: `-Recomendada` (37,46/50 sin RAGAS en la muestra; RAGAS medido 0,4275).
+Para el equipo: qué decir cuando pregunten y qué comandos correr. Configuración vigente: `-Recomendada -PromptVersion v6` (v6 38,08 frente a v4 37,46 con el mismo corpus; v4 dio 39,02 con el corpus descargado hoy). Preparación completa en un comando: `tools\kingscode_corre_todo.ps1` (viernes).
 
 ## 1. Antes de las 09:00 (en el PC que va a correr)
 
 1. Cerrar las sesiones de otros usuarios (`query user` → `logoff <ID>`); `nvidia-smi` debe mostrar < 1.000 MiB usados.
 2. Código fijo: `git pull --ff-only origin main` una sola vez y anotar `git rev-parse --short HEAD`. Desde ahí, todo con `-NoPull`.
-3. Corpus e índice idénticos a los de hoy (respaldo hecho el viernes con `tools\kingscode_snapshot.ps1 -Accion crear`):
+3. Corpus e índice idénticos a los de hoy (respaldo hecho el viernes por `tools\kingscode_corre_todo.ps1` en `$HOME\kc_snapshot`):
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\tools\kingscode_snapshot.ps1 -Accion restaurar -Origen <carpeta del respaldo>
    ```
    Debe terminar en "Corpus e indice identicos al snapshot". Si el corpus ya está en ese PC: `-Accion verificar -Origen <carpeta del respaldo>`.
-4. Ensayo corto (3 preguntas, 2 min): `powershell -ExecutionPolicy Bypass -File .\tools\kingscode_final.ps1 -Flags "-Recomendada"` y cortar tras `[batch] 3/50` si no hay tiempo, o dejarlo completo (≈ 14 min) para confirmar 37,46.
+4. Ensayo corto (3 preguntas, 2 min): `powershell -ExecutionPolicy Bypass -File .\tools\kingscode_final.ps1 -Flags "-Recomendada -PromptVersion v6"` y cortar tras `[batch] 3/50` si no hay tiempo, o dejarlo completo (≈ 14 min) para confirmar 37,46.
 
 ## 2. Corrida de las 992 (ventana 09:00–15:00)
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\kingscode_final.ps1 -Flags "-Recomendada" -InputFile <ruta del set ciego> -RunName final_992
+powershell -ExecutionPolicy Bypass -File .\tools\kingscode_final.ps1 -Flags "-Recomendada -PromptVersion v6" -InputFile <ruta del set ciego> -RunName final_992
 # si se corta (luz, cierre, error): el MISMO comando con -Resume (no repite lo ya generado)
-powershell -ExecutionPolicy Bypass -File .\tools\kingscode_final.ps1 -Flags "-Recomendada" -InputFile <ruta del set ciego> -RunName final_992 -Resume
+powershell -ExecutionPolicy Bypass -File .\tools\kingscode_final.ps1 -Flags "-Recomendada -PromptVersion v6" -InputFile <ruta del set ciego> -RunName final_992 -Resume
 ```
 
 - Proyección: 16,4 s/pregunta ≈ 4,5 h. Cada pregunta imprime `[batch] -> N/992 ... generando...` y al terminar `[batch] N/992 ... | faltan ~X min`.
@@ -34,7 +34,7 @@ $Run = "reports\decoder_diagnostic\final_992\batch"
 .\.venv\Scripts\python.exe tools\member_b.py verify --delivered "$Run\submissions.jsonl" --only 12,345,678 `
   --input <ruta del set ciego> --retrieval-mode option --retriever-mode bm25 --graph-policy router --k 8 --candidate-k 30 `
   --graph-budget 10 --reranker-batch-size 2 --corpus corpus_v01_v02_a1 --model qwen3-8b --precision bf16 `
-  --prompt-version v4 --citation-fill --cite-mentions 5
+  --prompt-version v6 --citation-fill --cite-mentions 5
 ```
 
 Debe decir `all_match: true` (temperatura 0, decodificación greedy, `torch.use_deterministic_algorithms`, corpus y modelo con hash fijo). Si piden una pregunta **modificada**: se escribe en un JSONL con los campos públicos (`id`, `pregunta`, `formato`, `opciones`) y se corre `tools\member_b.py batch --input <ese archivo> --run-dir reports\vivo\batch --fresh` con los mismos flags, o se usa la interfaz (`streamlit run interfaz/app.py`, misma configuración). El sistema responde cualquier pregunta: no depende de la muestra.
