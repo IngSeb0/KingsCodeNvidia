@@ -113,7 +113,7 @@ $DriverCuda = [double]((nvidia-smi | Select-String "CUDA Version:\s*([0-9.]+)").
 Write-Host "Driver NVIDIA con CUDA $DriverCuda"
 
 # ---------------------------------------------------------------------
-Step "[1] Repo: main en $Work"
+Step "[1] Repo en $Work"
 if (-not (Test-Path "$Work\.git")) {
     New-Item -ItemType Directory -Force (Split-Path $Work) | Out-Null
     git clone "https://github.com/$GitHubRepo.git" $Work; Check "git clone"
@@ -123,12 +123,12 @@ if (git status --porcelain --untracked-files=no) { git status --short; throw "ST
 if ($NoPull) { Write-Host "-NoPull: se usa el commit local sin actualizar." -ForegroundColor Yellow }
 else { git checkout main; Check "checkout main"; git pull --ff-only origin main; Check "pull main" }
 $Sha = (git rev-parse HEAD).Trim()
-Write-Host "main @ $Sha"
+Write-Host "checkout @ $Sha"
 # Si esta copia (p. ej. bajada de raw.githubusercontent, que cachea minutos) difiere de la del
 # repo recien actualizado, se relanza la del repo con los mismos parametros.
 $RepoScript = "$Work\tools\kingscode_pc_nueva_diagnostico.ps1"
 if ((Test-Path $RepoScript) -and ((Get-FileHash $PSCommandPath).Hash -ne (Get-FileHash $RepoScript).Hash)) {
-    Write-Host "Esta copia del script es distinta de la de main; se usa $RepoScript" -ForegroundColor Yellow
+    Write-Host "Esta copia del script es distinta de la del checkout; se usa $RepoScript" -ForegroundColor Yellow
     & $RepoScript @PSBoundParameters
     exit $LASTEXITCODE
 }
