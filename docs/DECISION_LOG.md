@@ -857,3 +857,8 @@ Detalle en `docs/ANALISIS_CORRIDAS_2026-10-01.md`.
 - El replay sin GPU había predicho exactamente 37,46: el replay es confiable para cambios de post-proceso.
 - `docs/REPORTE_AVANCE_BORRADOR.md` actualizado (37,46/50; con RAGAS ≈ 50,3/80, estimado).
 - Riesgo detectado: el `passages.jsonl` descargado difiere entre PCs (#2 `a91236e4…`, #1 `2956bf2d…` en la corrida de ALIA). Para el sábado se debe usar UN snapshot congelado copiado a ambas máquinas.
+
+## 2026-10-02 (tarde) — Interfaz unificada con la configuración `-Recomendada`
+
+- **Síntoma (PC #1, corpus real):** la interfaz funcionaba pero se abstenía. **Causa:** el decoder por defecto del selector era `dummy_abstain` (siempre se abstiene) y la interfaz armaba su propio `Pipeline` sin prompt v4, sin `citation_fill`, sin menciones, sin retrieval por opción y con `corpus/` en vez del corpus combinado.
+- **Corrección:** `interfaz/app.py` construye ahora el pipeline con `tools/member_b.py::_pipeline` (el mismo código de las corridas) y los argumentos de `-Recomendada` (BM25 + router, `option`, v4, `--citation-fill`, `--cite-mentions 5`). `qwen3-8b` es la primera opción cuando hay CUDA; `dummy_abstain` queda al final. Corpus por defecto: `corpus_v01_v02_a1` > `corpus_v01_v02` > `corpus`. Pipeline y decoder se cargan una sola vez (`st.cache_resource`).

@@ -3,7 +3,8 @@
 Consulta de extremo a extremo sobre el pipeline real de KingsCode: A.retrieve()
 -> B.Pipeline (router -> policy -> decoder -> citation_guard). No reimplementa
 nada: usa exactamente kingscode.reasoning y kingscode.Retriever, el mismo
-código que corre el sábado.
+código que corre el sábado (pipeline construido con tools/member_b.py::_pipeline,
+configuración -Recomendada).
 
 Ejecutar desde la raíz del repositorio, con el corpus ya construido:
     streamlit run interfaz/app.py
@@ -23,11 +24,9 @@ import streamlit as st
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT / "tools"))
 
 from kingscode.reasoning.contracts import FORMATS, Question  # noqa: E402
-from kingscode.reasoning.decoder import DummyDecoder  # noqa: E402
-from kingscode.reasoning.pipeline import Pipeline  # noqa: E402
-from kingscode.reasoning.routing import RetrieverGraphRouter  # noqa: E402
 from kingscode.reasoning.presentation import debug_trace, view_model  # noqa: E402
 
 st.set_page_config(page_title="KingsCode · Derecho colombiano", page_icon="⚖️", layout="wide")
@@ -73,66 +72,73 @@ st.title("KingsCode · Consulta de derecho colombiano")
 st.caption("Hackathon 2026 · AI Week · Universidad de los Andes · patrocina Software Colombia")
 
 
-@st.cache_resource(show_spinner="Cargando índice del corpus (A)...")
-def load_retriever(corpus_dir: str | None):
-    from kingscode import Retriever
-    adapter = RetrieverGraphRouter()
-    retriever = Retriever(corpus_dir or None, graph_router=adapter)
-    return retriever, adapter
+# Configuración recomendada (la misma de `kingscode_pc_nueva_diagnostico.ps1 -Recomendada`):
+# BM25 + router, retrieval por opción, prompt v4, citas completadas y 5 menciones verificadas.
+RECOMMENDED = ["--retrieval-mode", "option", "--retriever-mode", "bm25", "--prompt-version", "v4",
+               "--citation-fill", "--cite-mentions", "5"]
 
 
-@st.cache_resource(show_spinner="Cargando decoder...")
-def load_decoder(alias: str, precision: str):
+def default_corpus() -> Path:
+    for name in ("corpus_v01_v02_a1", "corpus_v01_v02", "corpus"):
+        if (ROOT / name / "manifest.json").exists():
+            return ROOT / name
+    return ROOT / "corpus"
+
+
+@st.cache_resource(show_spinner="Cargando corpus, índice y decoder (una sola vez)...")
+def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str):
+    """Builds the pipeline with tools/member_b.py::_pipeline, the exact code of the batch runs."""
+    from member_b import _pipeline, build_parser
+    argv = ["batch", "--corpus", corpus_dir, "--k", str(k), "--graph-policy", graph_policy, *RECOMMENDED]
+    if alias != "dummy_abstain":
+        argv += ["--model", alias, "--precision", precision]
+    pipeline, identity = _pipeline(build_parser().parse_args(argv))
     if alias == "dummy_abstain":
-        return DummyDecoder(), "DummyDecoder: se abstiene siempre (Gate 1B). No hay razonamiento legal real."
-    from kingscode.generation.hf_decoder import HFDecoder
-    decoder = HFDecoder(alias, precision=precision)
-    decoder.load()
-    return decoder, f"HFDecoder real: {alias} ({precision}, temperatura 0)."
+        note = "DummyDecoder: se abstiene siempre (Gate 1B). No hay razonamiento legal real."
+    else:
+        pipeline.decoder.load()
+        note = f"HFDecoder real: {alias} ({precision}, temperatura 0, prompt v4, citas verificadas)."
+    return pipeline, note
 
 
 with st.sidebar:
     st.header("Configuración")
-    corpus_dir = st.text_input("Directorio del corpus", value=str(ROOT / "corpus"))
+    corpus_dir = st.text_input("Directorio del corpus", value=str(default_corpus()))
     try:
         import torch
         cuda_ok = torch.cuda.is_available()
     except Exception:
         cuda_ok = False
-    decoder_options = ["dummy_abstain"]
+    decoder_options = []
     if cuda_ok:
         try:
             from kingscode.generation.config import load_bakeoff
-            decoder_options += sorted(a for a, c in load_bakeoff()["candidates"].items() if c["enabled"])
+            enabled = [a for a, c in load_bakeoff()["candidates"].items() if c["enabled"]]
+            # qwen3-8b is the measured configuration (37,46/50 on sample_50): offer it first.
+            decoder_options += sorted(enabled, key=lambda a: (a != "qwen3-8b", a))
         except Exception as exc:
             st.warning(f"No se pudo leer config/decoder_bakeoff.json: {exc}")
     else:
         st.info("Sin CUDA disponible en esta máquina: solo DummyDecoder (abstención).")
+    decoder_options.append("dummy_abstain")
     decoder_alias = st.selectbox("Decoder", decoder_options)
     precision = st.selectbox("Precisión", ["bf16", "int8", "int4"], disabled=decoder_alias == "dummy_abstain")
     k = st.slider("Pasajes recuperados (k)", 1, 10, 8)
     graph_policy = st.selectbox("Política de grafo", ["router", "off", "auto", "on"], index=0)
     debug_mode = st.checkbox("Modo depuración (traza técnica)", value=False)
 
-try:
-    retriever, adapter = load_retriever(corpus_dir)
-    corpus_error = None
-except Exception as exc:
-    retriever = adapter = None
-    corpus_error = exc
-
-if corpus_error is not None:
-    st.markdown(f'<div class="kc-banner">No se pudo cargar el corpus en <code>{corpus_dir}</code>: '
-                f'{corpus_error}. Construya el índice de A (tools/member_a.py) o corrija la ruta.</div>',
+if not (Path(corpus_dir) / "manifest.json").exists():
+    st.markdown(f'<div class="kc-banner">No hay corpus en <code>{corpus_dir}</code>. Construya el índice de A '
+                f'(tools/member_a.py o kingscode_pc_nueva_diagnostico.ps1) o corrija la ruta.</div>',
                 unsafe_allow_html=True)
     st.stop()
 
 try:
-    decoder, decoder_note = load_decoder(decoder_alias, precision)
+    pipeline, decoder_note = load_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy)
 except Exception as exc:
-    st.markdown(f'<div class="kc-banner">No se pudo cargar el decoder "{decoder_alias}": {exc}. '
-                f'Usando DummyDecoder.</div>', unsafe_allow_html=True)
-    decoder, decoder_note = DummyDecoder(), "DummyDecoder de respaldo (el decoder solicitado falló al cargar)."
+    st.markdown(f'<div class="kc-banner">No se pudo cargar "{decoder_alias}": {exc}. '
+                f'Usando DummyDecoder (se abstiene siempre).</div>', unsafe_allow_html=True)
+    pipeline, decoder_note = load_pipeline(corpus_dir, "dummy_abstain", "bf16", k, graph_policy)
 
 st.markdown(f'<div class="kc-banner">{decoder_note} · índice congelado: '
             f'<code>{Path(corpus_dir).name}</code></div>', unsafe_allow_html=True)
@@ -150,7 +156,6 @@ if formato == "multiple_choice":
 
 if st.button("Responder") and pregunta.strip():
     question = Question(0, pregunta.strip(), formato, opciones)
-    pipeline = Pipeline(retriever.retrieve, adapter=adapter, decoder=decoder, k=k, graph_policy=graph_policy)
     with st.spinner("Recuperando evidencia y generando..."):
         row, trace = pipeline.run(question)
     view = view_model(row, trace)
