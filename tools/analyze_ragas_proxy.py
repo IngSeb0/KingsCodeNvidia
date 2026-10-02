@@ -106,7 +106,7 @@ def main(argv=None) -> int:
     for path in args.submissions:
         subs = {int(json.loads(l)["id"]): json.loads(l) for l in path.read_text(encoding="utf-8").splitlines() if l.strip()}
         sims, f1s, bleus, answered = [], [], [], 0
-        readability, ref_readability = [], []
+        readability, ref_readability, ratios = [], [], []
         pairs = []
         for qid, k in key.items():
             s = subs.get(qid)
@@ -117,6 +117,8 @@ def main(argv=None) -> int:
             pairs.append((len(sims), "query: " + ragas_text(s), "query: " + str(k.get("respuesta_esperada") or "")))
             truth = str(k.get("respuesta_esperada") or "")
             sims.append(None); f1s.append(token_f1(ragas_text(s), truth)); bleus.append(bleu(ragas_text(s), truth))
+            if truth.split():
+                ratios.append(len(ragas_text(s).split()) / len(truth.split()))
             for bucket, text in ((readability, ragas_text(s)), (ref_readability, truth)):
                 score = fernandez_huerta(text)
                 if score is not None:
@@ -131,6 +133,10 @@ def main(argv=None) -> int:
         result = {"run": str(path), "judged": n, "answered": answered,
                   "token_f1_mean": round(sum(f1s) / n, 4),  # = ROUGE-1 F1 over content tokens
                   "bleu4_mean": round(sum(bleus) / n, 4),
+                  # Length vs reference: F1 peaks at 1-2x and drops past 2x (2026-10-02 sample analysis).
+                  "ratio_longitud_mediana": round(sorted(ratios)[len(ratios) // 2], 2) if ratios else None,
+                  "pct_mas_del_doble": round(sum(r > 2 for r in ratios) / len(ratios), 3) if ratios else None,
+                  "pct_menos_de_la_mitad": round(sum(r < 0.5 for r in ratios) / len(ratios), 3) if ratios else None,
                   "legibilidad_fh": round(sum(readability) / len(readability), 1) if readability else None,
                   "legibilidad_fh_referencia": round(sum(ref_readability) / len(ref_readability), 1) if ref_readability else None,
                   "semantic_similarity_mean": round(sum(s or 0.0 for s in sims) / n, 4) if model is not None else None}

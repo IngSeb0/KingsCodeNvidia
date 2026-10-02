@@ -107,7 +107,7 @@ Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Where-Object { $_.Last
     $fwText = $(if ($fw) { ($fw.PSObject.Properties | ForEach-Object { "$($_.Name)=$($_.Value.n)" }) -join ", " } else { "-" })
     Write-Host ("  {0}`n    fallbacks: {1}`n    correcciones: {2}`n    avisos de extension: {3}" -f $run.Name, $(if ($why) { $why -join " | " } else { "ninguno" }), $coText, $fwText)
 }
-Write-Host "`nProxy de RAGAS (sin credito; token_f1 = ROUGE-1) y alineacion cita-afirmacion. Base: token_f1 0.275, bleu4 0.087, tasa_alineadas 0.689, tasa_debiles 0.109:" -ForegroundColor Cyan
+Write-Host "`nProxy de RAGAS (sin credito; token_f1 = ROUGE-1) y alineacion cita-afirmacion. Base: token_f1 0.275, bleu4 0.087, pct_mas_del_doble 0.229, tasa_alineadas 0.689, tasa_debiles 0.109:" -ForegroundColor Cyan
 Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Where-Object { $_.LastWriteTime -ge $Inicio -and (Test-Path "$($_.FullName)\batch\submissions.jsonl") } | Sort-Object LastWriteTime | ForEach-Object {
     Write-Host "  $($_.Name)"
     .\.venv\Scripts\python.exe tools\analyze_ragas_proxy.py "$($_.FullName)\batch\submissions.jsonl" --no-encoder
