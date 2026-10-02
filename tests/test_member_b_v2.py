@@ -170,6 +170,25 @@ class RetrievalModeTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 Pipeline(lambda *a: [], **bad)
 
+    def test_option_plan_routes_options_to_option_views_and_free_text_to_plan(self):
+        text = "¿Cuál es el término para contestar la demanda?"
+        store = self._store(text, plan_json("demandado notificado"))
+        with self.assertRaises(ValueError):
+            Pipeline(lambda *a: [], retrieval_mode="option_plan")
+        calls = []
+
+        def retrieve(question, k=8, graph_mode="auto", query_views=None):
+            calls.append((question, query_views))
+            return [ev()]
+        pipe = Pipeline(retrieve, retrieval_mode="option_plan", plans=store, graph_policy="off")
+        pipe.run(Question(79, text, "semi_open"))
+        self.assertEqual(calls, [(text, list(store.get(79, text).views))])
+        calls.clear()
+        # Multiple choice never needs (nor reads) a plan: same views as retrieval_mode="option".
+        pipe.run(Question(80, "Ley 1010 de 2006", "multiple_choice", {"A": "x", "B": "y"}))
+        self.assertEqual(len(calls), 3)
+        self.assertTrue(all(views is None for _, views in calls))
+
 
 class PlannerDiagnosticsTests(unittest.TestCase):
     def test_categories_oracle_fusion_loss_and_unsupported_hypotheses(self):

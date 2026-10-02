@@ -862,3 +862,9 @@ Detalle en `docs/ANALISIS_CORRIDAS_2026-10-01.md`.
 
 - **Síntoma (PC #1, corpus real):** la interfaz funcionaba pero se abstenía. **Causa:** el decoder por defecto del selector era `dummy_abstain` (siempre se abstiene) y la interfaz armaba su propio `Pipeline` sin prompt v4, sin `citation_fill`, sin menciones, sin retrieval por opción y con `corpus/` en vez del corpus combinado.
 - **Corrección:** `interfaz/app.py` construye ahora el pipeline con `tools/member_b.py::_pipeline` (el mismo código de las corridas) y los argumentos de `-Recomendada` (BM25 + router, `option`, v4, `--citation-fill`, `--cite-mentions 5`). `qwen3-8b` es la primera opción cuando hay CUDA; `dummy_abstain` queda al final. Corpus por defecto: `corpus_v01_v02_a1` > `corpus_v01_v02` > `corpus`. Pipeline y decoder se cargan una sola vez (`st.cache_resource`).
+
+## 2026-10-02 (tarde) — Modo `option_plan`: cerradas por opción, texto libre con plan congelado de Qwen
+
+- **Motivo:** las 3 fallas de citas que quedan (239 Código de Comercio, 247 Ley 472, 679 Ley 1581) son normas que no aparecen en la evidencia; el texto de la pregunta no nombra la norma. El modo `plan` (planner Qwen3-8B, solo texto público de la pregunta, vistas congeladas y no confiables: sin locator) existía pero nunca se midió, y pierde las consultas por opción de las cerradas.
+- **Cambio aditivo:** `retrieval_mode="option_plan"` en `Pipeline` — `multiple_choice` con opciones → exactamente las vistas de `option`; el resto → vistas del plan (vía nativa `query_views` de A). `member_b.py plan --retrieval-mode option_plan` solo planifica texto libre. Script: `-RetrievalMode option_plan` congela los planes antes del lote y suma su tiempo a s/pregunta. Test nuevo en `test_member_b_v2.py`.
+- **Criterio de adopción:** total sin RAGAS > 37,46 sin bajar cerradas, y proyección para 992 (incluido el planner) ≤ 5 h; si no, se queda `option`.

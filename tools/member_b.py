@@ -40,7 +40,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--run-dir", type=Path, help="batch: checkpoint/output directory")
     parser.add_argument("--fresh", action="store_true", help="batch: refuse to resume an existing run directory")
     parser.add_argument("--retries", type=int, default=2)
-    parser.add_argument("--retrieval-mode", choices=["base", "option", "plan"], default="option")
+    parser.add_argument("--retrieval-mode", choices=["base", "option", "plan", "option_plan"], default="option")
     parser.add_argument("--plans", type=Path, help="plan mode: frozen reports/query_plans/<id> directory (replay)")
     parser.add_argument("--k", type=int, default=8)
     parser.add_argument("--candidate-k", type=positive_int, default=30,
@@ -158,12 +158,14 @@ def main(argv=None):
     return int(report["status"] != "passed")
 
 
-def _read_items(path: Path) -> list[tuple]:
+def _read_items(path: Path, skip_options: bool = False) -> list[tuple]:
     """(id, question text) only: the planner never sees options, labels or gold."""
     items = []
     for line in path.read_text(encoding="utf-8-sig").splitlines():
         if line.strip():
             record = json.loads(line)
+            if skip_options and record.get("formato") == "multiple_choice" and record.get("opciones"):
+                continue  # option_plan answers these with option views: no plan needed
             items.append((record["id"], record.get("pregunta", record.get("question"))))
     return items
 
@@ -283,7 +285,7 @@ def run_b_command(args, parser) -> int:
     source = args.input or ROOT / "data/sample_50.jsonl"
     if args.command == "plan":
         from kingscode.reasoning.planner import PLANNER_PROMPT_VERSION, prompt_sha256
-        items = _read_items(source)
+        items = _read_items(source, skip_options=args.retrieval_mode == "option_plan")
         if args.dry_run:
             print(json.dumps({"status": "prepared_not_executed", "questions": len(items), "model": args.model or "qwen3-8b",
                               "prompt_version": PLANNER_PROMPT_VERSION, "prompt_sha256": prompt_sha256()}, indent=2))

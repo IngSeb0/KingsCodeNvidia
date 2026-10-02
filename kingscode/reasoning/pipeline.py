@@ -40,7 +40,7 @@ def rrf_merge(ranked_lists: list[list[dict]], k: int, constant: int = 60) -> lis
     return [seen[pid] for pid in ordered[:k]]
 
 
-RETRIEVAL_MODES = ("base", "option", "plan")
+RETRIEVAL_MODES = ("base", "option", "plan", "option_plan")
 _LOCATOR_KWARGS = ("locator", "locator_injection", "exact_locator")
 _PROFILE_SUM_FIELDS = (
     "dense_encoded_queries", "dense_encode_batches", "candidate_count", "reranker_pairs",
@@ -66,6 +66,11 @@ def supports_query_views(retrieve) -> bool:
         return False
 
 
+def uses_options(question: Question) -> bool:
+    """option_plan routes multiple choice with options to option views, everything else to the plan."""
+    return question.format == "multiple_choice" and bool(question.options)
+
+
 def retrieval_views(question: Question, query: NormalizedQuery, mode: str, plan=None,
                    plan_roles: tuple[str, ...] | None = None) -> tuple[tuple[str, bool, str], ...]:
     """(text, trusted, role) per retrieval call. Q0 is always first and trusted.
@@ -76,8 +81,10 @@ def retrieval_views(question: Question, query: NormalizedQuery, mode: str, plan=
     q0 = (query.retrieval_text, True, "Q0")
     if mode == "base":
         return (q0,)
-    if mode == "option":
+    if mode == "option" or (mode == "option_plan" and uses_options(question)):
         return (q0,) + tuple((v, True, "option") for v in query_variants(question, query)[1:])
+    if mode == "option_plan":
+        mode = "plan"  # free text: planner views (organizer options never mix with generated views)
     if mode == "plan":
         if plan is None:
             raise ValueError("plan mode needs a frozen plan (replay); plans are never generated inside the pipeline")
@@ -186,7 +193,7 @@ class Pipeline:
             raise ValueError("Invalid evidence count/graph policy")
         if retrieval_mode not in RETRIEVAL_MODES:
             raise ValueError(f"retrieval_mode must be one of {RETRIEVAL_MODES}; plan+option stays disabled until measured")
-        if retrieval_mode == "plan" and plans is None:
+        if retrieval_mode in {"plan", "option_plan"} and plans is None:
             raise ValueError("plan mode replays frozen plans: pass plans=PlanStore(...)")
         if type(native_option_fusion) is not bool:
             raise ValueError("native_option_fusion must be a boolean")
@@ -289,7 +296,9 @@ class Pipeline:
             raise TypeError("Pipeline only accepts a public Question")
         start = perf_counter()
         query = normalize_query(question.text)
-        plan = self.plans.get(question.id, question.text) if self.retrieval_mode == "plan" else None
+        plan = (self.plans.get(question.id, question.text)
+                if self.retrieval_mode == "plan" or (self.retrieval_mode == "option_plan" and not uses_options(question))
+                else None)
         variants = retrieval_views(question, query, self.retrieval_mode, plan, self.plan_roles)
         flat, flat_profiles = self._fetch_with_profiles(variants, "off")
         check_passages(flat)

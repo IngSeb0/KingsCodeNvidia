@@ -33,6 +33,7 @@
 #   ... -CiteMentions 3                                    (citas a nivel de cuerpo de normas NOMBRADAS en la evidencia)
 #   ... -Recomendada                                       (configuracion recomendada: v4 + CitationFill + CiteMentions 5)
 #   ... -Recomendada -K 10                                 (entrega 10 pasajes: los que mira el evaluador)
+#   ... -Recomendada -RetrievalMode option_plan            (texto libre con consultas extra del planner Qwen; cerradas igual)
 #   ... -SkipVerify                                        (omite regenerar 3 preguntas para comprobar reproducibilidad)
 #   SABADO (set ciego, misma configuracion elegida):
 #   ... -InputFile data\test_992.jsonl -RunName final_992 <flags elegidos>      -> copia submissions.jsonl a la raiz
@@ -50,7 +51,8 @@ param(
     [switch]$AllowKnownLocalCorpusDrift,
     [ValidateSet("bm25", "dense", "hybrid")] [string]$RetrieverMode = "bm25",
     [ValidateRange(1, 500)] [int]$CandidateK = 30,
-    [ValidateRange(1, 10)] [int]$K = 8,   # pasajes entregados; el evaluador mira los 10 primeros
+    [ValidateRange(1, 10)] [int]$K = 8,
+    [ValidateSet("option", "option_plan")] [string]$RetrievalMode = "option",   # option_plan: cerradas por opcion, texto libre con plan de Qwen   # pasajes entregados; el evaluador mira los 10 primeros
     [ValidateSet("1", "2")] [int]$RerankerBatchSize = 2,
     [ValidateRange(0, 100)] [int]$GraphBudget = 10,
     [switch]$Rerank,
@@ -78,7 +80,7 @@ function Check($w) { if ($LASTEXITCODE -ne 0) { throw "STOP: $w (exit $LASTEXITC
 function RefreshPath { $env:Path = [Environment]::GetEnvironmentVariable("Path", "User") + ";" + [Environment]::GetEnvironmentVariable("Path", "Machine") }
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
 if ($Recomendada) { $PromptVersion = "v4"; $CitationFill = [switch]::new($true); if ($CiteMentions -eq 0) { $CiteMentions = 5 } }
-if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
+if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
 
 # ---------------------------------------------------------------------
 Step "[0] Herramientas: Git, Python 3.12, GPU"
@@ -289,7 +291,7 @@ if ($ExactLocator -and -not $Rerank) {
 }
 # Same configuration for the batch and for the live-verification replay below.
 $CommonArgs = @(
-    "--input", $InputFile, "--retrieval-mode", "option",
+    "--input", $InputFile, "--retrieval-mode", $RetrievalMode,
     "--retriever-mode", $RetrieverMode, "--graph-policy", "router",
     "--k", "$K", "--candidate-k", "$CandidateK", "--graph-budget", "$GraphBudget", "--corpus", $CorpusDir, "--model", $Model,
     "--reranker-batch-size", "$RerankerBatchSize", "--precision", "bf16", "--prompt-version", $PromptVersion
@@ -299,6 +301,20 @@ if ($NativeOptionFusion) { $CommonArgs += "--native-option-fusion" }
 if ($ExactLocator) { $CommonArgs += "--exact-locator" }
 if ($CitationFill) { $CommonArgs += "--citation-fill" }
 if ($CiteMentions -gt 0) { $CommonArgs += @("--cite-mentions", [string]$CiteMentions) }
+$PlanSeconds = 0
+if ($RetrievalMode -eq "option_plan") {
+    # Frozen query plans (Qwen planner, public question text only) for the free-text questions.
+    # Resumable: an existing plan set with the same identity is reused, never regenerated.
+    $PlanWatch = [Diagnostics.Stopwatch]::StartNew()
+    $PlanOut = & $Py tools\member_b.py plan --input $InputFile --retrieval-mode option_plan --model $Model --precision bf16
+    Check "planner (option_plan)"
+    $PlanSeconds = [math]::Round($PlanWatch.Elapsed.TotalSeconds, 1)
+    $PlanText = ($PlanOut | Out-String); $At = $PlanText.LastIndexOf("`n{"); if ($PlanText.StartsWith("{")) { $At = 0 } elseif ($At -ge 0) { $At += 1 }
+    $PlansDir = ($PlanText.Substring([math]::Max(0, $At)) | ConvertFrom-Json).plans
+    if (-not $PlansDir) { throw "STOP: el planner no devolvio la carpeta de planes." }
+    Write-Host "Planes congelados: $PlansDir ($PlanSeconds s)" -ForegroundColor Green
+    $CommonArgs += @("--plans", $PlansDir)
+}
 # -Resume: reuse validated checkpoints (same identity enforced by BatchRunner); never --fresh.
 # Build the array explicitly: $(if ...) unrolls a one-element array into a string, and splatting a
 # string passes it character by character ("- - f r e s h", 2026-10-01).
@@ -325,7 +341,8 @@ if (-not $SkipVerify) {
     Step "[6b] Verificacion en vivo simulada: regenerar 3 preguntas (cerrada, semiabierta, abierta) y comparar"
     $Rows = Get-Content "$Run\submissions.jsonl" | ForEach-Object { $_ | ConvertFrom-Json }
     $Ids = @("multiple_choice", "semi_open", "open_ended") | ForEach-Object { $f = $_; ($Rows | Where-Object { $_.formato -eq $f -and -not $_.abstencion } | Select-Object -First 1).id } | Where-Object { $_ -ne $null }
-    try {
+    if (-not $Ids) { Warn "sin preguntas respondidas para regenerar (todas abstencion): verificacion omitida." }
+    else { try {
         $VerifyOut = & $Py tools\member_b.py verify --delivered "$Run\submissions.jsonl" --only ($Ids -join ",") @CommonArgs
         $VerifyOut | Out-File -Encoding utf8 "$Out\verify_live.json"
         # member_b prints one indented JSON object last: parse from the last '{' at column 0.
@@ -339,7 +356,7 @@ if (-not $SkipVerify) {
         # Never lose the run summary because the replay output could not be parsed.
         $Verify = [ordered]@{ ids = $Ids; all_match = $null; error = "$($_.Exception.Message)"; raw = "$Out\verify_live.json" }
         Warn "No se pudo leer la verificacion en vivo ($($_.Exception.Message)); revisa $Out\verify_live.json. El resumen se escribe igual."
-    }
+    } }
 }
 
 # ---------------------------------------------------------------------
@@ -368,7 +385,7 @@ $Br = Get-Content "$Run\batch_report.json" -Raw | ConvertFrom-Json
 $Ev = $(if ($IsSample) { Get-Content "$Out\evaluation_official.json" -Raw | ConvertFrom-Json } else { $null })
 # Seconds of this session over the items generated in it (resumed items are not re-timed).
 $Processed = [math]::Max(1, [int]$Br.rows - [int]$Br.counts.resumed)
-$Spq = [math]::Round($Br.seconds / $Processed, 1)
+$Spq = [math]::Round(($Br.seconds + $PlanSeconds) / $Processed, 1)   # incluye el planner de option_plan
 $Summary = [ordered]@{
     main_sha = $Sha; model = $Model; gpu = $Rt.gpu; vram_gb = $Rt.vram_gb; torch = $Rt.torch
     retrieval = "$RetrieverMode$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($ExactLocator) { ' + locator exacto' }) k=$K graph router (diagnostico, no freeze)"
