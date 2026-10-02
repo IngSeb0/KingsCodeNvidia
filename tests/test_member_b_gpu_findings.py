@@ -238,6 +238,20 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         _, open_refs = attach_references(open_row, evidence, attribution, 5, fill_ranked=True)
         self.assertEqual(len(open_refs), 1)                                 # RAGAS-read field never filled
 
+    def test_open_citation_builder_avoids_exact_citation_duplicates_across_ragas_fields(self):
+        from kingscode.reasoning.citation_builder import attach_references
+        evidence = [deepcopy(FIXTURES[0]), deepcopy(FIXTURES[1])]
+        row = {"id": 1, "formato": "open_ended", "abstencion": False, "marco_normativo": "",
+               "analisis": "El artículo 1 de la Ley 1010 de 2006 regula este punto.",
+               "jurisprudencia": "No hay jurisprudencia aplicable al punto.", "conclusion": "Respuesta."}
+        attribution = {"status": "explicit", "ids": [p["passage_id"] for p in evidence]}
+        row, refs = attach_references(row, evidence, attribution, 3)
+        self.assertEqual(len(refs), 2)
+        self.assertIn("Constitución Política", row["marco_normativo"])
+        self.assertNotIn("Ley 1010 de 2006", row["marco_normativo"])
+        combined = " ".join(row[k] for k in ("marco_normativo", "analisis", "jurisprudencia", "conclusion"))
+        self.assertEqual(len(official_bodies(combined)), 2)
+
     def test_cli_exposes_prompt_and_citation_options(self):
         import subprocess, sys
         from kingscode.common import ROOT

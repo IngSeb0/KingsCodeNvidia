@@ -12,7 +12,7 @@ import re
 
 from .guards import reference_support
 from .legal import passage_bodies, references
-from .official import official_bodies
+from .official import citations as official_citation_extractor, official_bodies
 
 CODE_NAMES = {
     "constitucion": "Constitución Política",
@@ -103,8 +103,9 @@ def attach_references(row: dict, evidence: list[dict], attribution: dict | None 
     attribution malformed/not_applicable: nothing is added (attribution is never invented).
     semi_open: referencia_legal is replaced (the juez RAGAS never reads it).
     multiple_choice: appended to justificacion unless its bodies are already cited.
-    open_ended: appended to marco_normativo (max 3, it is read by RAGAS) only if
-    marco_normativo has no supported citation left after repair.
+    open_ended: append any missing declared-source citations to marco_normativo
+    (max 3; RAGAS reads it), without duplicating citations already present in any
+    of the four fields read by the judge.
     """
     fmt = row.get("formato")
     source = attribution_source(attribution)
@@ -134,8 +135,22 @@ def attach_references(row: dict, evidence: list[dict], attribution: dict | None 
                                     for k, v in (row.get("descarte_opciones") or {}).items()}
     elif fmt == "open_ended":
         marco = (row.get("marco_normativo") or "").strip()
-        if not official_bodies(marco):
-            row["marco_normativo"] = (marco + " " if marco else "") + "Normas aplicables: " + "; ".join(refs) + "."
+        # RAGAS scores all four open-ended fields concatenated. Keep the cited legal
+        # basis complete, but don't repeat a citation already present in analysis,
+        # jurisprudencia or conclusion merely because marco_normativo is citation-free.
+        extractor = official_citation_extractor()
+        represented = set()
+        for field in ("marco_normativo", "analisis", "jurisprudencia", "conclusion"):
+            represented |= extractor.extract(row.get(field) or "")
+        missing = []
+        for ref in refs:
+            normalized = extractor.extract(ref)
+            if normalized and normalized <= represented:
+                continue
+            missing.append(ref)
+            represented |= normalized
+        if missing:
+            row["marco_normativo"] = (marco + " " if marco else "") + "Normas aplicables: " + "; ".join(missing) + "."
     return row, refs
 
 
