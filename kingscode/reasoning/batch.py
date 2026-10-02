@@ -122,6 +122,10 @@ class BatchRunner:
             if resume and item_path.exists() and _valid_checkpoint(item_path, question):
                 counts["resumed"] += 1
                 continue
+            # Start line: a slow or stuck item (VRAM spilling to shared memory, a very long prompt)
+            # is visible immediately instead of a silent console until the item finishes.
+            print(f"[batch] -> {sum(counts.values()) + 1}/{len(questions)} id={question.id} {question.format} generando...",
+                  file=sys.stderr, flush=True)
             row, trace, errors = self._attempt(question)
             status = "ok"
             if errors:

@@ -187,7 +187,8 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         self.assertNotEqual(prompt_sha256(5, PROMPT_V4), prompt_sha256(5, PROMPT_V6))
         self.assertNotIn("especialidad", system_prompt("semi_open", 5, PROMPT_V4))  # v4 unchanged
         v6 = build_messages(Q, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version=PROMPT_V6)[0]["content"]
-        for needle in ("la evidencia no menciona", "especialidad", "única que puedes citar", "abstencion (false)", "mínimo 3"):
+        for needle in ("la evidencia no menciona", "especialidad", "única que puedes citar", "abstencion (false)", "mínimo 3",
+                       "empieza con \"Sí\" o \"No\"", "Tiempo jurídico"):
             self.assertIn(needle, v6)
         mc = system_prompt("multiple_choice", 5, PROMPT_V6)
         self.assertLess(mc.index("justificacion"), mc.index("respuesta_correcta"))
