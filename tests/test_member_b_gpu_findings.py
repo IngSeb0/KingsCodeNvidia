@@ -166,6 +166,20 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         for fmt in ("multiple_choice", "semi_open", "open_ended"):
             self.assertIn("pasajes_usados", system_prompt(fmt, 5, PROMPT_V6))
 
+    def test_prompt_v6_adds_authority_from_official_host_only(self):
+        import json
+        from kingscode.generation.prompts import PROMPT_V4, PROMPT_V6, build_messages, source_authority
+        from kingscode.reasoning.decoder import PromptSpec
+        self.assertEqual(source_authority("https://www.corteconstitucional.gov.co/relatoria/2025/T-256-25.htm"), "Corte Constitucional")
+        self.assertEqual(source_authority("https://cortesuprema.gov.co/x"), "Corte Suprema de Justicia")
+        self.assertIsNone(source_authority("https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=1"))
+        self.assertIsNone(source_authority(None))
+        passage = deepcopy(FIXTURES[1])
+        passage["source_url"] = "https://www.corteconstitucional.gov.co/relatoria/2007/C-960-07.htm"
+        user = lambda v: json.loads(build_messages(Q, [deepcopy(passage)], PromptSpec("semi_open"), version=v)[1]["content"])
+        self.assertEqual(user(PROMPT_V6)["evidencia"][0]["autoridad"], "Corte Constitucional")
+        self.assertNotIn("autoridad", user(PROMPT_V4)["evidencia"][0])  # v4 evidence unchanged
+
     def test_citation_fill_adds_verified_ranked_citations_only_where_ragas_does_not_read(self):
         from kingscode.reasoning.citation_builder import attach_references
         evidence = [deepcopy(FIXTURES[i]) for i in (1, 0, 2, 3, 4)]
