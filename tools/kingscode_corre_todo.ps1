@@ -8,12 +8,14 @@
 # 3. Corpus ACTUALIZADO: aparta el corpus actual (lo renombra a *.antes_<fecha>, no lo borra) y el
 #    diagnostico vuelve a descargar HOY las fuentes oficiales + adiciones versionadas (asi salio el 39,02).
 #    -MantenerCorpus usa el corpus que ya esta en la maquina.
-# 4. Corre la base (v4, -Recomendada) y la mejor version (v6) sobre ese corpus y las compara.
+# 4. Corre la base (v4, -Recomendada), v6 (razonamiento juridico) y v7 (v6 + economia de respuesta)
+#    sobre ese mismo corpus y elige la mejor (gana solo si supera a v4 sin bajar cerradas, 0 sin respaldo, <= 5 h).
 # 5. Respalda el corpus usado en $HOME\kc_snapshot (para el sabado: -Accion restaurar).
 # 6. Escribe DOCUMENTO_FINAL.md de la mejor version y dice cual usar.
 # =====================================================================
 param(
     [switch]$MantenerCorpus,
+    [string]$Variantes = "recomendada,v6,v7_concise",   # p. ej. "v7_concise" si v4 y v6 ya se midieron con este corpus
     [string]$Work = "$HOME\KingsCodeGPU\KingsCodeNvidia"
 )
 $ErrorActionPreference = "Stop"
@@ -50,11 +52,11 @@ if ($MantenerCorpus) {
     Write-Host "El diagnostico descargara hoy las fuentes oficiales y reconstruira el corpus (10-20 min la primera vez)." -ForegroundColor Yellow
 }
 
-Paso "4/6 Base (v4) y mejor version (v6) sobre el mismo corpus"
+Paso "4/6 v4 (base), v6 y v7 sobre el mismo corpus (~45 min)"
 $Antes = @(Get-ChildItem reports\decoder_diagnostic -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.Name })
 $p = Start-Process -FilePath "powershell.exe" -NoNewWindow -Wait -PassThru -ArgumentList @(
     "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$((Resolve-Path .\tools\kingscode_variantes.ps1).Path)`"",
-    "-Variantes", "recomendada,v6", "-Base", "39.02")
+    "-Variantes", $Variantes, "-Base", "39.02")
 $Nuevas = @(Get-ChildItem reports\decoder_diagnostic -Directory | Where-Object { $Antes -notcontains $_.Name -and (Test-Path "$($_.FullName)\evaluation_official.json") } | Sort-Object LastWriteTime)
 $Res = foreach ($r in $Nuevas) {
     $e = Get-Content "$($r.FullName)\evaluation_official.json" -Raw | ConvertFrom-Json
@@ -70,14 +72,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\kingscode_snapshot.p
 
 Paso "6/6 Documento final y decision"
 $V4 = $Res | Where-Object { $_.prompt -like "*v4*" } | Select-Object -Last 1
-$V6 = $Res | Where-Object { $_.prompt -like "*v6*" } | Select-Object -Last 1
 $Gana = $V4
-if ($V6 -and (-not $V4 -or ($V6.total -gt $V4.total -and $V6.cerradas -ge $V4.cerradas -and $V6.sin_respaldo -eq 0 -and $V6.horas_992 -le 5))) { $Gana = $V6 }
+foreach ($Cand in @($Res | Where-Object { $_.prompt -notlike "*v4*" })) {
+    if (-not $Gana -or ($Cand.total -gt $Gana.total -and (-not $V4 -or $Cand.cerradas -ge $V4.cerradas) -and $Cand.sin_respaldo -eq 0 -and $Cand.horas_992 -le 5)) { $Gana = $Cand }
+}
 & $Py tools\final_document.py $Gana.dir | Out-Null
-$Flags = $(if ($Gana -eq $V6) { "-Recomendada -PromptVersion v6" } else { "-Recomendada" })
+$Ver = ($Gana.prompt -replace "grounded-formats-", "")
+$Flags = $(if ($Ver -eq "v4") { "-Recomendada" } else { "-Recomendada -PromptVersion $Ver" })
 Write-Host ""
 Write-Host ("MEJOR VERSION: {0}  ->  {1}/50 sin RAGAS (cerradas {2}, {3} h para 992)" -f $Flags, $Gana.total, $Gana.cerradas, $Gana.horas_992) -ForegroundColor Green
-if ($V4 -and $V6) { Write-Host ("v4 {0} | v6 {1} | diferencia {2:+0.00;-0.00}" -f $V4.total, $V6.total, ($V6.total - $V4.total)) -ForegroundColor Green }
+Write-Host (($Res | ForEach-Object { "{0} = {1}" -f ($_.prompt -replace "grounded-formats-", ""), $_.total }) -join " | ") -ForegroundColor Green
 Write-Host "Documento: $($Gana.dir)\DOCUMENTO_FINAL.md" -ForegroundColor Green
 Write-Host "Respaldo del corpus: $HOME\kc_snapshot  (copiarlo a USB/OneDrive)" -ForegroundColor Green
 Write-Host "Sabado: git checkout $Commit ; kingscode_snapshot.ps1 -Accion restaurar -Origen <copia> ; kingscode_final.ps1 -Flags `"$Flags`" -InputFile <set ciego> -RunName final_992" -ForegroundColor Green
