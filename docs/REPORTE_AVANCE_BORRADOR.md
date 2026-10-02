@@ -8,7 +8,7 @@
 
 ## 1. Puntaje sobre las preguntas de muestra
 
-Resultado de `python scripts/evaluate.py --submission submissions.jsonl --split sample`.
+Resultado de `python scripts/evaluate.py --submission submissions_sample50.jsonl --split sample` (50 filas, 0 errores de validación, sha256 `e2041f84…`, en el repositorio del equipo: `docs/entrega_viernes/`; generado automáticamente por el pipeline con esta configuración sobre las salidas guardadas del modelo).
 
 | Componente | Puntos obtenidos | Puntos posibles |
 |---|---:|---:|
