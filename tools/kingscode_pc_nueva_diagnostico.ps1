@@ -33,6 +33,8 @@
 #   ... -CiteMentions 3                                    (citas a nivel de cuerpo de normas NOMBRADAS en la evidencia)
 #   ... -Recomendada                                       (configuracion recomendada: v4 + CitationFill + CiteMentions 5)
 #   ... -Recomendada -K 10                                 (entrega 10 pasajes: los que mira el evaluador)
+#   ... -Recomendada -PromptVersion v6                    (prompt v6: razonamiento juridico, sin escudarse en la evidencia)
+#   ... -Recomendada -DocCap 3                             (maximo 3 pasajes por documento: evidencia mas diversa)
 #   ... -Recomendada -RetrievalMode option_plan            (texto libre con consultas extra del planner Qwen; cerradas igual)
 #   ... -SkipVerify                                        (omite regenerar 3 preguntas para comprobar reproducibilidad)
 #   SABADO (set ciego, misma configuracion elegida):
@@ -52,13 +54,14 @@ param(
     [ValidateSet("bm25", "dense", "hybrid")] [string]$RetrieverMode = "bm25",
     [ValidateRange(1, 500)] [int]$CandidateK = 30,
     [ValidateRange(1, 10)] [int]$K = 8,
+    [ValidateRange(0, 8)] [int]$DocCap = 0,   # >0: maximo N pasajes por documento (trae 10 y diversifica)
     [ValidateSet("option", "option_plan")] [string]$RetrievalMode = "option",   # option_plan: cerradas por opcion, texto libre con plan de Qwen   # pasajes entregados; el evaluador mira los 10 primeros
     [ValidateSet("1", "2")] [int]$RerankerBatchSize = 2,
     [ValidateRange(0, 100)] [int]$GraphBudget = 10,
     [switch]$Rerank,
     [switch]$NativeOptionFusion,
     [switch]$ExactLocator,
-    [ValidateSet("v3", "v4")] [string]$PromptVersion = "v3",
+    [ValidateSet("v3", "v4", "v6")] [string]$PromptVersion = "v3",
     [string]$InputFile = "data\sample_50.jsonl",
     [switch]$Resume,
     [switch]$CitationFill,
@@ -79,8 +82,8 @@ function Warn($m) { Write-Host "AVISO: $m" -ForegroundColor Yellow }
 function Check($w) { if ($LASTEXITCODE -ne 0) { throw "STOP: $w (exit $LASTEXITCODE)" } }
 function RefreshPath { $env:Path = [Environment]::GetEnvironmentVariable("Path", "User") + ";" + [Environment]::GetEnvironmentVariable("Path", "Machine") }
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
-if ($Recomendada) { $PromptVersion = "v4"; $CitationFill = [switch]::new($true); if ($CiteMentions -eq 0) { $CiteMentions = 5 } }
-if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
+if ($Recomendada) { if ($PromptVersion -eq "v3") { $PromptVersion = "v4" }; $CitationFill = [switch]::new($true); if ($CiteMentions -eq 0) { $CiteMentions = 5 } }
+if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })$(if ($DocCap -gt 0) { "_cap$DocCap" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
 
 # ---------------------------------------------------------------------
 Step "[0] Herramientas: Git, Python 3.12, GPU"
@@ -301,6 +304,7 @@ if ($NativeOptionFusion) { $CommonArgs += "--native-option-fusion" }
 if ($ExactLocator) { $CommonArgs += "--exact-locator" }
 if ($CitationFill) { $CommonArgs += "--citation-fill" }
 if ($CiteMentions -gt 0) { $CommonArgs += @("--cite-mentions", [string]$CiteMentions) }
+if ($DocCap -gt 0) { $CommonArgs += @("--doc-cap", [string]$DocCap) }
 $PlanSeconds = 0
 if ($RetrievalMode -eq "option_plan") {
     # Frozen query plans (Qwen planner, public question text only) for the free-text questions.

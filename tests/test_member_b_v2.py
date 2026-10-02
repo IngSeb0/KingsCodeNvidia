@@ -190,6 +190,27 @@ class RetrievalModeTests(unittest.TestCase):
         self.assertTrue(all(views is None for _, views in calls))
 
 
+class DocCapTests(unittest.TestCase):
+    def test_cap_keeps_rank_order_and_refills(self):
+        from kingscode.reasoning.pipeline import cap_per_document
+        ps = [{"passage_id": f"p{i}", "doc_id": d} for i, d in enumerate("AAAABBCA")]
+        self.assertEqual([p["passage_id"] for p in cap_per_document(ps, 2, 5)], ["p0", "p1", "p4", "p5", "p6"])
+        # not enough distinct documents: refilled from the skipped ones, still in rank order
+        self.assertEqual([p["passage_id"] for p in cap_per_document(ps, 1, 5)], ["p0", "p1", "p2", "p4", "p6"])
+
+    def test_off_by_default_and_fetches_ten_when_on(self):
+        calls = []
+
+        def retrieve(question, k, graph_mode="off"):
+            calls.append(k)
+            return [ev()]
+        Pipeline(retrieve, graph_policy="off", retrieval_mode="base").run(Question(79, "Ley 1010 de 2006", "semi_open"))
+        Pipeline(retrieve, graph_policy="off", retrieval_mode="base", doc_cap=3).run(Question(79, "Ley 1010 de 2006", "semi_open"))
+        self.assertEqual(calls, [8, 10])
+        with self.assertRaises(ValueError):
+            Pipeline(retrieve, doc_cap=-1)
+
+
 class PlannerDiagnosticsTests(unittest.TestCase):
     def test_categories_oracle_fusion_loss_and_unsupported_hypotheses(self):
         import sys

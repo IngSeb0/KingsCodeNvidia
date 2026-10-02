@@ -66,6 +66,26 @@ def supports_query_views(retrieve) -> bool:
         return False
 
 
+def cap_per_document(passages: list[dict], cap: int, k: int) -> list[dict]:
+    """First k passages in rank order with at most cap per doc_id; refilled in rank order from
+    the skipped ones when fewer than k remain (never returns fewer passages than available)."""
+    kept, skipped, per_doc = [], [], {}
+    for passage in passages:
+        doc = passage.get("doc_id")
+        if per_doc.get(doc, 0) < cap:
+            kept.append(passage)
+            per_doc[doc] = per_doc.get(doc, 0) + 1
+        else:
+            skipped.append(passage)
+    chosen = kept[:k]
+    if len(chosen) < k:
+        ids = {p["passage_id"] for p in chosen}
+        chosen += [p for p in skipped if p["passage_id"] not in ids][:k - len(chosen)]
+        order = {p["passage_id"]: i for i, p in enumerate(passages)}
+        chosen.sort(key=lambda p: order[p["passage_id"]])
+    return chosen
+
+
 def uses_options(question: Question) -> bool:
     """option_plan routes multiple choice with options to option views, everything else to the plan."""
     return question.format == "multiple_choice" and bool(question.options)
@@ -188,7 +208,7 @@ class Pipeline:
     def __init__(self, retrieve, *, adapter: RetrieverGraphRouter | None = None, decoder: Decoder | None = None,
                  k: int = 8, graph_policy: str = "router", retrieval_mode: str = "option", plans=None,
                  max_refs: int = 3, citation_fill: bool = False, cite_mentions: int = 0, native_option_fusion: bool = False,
-                 plan_roles: tuple[str, ...] | None = None, option_supporter=None):
+                 plan_roles: tuple[str, ...] | None = None, option_supporter=None, doc_cap: int = 0):
         if type(k) is not int or not 1 <= k <= 10 or graph_policy not in {"router", "off", "auto", "on"}:
             raise ValueError("Invalid evidence count/graph policy")
         if retrieval_mode not in RETRIEVAL_MODES:
@@ -206,13 +226,24 @@ class Pipeline:
         self.cite_mentions = cite_mentions
         self.native_option_fusion = native_option_fusion
         self.plan_roles, self.option_supporter = plan_roles, option_supporter
+        if type(doc_cap) is not int or doc_cap < 0:
+            raise ValueError("doc_cap must be a non-negative integer (0 = off)")
+        # doc_cap > 0: fetch the 10 passages the evaluator can see, then keep at most doc_cap per
+        # document in rank order (refilling from the skipped ones), so one long judgment cannot
+        # fill the whole evidence. Off (0) keeps the exact k-passage calls of every measured run.
+        self.doc_cap = doc_cap
+        self.fetch_k = 10 if doc_cap else k
         self.locator_kwarg = locator_switch(retrieve)
         self.native_views = supports_query_views(retrieve)
 
     def _call(self, text: str, trusted: bool, mode: str) -> list[dict]:
         if not trusted and self.locator_kwarg:
-            return self.retrieve(text, self.k, mode, **{self.locator_kwarg: False})
-        return self.retrieve(text, self.k, mode)
+            return self.retrieve(text, self._fetch_k, mode, **{self.locator_kwarg: False})
+        return self.retrieve(text, self._fetch_k, mode)
+
+    @property
+    def _fetch_k(self) -> int:
+        return getattr(self, "fetch_k", self.k)  # objects built without __init__ (tests) keep k
 
     def _fetch(self, views, mode: str) -> list[dict]:
         return self._fetch_with_profiles(views, mode)[0]
@@ -266,7 +297,7 @@ class Pipeline:
         if self._native(views):
             # A's own multi-view path: the exact locator, graph router and
             # reranker see only Q0; generated views only widen candidates.
-            passages = self.retrieve(views[0][0], self.k, mode, query_views=[text for text, _, _ in views[1:]])
+            passages = self.retrieve(views[0][0], self._fetch_k, mode, query_views=[text for text, _, _ in views[1:]])
             return passages, self._aggregate_view_profiles(self._profiles_from(passages))
         ranked_lists = []
         profiles = []
@@ -274,7 +305,7 @@ class Pipeline:
             ranked = self._call(text, trusted, mode)
             ranked_lists.append(ranked)
             profiles.extend(self._profiles_from(ranked))
-        return rrf_merge(ranked_lists, self.k), self._aggregate_view_profiles(profiles)
+        return rrf_merge(ranked_lists, self._fetch_k), self._aggregate_view_profiles(profiles)
 
     def _native(self, views) -> bool:
         if len(views) < 2 or not self.native_views or not views[0][1]:
@@ -313,6 +344,8 @@ class Pipeline:
             # silently falling back to A's question-only provisional AUTO router.
             executed = decision if decision == "on" or self.adapter else "on"
             passages, passage_profiles = self._fetch_with_profiles(variants, executed)
+        if getattr(self, "doc_cap", 0):
+            passages = cap_per_document(passages, self.doc_cap, self.k)
         option_support = None
         if self.option_supporter and question.format == "multiple_choice" and passages:
             option_support = self.option_supporter(question.text, question.options, passages)

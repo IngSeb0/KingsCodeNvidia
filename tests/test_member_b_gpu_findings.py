@@ -152,6 +152,20 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_messages(Q, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version="grounded-formats-v9")
 
+    def test_prompt_v6_reasons_without_hedging_and_keeps_v4_fields(self):
+        from kingscode.generation.prompts import PROMPT_V4, PROMPT_V6, build_messages, prompt_sha256, system_prompt
+        from kingscode.reasoning.decoder import PromptSpec
+        self.assertEqual(PROMPT_V6, "grounded-formats-v6")  # tools/member_b.py builds it from --prompt-version v6
+        self.assertNotEqual(prompt_sha256(5, PROMPT_V4), prompt_sha256(5, PROMPT_V6))
+        self.assertNotIn("especialidad", system_prompt("semi_open", 5, PROMPT_V4))  # v4 unchanged
+        v6 = build_messages(Q, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version=PROMPT_V6)[0]["content"]
+        for needle in ("la evidencia no menciona", "especialidad", "única que puedes citar", "abstencion (false)", "mínimo 3"):
+            self.assertIn(needle, v6)
+        mc = system_prompt("multiple_choice", 5, PROMPT_V6)
+        self.assertLess(mc.index("justificacion"), mc.index("respuesta_correcta"))
+        for fmt in ("multiple_choice", "semi_open", "open_ended"):
+            self.assertIn("pasajes_usados", system_prompt(fmt, 5, PROMPT_V6))
+
     def test_citation_fill_adds_verified_ranked_citations_only_where_ragas_does_not_read(self):
         from kingscode.reasoning.citation_builder import attach_references
         evidence = [deepcopy(FIXTURES[i]) for i in (1, 0, 2, 3, 4)]
