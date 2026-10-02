@@ -39,6 +39,8 @@ def main(argv=None) -> int:
         f[0] += 1
         f[1] += bool(r.get("abstencion"))
     verify = resumen.get("verificacion_en_vivo") or {}
+    if not isinstance(verify, dict):  # "omitida (-SkipVerify)" in variant runs
+        verify = {"ids": "-", "all_match": str(verify)}
     lines = [f"# Documento final — corrida `{run.name}`", "",
              "| Dato | Valor |", "|---|---|",
              f"| Commit | `{resumen.get('main_sha', '?')}` |",
