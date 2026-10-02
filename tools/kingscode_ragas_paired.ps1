@@ -1,8 +1,8 @@
 # Compara una sola técnica contra -Recomendada (39.02/50), con el mismo corpus y RAGAS en ambos perfiles.
-# Uso: -CandidateTechnique doccap3|v7-concise. Requiere que el control reproduzca 39.02/50;
+# Uso: -CandidateTechnique doccap3|v7-concise|doccap3-v7. Requiere que el control reproduzca 39.02/50;
 # si da otro puntaje, detiene el par y presenta hashes/identidad para auditar PCs y corpus.
 param(
-    [ValidateSet("doccap3", "v7-concise")] [string]$CandidateTechnique = "doccap3",
+    [ValidateSet("doccap3", "v7-concise", "doccap3-v7")] [string]$CandidateTechnique = "doccap3",
     [string]$Work = "$HOME\KingsCodeGPU\KingsCodeNvidia"
 )
 $ErrorActionPreference = "Stop"
@@ -17,6 +17,7 @@ $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
 $CandidateSpec = switch ($CandidateTechnique) {
     "doccap3" { @{ name = "doccap3"; flags = @("-Recomendada", "-DocCap", "3") } }
     "v7-concise" { @{ name = "v7concise"; flags = @("-Recomendada", "-PromptVersion", "v7") } }
+    "doccap3-v7" { @{ name = "doccap3_v7"; flags = @("-Recomendada", "-DocCap", "3", "-PromptVersion", "v7") } }
 }
 $Runs = @(
     @{ name = "ragas_recomendada_control_$Stamp"; flags = @("-Recomendada") },
@@ -71,6 +72,7 @@ if ($Control.summary.prompt_version -ne "grounded-formats-v4" -or
     [int]$Control.summary.doc_cap -ne 0 -or
     ($CandidateTechnique -eq "doccap3" -and ([int]$CandidateRun.summary.doc_cap -ne 3 -or $CandidateRun.summary.prompt_version -ne $Control.summary.prompt_version)) -or
     ($CandidateTechnique -eq "v7-concise" -and ([int]$CandidateRun.summary.doc_cap -ne 0 -or $CandidateRun.summary.prompt_version -ne "grounded-formats-v7")) -or
+    ($CandidateTechnique -eq "doccap3-v7" -and ([int]$CandidateRun.summary.doc_cap -ne 3 -or $CandidateRun.summary.prompt_version -ne "grounded-formats-v7")) -or
     [int]$CandidateRun.summary.max_context_tokens -ne [int]$Control.summary.max_context_tokens) {
     throw "El control no coincide con -Recomendada o el candidato cambió más de una variable ($CandidateTechnique)."
 }
