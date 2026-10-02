@@ -55,6 +55,7 @@ $Catalogo = [ordered]@{
     "hybrid"         = @("-RetrieverMode", "hybrid")
     "alia"           = @("-Model", "alia-legal-7b")
     "v6"             = @("-Recomendada", "-PromptVersion", "v6")
+    "v7_concise"     = @("-Recomendada", "-PromptVersion", "v7")
     "option_plan"    = @("-Recomendada", "-RetrievalMode", "option_plan")
     "doccap3"        = @("-Recomendada", "-DocCap", "3")
     "ctx16k"         = @("-Recomendada", "-MaxContext", "16384")

@@ -94,7 +94,22 @@ Incluye palabras clave pertinentes y en referencia_legal las normas o sentencias
     "open_ended": """Campos, en este orden: abstencion (false), marco_normativo, analisis, jurisprudencia, conclusion (todos strings).
 marco_normativo enuncia las normas aplicables de los pasajes y su jerarquía. analisis debe tener entre 5 y 8 oraciones completas (mínimo 5, máximo 8) con este orden: hechos jurídicamente relevantes, problema jurídico, regla aplicable con su cita, aplicación de la regla a cada hecho (requisitos que se cumplen y que no) y consecuencia jurídica. jurisprudencia cita solo decisiones de los pasajes y explica su regla; si no hay, dilo en una oración sin inventarla. conclusion responde de forma directa y concreta lo que pide el caso. En todos los campos, cada oración aporta una afirmación distinta: sin repeticiones, sin listas de normas sin contenido y sin contexto que el caso no pide.""",
 }
-ACTIVE_PROMPT_VERSIONS = {PROMPT_VERSION, PROMPT_V4, PROMPT_V5_OPTION_SUPPORT, PROMPT_V6}
+# v7 (2026-10-02), candidate targeting the known RAGAS error pattern: long answers
+# introduce unsupported/extra claims and dilute reference overlap. It keeps v6's legal
+# reasoning/citation rules but uses a minimal answer budget and forbids repeating claims
+# across fields. This is opt-in and must be compared on a frozen corpus before adoption.
+PROMPT_V7 = "grounded-formats-v7"
+COMMON_V7 = COMMON_V6 + """
+Economía de respuesta: entrega solo las proposiciones necesarias para contestar lo preguntado. No añadas contexto, antecedentes, definiciones ni recomendaciones que no se pidan. No repitas una misma regla o conclusión en campos distintos. Una afirmación nueva debe aportar un elemento necesario; si no, omítela. Conserva todos los requisitos, excepciones y hechos que sí cambien la respuesta.
+"""
+FORMAT_INSTRUCTIONS_V7 = {
+    "multiple_choice": FORMAT_INSTRUCTIONS_V6["multiple_choice"],
+    "semi_open": """Campos, en este orden: abstencion (false), respuesta (string), palabras_clave (array de strings), referencia_legal (string).
+respuesta debe tener exactamente 3 oraciones breves y como máximo 150 palabras: (1) respuesta directa; (2) regla o requisito que la decide, con cita verificable; (3) aplicación, condición o consecuencia indispensable. Si la pregunta pide un dato puntual, las tres oraciones deben ser muy breves. No repitas la respuesta en palabras_clave ni en referencia_legal; incluye allí solo términos o referencias útiles y verificables.""",
+    "open_ended": """Campos, en este orden: abstencion (false), marco_normativo, analisis, jurisprudencia, conclusion (todos strings).
+marco_normativo identifica únicamente las disposiciones aplicables aportadas, sin volver a explicar su contenido. analisis tiene exactamente 5 oraciones, en este orden: hechos relevantes; problema jurídico; regla con cita; aplicación por requisitos al caso; consecuencia jurídica. Cada oración debe añadir una proposición necesaria distinta. jurisprudencia contiene solo la regla de una decisión aportada que resuelva el punto; si no hay una, devuelve cadena vacía. conclusion responde en una oración directa, sin repetir el análisis ni agregar hechos.""",
+}
+ACTIVE_PROMPT_VERSIONS = {PROMPT_VERSION, PROMPT_V4, PROMPT_V5_OPTION_SUPPORT, PROMPT_V6, PROMPT_V7}
 
 MAX_USED_PASSAGES = 5
 ATTRIBUTION_INSTRUCTION = """Si respondes, añade también el campo "pasajes_usados": lista con los passage_id (como máximo {max_used}) de los pasajes de la evidencia en que realmente te basaste. Usa solo passage_id que aparezcan en la evidencia; no inventes identificadores.
@@ -103,8 +118,10 @@ LEGACY_PROMPT_VERSIONS = {"grounded-formats-v1", "grounded-formats-v2"}
 
 
 def system_prompt(fmt: str, max_used: int = MAX_USED_PASSAGES, version: str = PROMPT_VERSION) -> str:
-    if version == PROMPT_V6:
-        return COMMON_V6 + "\n" + FORMAT_INSTRUCTIONS_V6[fmt] + "\n" + ATTRIBUTION_INSTRUCTION.format(max_used=max_used)
+    if version in {PROMPT_V6, PROMPT_V7}:
+        common = COMMON_V7 if version == PROMPT_V7 else COMMON_V6
+        instructions = FORMAT_INSTRUCTIONS_V7 if version == PROMPT_V7 else FORMAT_INSTRUCTIONS_V6
+        return common + "\n" + instructions[fmt] + "\n" + ATTRIBUTION_INSTRUCTION.format(max_used=max_used)
     instructions = FORMAT_INSTRUCTIONS_V4 if version == PROMPT_V4 else FORMAT_INSTRUCTIONS
     extra =("\nLa evidencia puede incluir option_support: cosenos auxiliares de Q+opción frente a cada pasaje. "
              "No son probabilidades, no prueban implicación jurídica y no eligen la respuesta; contrasta cada opción "
@@ -141,7 +158,7 @@ def build_messages(question: Question, passages: list[dict], prompt: PromptSpec,
     if prompt.version not in LEGACY_PROMPT_VERSIONS | {PROMPT_VERSION} or version not in ACTIVE_PROMPT_VERSIONS:
         raise ValueError("Unknown prompt version")
     evidence = [{k: p.get(k) for k in ("passage_id", "doc_id", "norm_name", "article", "source_url", "text")} for p in passages]
-    if version == PROMPT_V6:
+    if version in {PROMPT_V6, PROMPT_V7}:
         for entry in evidence:
             authority = source_authority(entry.get("source_url"))
             if authority:

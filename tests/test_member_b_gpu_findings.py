@@ -195,6 +195,19 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         for fmt in ("multiple_choice", "semi_open", "open_ended"):
             self.assertIn("pasajes_usados", system_prompt(fmt, 5, PROMPT_V6))
 
+    def test_prompt_v7_is_concise_but_preserves_v6_citation_and_reasoning_rules(self):
+        from kingscode.generation.prompts import PROMPT_V6, PROMPT_V7, build_messages, prompt_sha256, system_prompt
+        from kingscode.reasoning.decoder import PromptSpec
+        self.assertNotEqual(prompt_sha256(5, PROMPT_V6), prompt_sha256(5, PROMPT_V7))
+        semi = system_prompt("semi_open", 5, PROMPT_V7)
+        self.assertIn("exactamente 3 oraciones breves", semi)
+        self.assertIn("No repitas", semi)
+        self.assertIn("única que puedes citar", semi)
+        opened = system_prompt("open_ended", 5, PROMPT_V7)
+        self.assertIn("exactamente 5 oraciones", opened)
+        self.assertIn("problema jurídico; regla con cita", opened)
+        self.assertEqual(build_messages(Q, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version=PROMPT_V7)[0]["role"], "system")
+
     def test_prompt_v6_adds_authority_from_official_host_only(self):
         import json
         from kingscode.generation.prompts import PROMPT_V4, PROMPT_V6, build_messages, source_authority

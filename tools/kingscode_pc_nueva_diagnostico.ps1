@@ -64,7 +64,7 @@ param(
     [switch]$Rerank,
     [switch]$NativeOptionFusion,
     [switch]$ExactLocator,
-    [ValidateSet("v3", "v4", "v6")] [string]$PromptVersion = "v3",
+    [ValidateSet("v3", "v4", "v6", "v7")] [string]$PromptVersion = "v3",
     [string]$InputFile = "data\sample_50.jsonl",
     [switch]$Resume,
     [switch]$CitationFill,
