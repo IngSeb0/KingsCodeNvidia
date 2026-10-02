@@ -58,20 +58,28 @@ $Catalogo = [ordered]@{
     "ctx16k"         = @("-Recomendada", "-MaxContext", "16384")
     "v6_ctx16k"      = @("-Recomendada", "-PromptVersion", "v6", "-MaxContext", "16384")
 }
+# Runs the diagnostic in a child PowerShell attached to THIS console (Start-Process -NoNewWindow):
+# invoked as "powershell -File ..." from a script, PowerShell 5.1 redirects the child's streams and
+# the [batch] progress lines (stderr) only appeared at the end (2026-10-02).
+function Invoke-Diagnostico([string[]]$Flags) {
+    $ArgList = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$((Resolve-Path $S).Path)`"") + $Flags
+    $p = Start-Process -FilePath "powershell.exe" -ArgumentList $ArgList -NoNewWindow -Wait -PassThru
+    if ($p.ExitCode -ne 0) { Write-Host "La corrida termino con codigo $($p.ExitCode) (se sigue con la siguiente)." -ForegroundColor Yellow }
+}
 $Inicio = Get-Date
 foreach ($v in $Variantes) {
     if ($v -eq "final") {
         if (-not $Final) { Write-Host "final requiere -Final '<flags>'" -ForegroundColor Yellow; continue }
         $a = @($Final -split "\s+" | Where-Object { $_ })
         Write-Host "`n################ CONFIGURACION FINAL (con verificacion en vivo): $Final ################" -ForegroundColor Magenta
-        powershell -ExecutionPolicy Bypass -File $S -SkipSmoke -NoPull @a
+        Invoke-Diagnostico (@("-SkipSmoke", "-NoPull") + $a)
         continue
     }
     if (-not $Catalogo.Contains($v)) { Write-Host "Variante desconocida: $v" -ForegroundColor Yellow; continue }
     $a = @($Catalogo[$v]) + @("-SkipSmoke", "-SkipVerify", "-NoPull")
     $t0 = Get-Date
     Write-Host "`n################ VARIANTE: $v ($($Catalogo[$v] -join ' ')) ################" -ForegroundColor Magenta
-    powershell -ExecutionPolicy Bypass -File $S @a
+    Invoke-Diagnostico $a
     Write-Host ("Variante {0}: {1:N1} min" -f $v, ((Get-Date) - $t0).TotalMinutes) -ForegroundColor Cyan
 }
 
