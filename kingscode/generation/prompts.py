@@ -74,6 +74,7 @@ Abstente (devuelve únicamente {"abstencion":true}) solo si la pregunta no es ju
 En otro caso devuelve un único objeto JSON con abstencion=false y exactamente los campos indicados.
 No añadas Markdown, comentarios, razonamiento oculto, ID, formato ni pasajes_recuperados; estos los incorpora el sistema.
 Al citar, escribe la identidad completa de la fuente tal como aparece en los pasajes (tipo, número, año y artículo), sin abreviaturas.
+Cada cita va en la misma oración que la afirmación que ese pasaje dice expresamente: cita el artículo cuyo texto contiene la regla, no otro de la misma norma ni una norma solo mencionada de paso. Una afirmación que proviene de tu conocimiento general se escribe sin cita. Nunca cites una norma, artículo o sentencia que no esté en los pasajes.
 Una mención a otra norma en un pasaje no prueba el contenido de los artículos de esa otra norma."""
 FORMAT_INSTRUCTIONS_V6 = {
     "multiple_choice": """Campos, en este orden: abstencion (false), justificacion (string), respuesta_correcta (A/B/C/D), descarte_opciones (objeto).
@@ -85,7 +86,7 @@ descarte_opciones contiene solo las letras de las opciones incorrectas, cada una
 respuesta debe tener entre 3 y 5 oraciones completas (mínimo 3, máximo 5) y como máximo 150 palabras. La primera oración responde directamente la pregunta; las siguientes dan el fundamento y las condiciones o excepciones relevantes.
 Incluye palabras clave pertinentes y en referencia_legal las normas o sentencias de los pasajes que fundamentan la respuesta.""",
     "open_ended": """Campos, en este orden: abstencion (false), marco_normativo, analisis, jurisprudencia, conclusion (todos strings).
-marco_normativo enuncia las normas aplicables de los pasajes y su jerarquía. analisis debe tener entre 5 y 8 oraciones completas (mínimo 5, máximo 8) que apliquen esas normas a los hechos del caso. jurisprudencia cita solo decisiones de los pasajes y explica su regla; si no hay, dilo en una oración sin inventarla. conclusion responde de forma directa y concreta lo que pide el caso.""",
+marco_normativo enuncia las normas aplicables de los pasajes y su jerarquía. analisis debe tener entre 5 y 8 oraciones completas (mínimo 5, máximo 8) con este orden: hechos jurídicamente relevantes, problema jurídico, regla aplicable con su cita, aplicación de la regla a cada hecho (requisitos que se cumplen y que no) y consecuencia jurídica. jurisprudencia cita solo decisiones de los pasajes y explica su regla; si no hay, dilo en una oración sin inventarla. conclusion responde de forma directa y concreta lo que pide el caso.""",
 }
 ACTIVE_PROMPT_VERSIONS = {PROMPT_VERSION, PROMPT_V4, PROMPT_V5_OPTION_SUPPORT, PROMPT_V6}
 
