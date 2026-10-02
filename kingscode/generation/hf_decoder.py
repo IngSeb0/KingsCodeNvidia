@@ -31,13 +31,21 @@ class HFDecoder:
 
     def __init__(self, alias: str, *, config: dict | None = None, precision: str = "bf16",
                  allow_optional: bool = False, torch_module=None, transformers_module=None,
-                 prompt_version: str | None = None, constrained_json: bool = False):
+                 prompt_version: str | None = None, constrained_json: bool = False,
+                 max_context_tokens: int | None = None):
         self.config = deepcopy(config) if config is not None else load_bakeoff()
         if prompt_version is not None:
             if prompt_version not in ACTIVE_PROMPT_VERSIONS:
                 raise ValueError(f"prompt_version must be one of {sorted(ACTIVE_PROMPT_VERSIONS)}")
             self.prompt_version = prompt_version
         self.candidate = select_decoder(alias, self.config, allow_optional=allow_optional)
+        if max_context_tokens is not None:
+            # Opt-in (--max-context): with the 8192 default, 22/50 sample prompts already drop
+            # retrieved passages to fit (2026-10-02). The load() check still rejects any value
+            # above the locked model's native context; the official row never changes.
+            if type(max_context_tokens) is not int or not 8192 <= max_context_tokens <= 32768:
+                raise ValueError("max_context_tokens must be an int in [8192, 32768]")
+            self.candidate = {**self.candidate, "max_context_tokens": max_context_tokens}
         self.entry = resolve_model(alias)
         if self.entry["revision"] != self.candidate["revision"]:
             raise ValueError("Decoder revision mismatch")

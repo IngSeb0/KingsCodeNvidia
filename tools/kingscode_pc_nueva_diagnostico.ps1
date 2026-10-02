@@ -34,6 +34,7 @@
 #   ... -Recomendada                                       (configuracion recomendada: v4 + CitationFill + CiteMentions 5)
 #   ... -Recomendada -K 10                                 (entrega 10 pasajes: los que mira el evaluador)
 #   ... -Recomendada -PromptVersion v6                    (prompt v6: razonamiento juridico, sin escudarse en la evidencia)
+#   ... -Recomendada -MaxContext 16384                    (contexto de 16k: el modelo ve los 8 pasajes completos)
 #   ... -Recomendada -DocCap 3                             (maximo 3 pasajes por documento: evidencia mas diversa)
 #   ... -Recomendada -RetrievalMode option_plan            (texto libre con consultas extra del planner Qwen; cerradas igual)
 #   ... -SkipVerify                                        (omite regenerar 3 preguntas para comprobar reproducibilidad)
@@ -54,7 +55,8 @@ param(
     [ValidateSet("bm25", "dense", "hybrid")] [string]$RetrieverMode = "bm25",
     [ValidateRange(1, 500)] [int]$CandidateK = 30,
     [ValidateRange(1, 10)] [int]$K = 8,
-    [ValidateRange(0, 8)] [int]$DocCap = 0,   # >0: maximo N pasajes por documento (trae 10 y diversifica)
+    [ValidateRange(0, 8)] [int]$DocCap = 0,
+    [ValidateSet(0, 12288, 16384)] [int]$MaxContext = 0,   # 0 = 8192 del config; 16384: el modelo ve todos los pasajes   # >0: maximo N pasajes por documento (trae 10 y diversifica)
     [ValidateSet("option", "option_plan")] [string]$RetrievalMode = "option",   # option_plan: cerradas por opcion, texto libre con plan de Qwen   # pasajes entregados; el evaluador mira los 10 primeros
     [ValidateSet("1", "2")] [int]$RerankerBatchSize = 2,
     [ValidateRange(0, 100)] [int]$GraphBudget = 10,
@@ -83,7 +85,7 @@ function Check($w) { if ($LASTEXITCODE -ne 0) { throw "STOP: $w (exit $LASTEXITC
 function RefreshPath { $env:Path = [Environment]::GetEnvironmentVariable("Path", "User") + ";" + [Environment]::GetEnvironmentVariable("Path", "Machine") }
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
 if ($Recomendada) { if ($PromptVersion -eq "v3") { $PromptVersion = "v4" }; $CitationFill = [switch]::new($true); if ($CiteMentions -eq 0) { $CiteMentions = 5 } }
-if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })$(if ($DocCap -gt 0) { "_cap$DocCap" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
+if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })$(if ($DocCap -gt 0) { "_cap$DocCap" })$(if ($MaxContext -gt 0) { "_ctx$MaxContext" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
 
 # ---------------------------------------------------------------------
 Step "[0] Herramientas: Git, Python 3.12, GPU"
@@ -305,6 +307,7 @@ if ($ExactLocator) { $CommonArgs += "--exact-locator" }
 if ($CitationFill) { $CommonArgs += "--citation-fill" }
 if ($CiteMentions -gt 0) { $CommonArgs += @("--cite-mentions", [string]$CiteMentions) }
 if ($DocCap -gt 0) { $CommonArgs += @("--doc-cap", [string]$DocCap) }
+if ($MaxContext -gt 0) { $CommonArgs += @("--max-context", [string]$MaxContext) }
 $PlanSeconds = 0
 if ($RetrievalMode -eq "option_plan") {
     # Frozen query plans (Qwen planner, public question text only) for the free-text questions.

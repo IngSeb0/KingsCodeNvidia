@@ -98,6 +98,34 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         self.assertEqual(ATTN_IMPLEMENTATION, "sdpa")
         model.generate.assert_called_once()
 
+    def test_max_context_override_shows_more_evidence_and_respects_native_limit(self):
+        from unittest.mock import patch
+        from kingscode.generation.hf_decoder import HFDecoder
+        from kingscode.reasoning.decoder import GENERATION_CONFIG, PromptSpec
+        from test_gpu_preparation import FakeInputs, FakeTokenizer, fake_torch, fake_transformers
+
+        class LengthTokenizer(FakeTokenizer):
+            def __call__(self, text, **kwargs):
+                user = json.loads(json.loads(text[0])[1]["content"])
+                return FakeInputs(500 + 3000 * len(user["evidencia"]))
+
+        evidence = [dict(deepcopy(FIXTURES[i % 5]), passage_id=f"p{i}") for i in range(8)]
+        transformers, model = fake_transformers(LengthTokenizer())
+        model.config.max_position_embeddings = 40960  # Qwen3-8B native context
+        decoder = HFDecoder("qwen3-8b", torch_module=fake_torch(), transformers_module=transformers, max_context_tokens=16384)
+        with patch("kingscode.generation.hf_decoder.verify_snapshot", return_value={}):
+            decoder.generate(Q, evidence, PromptSpec("semi_open"), dict(GENERATION_CONFIG))
+        self.assertEqual(decoder.last_usage["evidence_in_prompt"], 5)        # 500 + 5*3000 + 512 <= 16384
+        self.assertEqual(HFDecoder("qwen3-8b").candidate["max_context_tokens"], 8192)  # default unchanged
+        for bad in (4096, 65536, "16384"):
+            with self.assertRaises(ValueError):
+                HFDecoder("qwen3-8b", max_context_tokens=bad)
+        transformers, model = fake_transformers(LengthTokenizer())          # native 8192 < 16384
+        decoder = HFDecoder("qwen3-8b", torch_module=fake_torch(), transformers_module=transformers, max_context_tokens=16384)
+        with patch("kingscode.generation.hf_decoder.verify_snapshot", return_value={}):
+            with self.assertRaises(Exception):
+                decoder.generate(Q, evidence, PromptSpec("semi_open"), dict(GENERATION_CONFIG))
+
     def test_missing_abstencion_on_complete_answer_is_an_answer(self):
         value = json.loads(QWEN_4090_RAW)
         value.pop("abstencion")
