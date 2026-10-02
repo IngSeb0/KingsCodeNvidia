@@ -75,7 +75,8 @@ if ($Control.summary.prompt_version -ne "grounded-formats-v4" -or
     throw "El control no coincide con -Recomendada o el candidato cambió más de una variable ($CandidateTechnique)."
 }
 $FastEnough = [double]$CandidateRun.summary.proyeccion_992_horas -le 5
-$Better = [double]$CandidateRun.official.total_automatico.obtenidos -gt [double]$Control.official.total_automatico.obtenidos
+$ScoreNonRegressive = [double]$CandidateRun.official.total_automatico.obtenidos -ge [double]$Control.official.total_automatico.obtenidos
+$ScoreDelta = [double]$CandidateRun.official.total_automatico.obtenidos - [double]$Control.official.total_automatico.obtenidos
 $ClosedSafe = [double]$CandidateRun.official.cerradas.puntos -ge [double]$Control.official.cerradas.puntos
 $CitationsSafe = [int]$CandidateRun.official.citas.citas_sin_respaldo -eq 0
 $ProxySafe = [double]$CandidateRun.proxy.token_f1_mean -ge [double]$Control.proxy.token_f1_mean -and
@@ -87,6 +88,7 @@ Write-Host ("Control: {0}/50, {1} s/preg, {2} h/992" -f $Control.official.total_
     $Control.summary.segundos_por_pregunta, $Control.summary.proyeccion_992_horas)
 Write-Host ("{0}: {1}/50, {2} s/preg, {3} h/992" -f $CandidateTechnique, $CandidateRun.official.total_automatico.obtenidos,
     $CandidateRun.summary.segundos_por_pregunta, $CandidateRun.summary.proyeccion_992_horas)
+Write-Host ("Gate de puntaje: delta {0:+0.00;-0.00;0.00}/50; no regresión={1}. Un empate puede aceptarse si RAGAS mejora y pasan los demás gates." -f $ScoreDelta, $ScoreNonRegressive) -ForegroundColor Cyan
 Write-Host "Se ejecutará RAGAS sobre ambos perfiles; velocidad es un gate operativo separado." -ForegroundColor Cyan
 & $Py -m pip install -r scripts\requirements-evaluador.txt --quiet
 if ($LASTEXITCODE -ne 0) { throw "Fallo la instalacion de dependencias de RAGAS." }
@@ -127,7 +129,7 @@ $RagasComparable = ([int]$CandidateRagas.correccion_ragas.n_fallidos -eq 0 -and
     $CandidateRagas.correccion_ragas.encoder -eq $ControlRagas.correccion_ragas.encoder)
 $RagasBetter = $RagasComparable -and
     [double]$CandidateRagas.correccion_ragas.correctness -gt [double]$ControlRagas.correccion_ragas.correctness
-$Accepted = $FastEnough -and $Better -and $ClosedSafe -and $CitationsSafe -and $ProxySafe -and $AlignmentSafe -and $RagasBetter
+$Accepted = $FastEnough -and $ScoreNonRegressive -and $ClosedSafe -and $CitationsSafe -and $ProxySafe -and $AlignmentSafe -and $RagasBetter
 $Selected = if ($Accepted) { $CandidateRun } else { $Control }
 $SelectedRagas = if ($Accepted) { $CandidateRagas } else { $ControlRagas }
 Write-Host ("RAGAS control: {0}/30 ({1}); {2}: {3}/30 ({4}); comparable={5}" -f
