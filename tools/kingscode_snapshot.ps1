@@ -18,7 +18,7 @@ param(
     [string]$Destino = "$HOME\kc_snapshot",
     [string]$Work = "$HOME\KingsCodeGPU\KingsCodeNvidia",
     [switch]$IncluirModelos,   # agrega models\ (~18 GB) por si manana no hay internet para descargar por lock
-    [string[]]$Carpetas = @("corpus", "corpus_v01_v02", "corpus_v01_v02_a1", "artifacts", ".kingscode_corpus_origin.txt")
+    [string[]]$Carpetas = @("corpus", "corpus_v01_v02", "corpus_v01_v02_a1", "corpora", "artifacts", ".kingscode_corpus_origin.txt")
 )
 $ErrorActionPreference = "Stop"
 Set-Location $Work
