@@ -13,7 +13,7 @@
 #   powershell -ExecutionPolicy Bypass -File tools\kingscode_final.ps1 -Flags "<flags elegidos>" -InputFile data\test_992.jsonl -RunName final_992 -Resume
 # =====================================================================
 param(
-    [string]$Flags = "-Recomendada",
+    [string]$Flags = "-Recomendada -PromptVersion v6",   # mejor medido el 2-oct: v6 38,08 vs v4 37,46 (mismo corpus)
     [string]$InputFile = "data\sample_50.jsonl",
     [string]$RunName = "",
     [switch]$Resume,
