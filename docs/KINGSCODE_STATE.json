@@ -564,6 +564,16 @@
     "reports": "reports/corpus_quality_v07",
     "next_action": "Review findings before v0.2 hardening; preserve v0.1 GPU snapshot. GPU evolution exists separately on feat/member-a-gpu-results-4090-20260928; this branch does not rewrite its results."
   },
+  "legal_domain_route_experiment_20261002": {
+    "status": "prepared_not_gpu_measured",
+    "planner_prompt_version": "legal-query-planner-v2-domain-norm-first",
+    "scope": "option_plan only; Q0 retained, up to three untrusted query views, no extra retrieval calls",
+    "candidate": "-Recomendada -RetrievalMode option_plan",
+    "control": "-Recomendada on the same commit and corpus snapshot",
+    "gate": "higher official sample score, closed score not lower, zero unsupported citations, proxy and citation alignment not lower, projected 992 runtime at most 5 hours",
+    "next_command": "powershell -ExecutionPolicy Bypass -File tools/kingscode_candidato_arbol.ps1",
+    "delivery_pdf": "informe/INFORME_TECNICO.pdf, generated only from measured official and RAGAS reports"
+  },
   "member_b_v2": {
     "status": "merged_to_main_not_gpu_validated",
     "updated": "2026-09-29",
