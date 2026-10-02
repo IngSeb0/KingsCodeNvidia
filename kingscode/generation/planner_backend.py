@@ -46,8 +46,9 @@ class QwenPlannerBackend:
         if count + self.max_new_tokens > d.candidate["max_context_tokens"]:
             return "", {"input_tokens": count, "error": "CONTEXT_LIMIT_EXCEEDED"}
         inputs = inputs.to(d.config["device"])
+        # Planner decoding is greedy; sampling-only knobs are intentionally omitted.
         cfg = d.transformers.GenerationConfig(
-            do_sample=False, temperature=0.0, num_beams=1, top_p=1.0, top_k=0, max_new_tokens=self.max_new_tokens,
+            do_sample=False, num_beams=1, max_new_tokens=self.max_new_tokens,
             repetition_penalty=1.0, no_repeat_ngram_size=0, use_cache=True,
             eos_token_id=d.model.generation_config.eos_token_id or d.tokenizer.eos_token_id,
             pad_token_id=d.tokenizer.pad_token_id if d.tokenizer.pad_token_id is not None else d.tokenizer.eos_token_id)

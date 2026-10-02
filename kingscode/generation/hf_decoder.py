@@ -139,6 +139,8 @@ class HFDecoder:
                            "revision": self.version, "prompt_version": self.prompt_version,
                            "prompt_sha256": prompt_sha256(max_used, self._system_version()),
                            "max_new_tokens": self.config["max_new_tokens"][question.format],
+                           "sampling_policy": {"strategy": "greedy", "do_sample": False,
+                                               "temperature": generation["temperature"], "seed": generation["seed"]},
                            "constrained_json": self.constrained_json}
         self.load()
         started = perf_counter()
@@ -166,15 +168,18 @@ class HFDecoder:
             inputs = inputs.to(self.config["device"])
             # Use shared generation settings, not model-specific sampling or
             # repetition defaults. Only native stopping/special-token IDs vary.
+            # Greedy decoding is controlled by do_sample=False and num_beams=1.
+            # Temperature/top_k do not apply in this mode; passing non-default values
+            # makes Transformers warn that they are ignored and misstates runtime telemetry.
             cfg = self.transformers.GenerationConfig(
-                do_sample=False, temperature=0.0, num_beams=1, top_p=1.0, top_k=0,
+                do_sample=False, num_beams=1,
                 max_new_tokens=budget, repetition_penalty=1.0, no_repeat_ngram_size=0,
                 use_cache=True,
                 bos_token_id=getattr(self.model.generation_config, "bos_token_id", None),
                 eos_token_id=self.model.generation_config.eos_token_id or self.tokenizer.eos_token_id,
                 pad_token_id=self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else self.tokenizer.eos_token_id)
             self.last_usage["effective_generation_config"] = {
-                key: getattr(cfg, key) for key in ("do_sample", "temperature", "num_beams", "top_p", "top_k",
+                key: getattr(cfg, key) for key in ("do_sample", "num_beams",
                                                   "max_new_tokens", "repetition_penalty", "no_repeat_ngram_size",
                                                   "bos_token_id", "eos_token_id", "pad_token_id")}
             self.torch.manual_seed(generation["seed"])

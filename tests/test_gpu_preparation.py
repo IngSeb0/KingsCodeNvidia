@@ -157,8 +157,14 @@ class PromptAndDecoderTests(PrepCase):
         self.assertIs(kwargs["local_files_only"], True)
         self.assertIs(kwargs["trust_remote_code"], False)
         generation = model.generate.call_args.kwargs["generation_config"]
-        self.assertEqual(generation.temperature, 0)
         self.assertFalse(generation.do_sample)
+        self.assertEqual(generation.num_beams, 1)
+        self.assertFalse(hasattr(generation, "temperature"))
+        self.assertFalse(hasattr(generation, "top_k"))
+        self.assertEqual(decoder.last_usage["sampling_policy"],
+                         {"strategy": "greedy", "do_sample": False, "temperature": 0.0, "seed": 0})
+        self.assertNotIn("temperature", decoder.last_usage["effective_generation_config"])
+        self.assertNotIn("top_k", decoder.last_usage["effective_generation_config"])
         self.assertFalse(tokenizer.template_kwargs["enable_thinking"])
         self.assertEqual(decoder.last_usage["input_tokens"], 12)
 
