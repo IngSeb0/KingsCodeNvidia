@@ -23,6 +23,16 @@ def positive_int(value):
     return parsed
 
 
+def nonnegative_int(value):
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError) as exc:
+        raise argparse.ArgumentTypeError("must be a nonnegative integer") from exc
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("must be a nonnegative integer")
+    return parsed
+
+
 def graph_budget_int(value):
     try:
         parsed = int(value)
@@ -72,6 +82,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help="batch/verify: grounded-formats-v3 (default) or v4 (abstencion listed, minimum lengths, MC justification first)")
     parser.add_argument("--citation-fill", action="store_true",
                         help="batch/verify: complete up to 5 verified citations with top-ranked evidence (semi_open/multiple_choice only)")
+    parser.add_argument("--citation-fill-extra", type=nonnegative_int, metavar="N",
+                        help="batch/verify: cap ranked citations beyond decoder-declared passages; 0 means used passages only")
     parser.add_argument("--cite-mentions", type=int, default=0, metavar="N",
                         help="batch/verify: up to N body-level citations of norms NAMED in retrieved passages (official support rule); semi_open/MC only")
     parser.add_argument("--native-option-fusion", action="store_true",
@@ -208,6 +220,8 @@ def _pipeline(args):
     for name, value in vars(build_parser().parse_args(["batch"])).items():
         if not hasattr(args, name):
             setattr(args, name, value)
+    if args.citation_fill_extra is not None and not args.citation_fill:
+        raise ValueError("--citation-fill-extra requires --citation-fill")
     from kingscode.reasoning import DummyDecoder, Pipeline, RetrieverGraphRouter
     from kingscode.reasoning.plan_store import PlanStore
     if getattr(args, "plan_roles", None) and args.retrieval_mode != "plan":
@@ -266,7 +280,8 @@ def _pipeline(args):
                 "reranker_score_cache": args.reranker_score_cache,
                 "option_support": args.option_support, "constrained_json": args.constrained_json,
                 "plan_roles": list(plan_roles) if plan_roles else None,
-                "prompt_version": getattr(decoder, "prompt_version", None), "citation_fill": args.citation_fill, "cite_mentions": args.cite_mentions,
+                "prompt_version": getattr(decoder, "prompt_version", None), "citation_fill": args.citation_fill,
+                "citation_fill_extra": args.citation_fill_extra, "cite_mentions": args.cite_mentions,
                 "retriever": {"mode": args.retriever_mode, "rerank": args.rerank,
                               "graph_budget": args.graph_budget,
                               "exact_locator": args.exact_locator, "fixture_evidence": args.fixture_evidence,
@@ -274,7 +289,8 @@ def _pipeline(args):
                 "graph_policy": args.graph_policy, "plans": plans.manifest["experiment_id"] if plans else None}
     return Pipeline(retriever.retrieve, adapter=adapter, decoder=decoder, k=args.k, graph_policy=args.graph_policy,
                     retrieval_mode=args.retrieval_mode, plans=plans, max_refs=5 if args.citation_fill else 3,
-                    citation_fill=args.citation_fill, cite_mentions=args.cite_mentions, native_option_fusion=args.native_option_fusion,
+                    citation_fill=args.citation_fill, citation_fill_extra=args.citation_fill_extra,
+                    cite_mentions=args.cite_mentions, native_option_fusion=args.native_option_fusion,
                     plan_roles=plan_roles, option_supporter=option_supporter), identity
 
 

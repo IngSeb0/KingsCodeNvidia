@@ -88,7 +88,7 @@ def retrieval_views(question: Question, query: NormalizedQuery, mode: str, plan=
 
 
 def _answer(question: Question, passages: list[dict], decoder: Decoder, *, max_refs: int = 3, citation_fill: bool = False,
-            cite_mentions: int = 0):
+            citation_fill_extra: int | None = None, cite_mentions: int = 0):
     check_passages(passages)
     evidence = deepcopy(passages[:10])
     assessment = assess_evidence(question.text, evidence)
@@ -118,7 +118,7 @@ def _answer(question: Question, passages: list[dict], decoder: Decoder, *, max_r
             source, before = "none", count_citations(row)
             row, repair = repair_citations(row, evidence)
             row, refs = attach_references(row, evidence, usage.get("attribution"), max_refs, fill_ranked=citation_fill,
-                                          mentions=cite_mentions)
+                                          fill_ranked_limit=citation_fill_extra, mentions=cite_mentions)
             if question.format != "multiple_choice" and any(
                     row.get(k) in (None, "", [], {}) for k in ANSWER_FIELDS[question.format]):
                 reason, source = "citation_repair_emptied_required_field", "citation_repair"
@@ -180,7 +180,8 @@ def answer(question: Question | str, passages: list[dict], format: str, *, quest
 class Pipeline:
     def __init__(self, retrieve, *, adapter: RetrieverGraphRouter | None = None, decoder: Decoder | None = None,
                  k: int = 8, graph_policy: str = "router", retrieval_mode: str = "option", plans=None,
-                 max_refs: int = 3, citation_fill: bool = False, cite_mentions: int = 0, native_option_fusion: bool = False,
+                 max_refs: int = 3, citation_fill: bool = False, citation_fill_extra: int | None = None,
+                 cite_mentions: int = 0, native_option_fusion: bool = False,
                  plan_roles: tuple[str, ...] | None = None, option_supporter=None):
         if type(k) is not int or not 1 <= k <= 10 or graph_policy not in {"router", "off", "auto", "on"}:
             raise ValueError("Invalid evidence count/graph policy")
@@ -196,6 +197,9 @@ class Pipeline:
         self.decoder, self.k, self.graph_policy = decoder or DummyDecoder(), k, graph_policy
         self.retrieval_mode, self.plans, self.max_refs = retrieval_mode, plans, max_refs
         self.citation_fill = citation_fill
+        if citation_fill_extra is not None and (type(citation_fill_extra) is not int or citation_fill_extra < 0):
+            raise ValueError("citation_fill_extra must be a nonnegative integer")
+        self.citation_fill_extra = citation_fill_extra
         self.cite_mentions = cite_mentions
         self.native_option_fusion = native_option_fusion
         self.plan_roles, self.option_supporter = plan_roles, option_supporter
@@ -314,6 +318,7 @@ class Pipeline:
         retrieval_profiles = flat_profiles + (passage_profiles if executed != "off" else [])
         try:
             row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill,
+                                 citation_fill_extra=self.citation_fill_extra,
                                  cite_mentions=getattr(self, "cite_mentions", 0))
         except CitationGuardError as exc:
             # Enunciado B.5: an unsupported/unsafe citation must be corrected or

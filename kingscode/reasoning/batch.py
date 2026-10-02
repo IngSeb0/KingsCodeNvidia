@@ -106,6 +106,11 @@ class BatchRunner:
                 errors.append({"attempt": attempt + 1, "type": type(exc).__name__, "code": getattr(exc, "code", None),
                                "message": str(exc), "detail": getattr(exc, "detail", None),
                                "traceback": traceback.format_exc()})
+                if getattr(exc, "code", None) == "GPU_MEMORY_SPILL":
+                    atomic_write_text(self.run_dir / "errors" / f"{question.id}.json",
+                                      json.dumps({"id": question.id, "attempts": errors},
+                                                 ensure_ascii=False, indent=2, default=str) + "\n")
+                    raise  # A physical-memory overflow invalidates the run's throughput projection.
                 if getattr(exc, "code", None) in DETERMINISTIC_CODES:
                     break  # temperature 0: the same input reproduces the same output
         return None, None, errors

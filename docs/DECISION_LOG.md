@@ -821,3 +821,11 @@ Detalle en `docs/ANALISIS_CORRIDAS_2026-10-01.md`.
 - **Regla anti-overfitting:** la regla es genérica (la definición oficial de respaldo) y no se ajustó por ítem. N = 3 se elige por ser el mínimo que satura c1. Según el enunciado §6.1, una cita respaldada que no coincide con la referencia vale 0 sin penalización; el riesgo que queda es citar normas que el pasaje solo nombra de paso, y eso no resta puntos.
 - **Configuración recomendada:** `-Recomendada` en `kingscode_pc_nueva_diagnostico.ps1` (prompt v4, `--citation-fill`, `--cite-mentions 3`, BM25 + router, cerradas 768 y abiertas 1.280 tokens). Falta confirmarla con una corrida real en GPU.
 
+## 2026-10-02 — Calidad de citas y diagnóstico de memoria
+
+La auditoría de c1 (30,41/50 sin RAGAS) mostró 31 coincidencias de `legal_basis` entre 130 citas; el guard registró cero referencias sin soporte textual. El relleno hasta cinco fuentes agrega con frecuencia pasajes no declarados como usados por Qwen. Se incorpora `--citation-fill-extra` como límite experimental, sin cambiar el comportamiento por defecto ni escoger ganador con el sample. La reparación de citas corrige el bucle de renombrado de artículo equivocado y deja vacío un campo cuya única oración depende de una cita no sustentada, en lugar de conservar una frase mutilada.
+
+Los reportes hybrid de Luis muestran reserva mayor que 24 GB incluso con SDPA. Se introduce un corte fatal `GPU_MEMORY_SPILL` con evidencia por ítem; no se interpreta como mejora de latencia. Las comparaciones y la selección competitiva requieren repetir 50 preguntas bajo un mismo commit, corpus y modelos, además de revisar citas y RAGAS. `--cite-mentions` permanece opt-in porque una mención secundaria no prueba el contenido normativo.
+
+En el script de la PC nueva, `-Recomendada` configura v4 + `CitationFill` sin activar `CiteMentions 3` de manera implícita. `-CitationFillExtra 0/1` expone las dos variantes de cita sin cambiar el comportamiento original de `-CitationFill` cuando no se especifica el límite.
+

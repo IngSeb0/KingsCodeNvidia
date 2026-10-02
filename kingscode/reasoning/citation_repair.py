@@ -3,8 +3,8 @@
 Per cited reference in any answer string:
   supported (citation_guard's own rule)           -> keep
   body supported, article not                      -> rewrite to body level (drop the article)
-  body unsupported / unresolvable / abbreviation   -> drop the sentence (or only the fragment,
-                                                      if dropping sentences would empty the field)
+  body unsupported / unresolvable / abbreviation   -> drop the sentence; an emptied
+                                                      semi/open required field triggers abstention
 Then the official extractor must find, in the kept text, only bodies the evaluator
 counts as supported by the first 10 passages; any other sentence is dropped too.
 
@@ -63,9 +63,10 @@ def _drop_span(text: str, start: int, end: int) -> str:
 def _rename_to_evidence(sentence: str, refs: list, ref, emitted: list[dict]) -> str | None:
     """Undated code the guard cannot see literally ('Constitución Política') -> the
     name the retrieved passage itself uses, only if that name verifies."""
-    if not ref.body or ref.body[1] is not None:
+    if ref.kind not in {"code", "article"} or not ref.body or ref.body[1] is not None:
         return None
-    code = next((r for r in refs if r.kind == "code" and r.body and r.body[0] == ref.body[0]), None)
+    code = ref if ref.kind == "code" else next(
+        (r for r in refs if r.kind == "code" and r.body and r.body[0] == ref.body[0]), None)
     if code is None:
         return None
     for passage in emitted:
@@ -73,7 +74,14 @@ def _rename_to_evidence(sentence: str, refs: list, ref, emitted: list[dict]) -> 
             continue
         for name in _names(passage):
             if fold(name) != fold(code.raw) and verified(name, passage):
-                return sentence[:code.start] + name + sentence[code.end:]
+                renamed = sentence[:code.start] + name + sentence[code.end:]
+                revised = references(renamed)
+                repaired_target = any(
+                    r.kind == ref.kind and r.body and r.body[0] == ref.body[0]
+                    and (ref.kind != "article" or r.article == ref.article)
+                    and _supported(r, emitted) for r in revised)
+                if renamed != sentence and repaired_target:
+                    return renamed
     return None
 
 
@@ -99,22 +107,6 @@ def _repair_sentence(sentence: str, emitted: list[dict], actions: list, field: s
     return None
 
 
-def _strip_fragments(text: str, emitted: list[dict], supported: set, actions: list, field: str) -> str:
-    for _ in range(20):
-        pending = [r for r in references(text) if not _supported(r, emitted)]
-        if not pending:
-            break
-        ref = pending[0]
-        actions.append({"field": field, "action": "suppressed_fragment", "reference": ref.raw})
-        text = _drop_span(text, ref.start, ref.end)
-    text = re.sub(r"\s{2,}", " ", text).strip(" ,;:")
-    if not official_bodies(text) <= supported or not re.search(r"[A-Za-zÁÉÍÓÚáéíóúÑñ]{3}", text):
-        if text:
-            actions.append({"field": field, "action": "emptied"})
-        return ""
-    return text
-
-
 def repair_text(text: str, emitted: list[dict], supported: set, actions: list, field: str) -> str:
     if not text.strip():
         return text
@@ -128,7 +120,11 @@ def repair_text(text: str, emitted: list[dict], supported: set, actions: list, f
             kept.append(re.sub(r"\s{2,}", " ", fixed).strip())
     repaired = " ".join(s for s in kept if s)
     if not repaired:
-        return _strip_fragments(text, emitted, supported, actions, field)
+        # Removing a cited norm from the only sentence can invert or mutilate its
+        # legal claim (for example "El Código Civil establece" -> "El establece").
+        # Leave the field empty so required fields trigger a controlled abstention.
+        actions.append({"field": field, "action": "emptied_after_unsupported_citation"})
+        return ""
     return repaired
 
 

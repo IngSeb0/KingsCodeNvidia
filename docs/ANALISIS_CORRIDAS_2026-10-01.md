@@ -42,7 +42,7 @@
 5. **Reranker y locator** suben las citas (+1 o 2 ítems), pero bajan las cerradas y agregan 3 s por pregunta. El retrieval p95 de c2/c4 es de unos 11 s, y en esas corridas aparecen más truncamientos.
 6. **Pilotos híbrido + rerank (12 preguntas):** todos van a 22,8–30,8 s/pregunta, por encima del presupuesto de 20 s. Con 4 cerradas y 9 citas por piloto no se puede elegir una variante. `context_representation` es la más lenta (30,8 s). Ninguno justifica adoptarse antes del sábado.
 7. **PC de Luis:** generación p50 de 88–252 s y VRAM reservada de 43–53 GB en una tarjeta de 24 GB. Es el mismo desborde a RAM del sistema que tuvo `turing` antes de SDPA. Sus tiempos no son válidos para presupuestar. Hay que revisar en su máquina:
-   - que tenga `main` con SDPA;
+   - confirmar el commit y la configuración real: los errores de los ítems 253 y 679 ya registran `attn_implementation: sdpa`, por lo que SDPA por sí solo no explica ni resuelve el desborde;
    - que no haya otros procesos usando la GPU;
    - la opción del Panel de NVIDIA "CUDA - Sysmem Fallback Policy" = "Prefer No Sysmem Fallback".
 
@@ -66,6 +66,15 @@ python tools/analyze_run.py C:\tmp\runs\reports\decoder_diagnostic\<corrida>\bat
 ```
 
 `revision.md` muestra cada pregunta: respuesta final, error y salida cruda si hubo, correcciones del parser, reparación de citas, pasajes declarados por el modelo, evidencia con norma y artículo, tokens y tiempos.
+
+Las trazas muestran las respuestas y la evidencia, no el razonamiento interno de Qwen (`enable_thinking=false`). `unsupported_citations=0` verifica identidad textual de la fuente, no que la afirmación esté jurídicamente demostrada. En c1, 31 de 130 referencias citadas coinciden con `legal_basis`; 99 son citas distintas aunque el guard las considere soportadas. Las 35 respuestas semiabiertas/abiertas no tienen aquí una calificación semántica por ítem; RAGAS sigue pendiente.
+
+## 6. Cambios de calidad preparados el 2026-10-02
+
+- La reparación ya no intenta 20 veces renombrar un código cuando el problema real es un artículo ausente. Si una oración completa depende de una cita sin respaldo, se descarta sin dejar una frase mutilada. Un campo sustantivo vacío de respuesta semiabierta o abierta produce abstención controlada; las cerradas conservan su política previa de respuesta y descarte neutral.
+- `--citation-fill-extra N` permite comparar el relleno original (`--citation-fill`, sin límite explícito) con `N=0` (solo pasajes declarados por Qwen) o `N=1` (a lo sumo una fuente adicional). La configuración queda en la identidad de la corrida. Ninguna variante se declara ganadora antes de correr los mismos 50 ítems y revisar pertinencia de citas, abstenciones, puntaje, tiempo y RAGAS.
+- La generación detiene el lote con `GPU_MEMORY_SPILL` y conserva `errors/<id>.json` cuando la memoria reservada supera la VRAM física. Esto evita proyectar una corrida de 992 a partir de un proceso paginado; no mejora por sí mismo la velocidad de una configuración que excede la tarjeta.
+- `--cite-mentions` sigue siendo una ablation opcional. Una norma nombrada dentro de otro documento puede satisfacer el extractor automático sin probar el contenido de la afirmación. No se activa para juzgar calidad jurídica solo con la mejora de puntaje offline 30,41→32,92.
 
 ## 5. Re-puntuación offline (sin GPU)
 

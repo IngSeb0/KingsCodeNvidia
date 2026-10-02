@@ -66,6 +66,21 @@ class HFDecoder:
             return {"peak_vram_bytes": None, "peak_reserved_vram_bytes": None, "memory_error_type": type(exc).__name__}
         return {"peak_vram_bytes": None, "peak_reserved_vram_bytes": None}
 
+    def _reject_memory_spill(self, phase: str) -> None:
+        """Stop a CUDA run if this process reserves more than physical device memory."""
+        cuda = self.torch.cuda
+        properties = getattr(cuda, "get_device_properties", None)
+        if properties is None:  # Lightweight CPU test doubles do not model device properties.
+            return
+        physical = int(properties(0).total_memory)
+        reserved = int(cuda.max_memory_reserved(0))
+        if reserved > physical:
+            raise DecoderFailure("GPU_MEMORY_SPILL", {
+                "phase": phase, "model": self.alias, "precision": self.precision,
+                "physical_vram_bytes": physical, "peak_reserved_vram_bytes": reserved,
+                "usage": deepcopy(self.last_usage),
+            })
+
     def _failure(self, exc, phase):
         oom_class = getattr(getattr(self.torch, "cuda", None), "OutOfMemoryError", ())
         oom = isinstance(exc, oom_class) if isinstance(oom_class, type) else False
@@ -103,10 +118,9 @@ class HFDecoder:
             self.tokenizer = self.transformers.AutoTokenizer.from_pretrained(self.entry["repo_id"], **kwargs)
             if not self.tokenizer.chat_template:
                 raise ValueError("Locked tokenizer has no chat template; no template substitution allowed")
-            # SDPA, not eager: eager materializes heads x seq x seq attention per layer; with
-            # 6-7k evidence tokens on the 4090 that reserved ~46 GB and Windows silently
-            # spilled to system RAM (93 s/question). use_deterministic_algorithms(True)
-            # above still rejects any nondeterministic kernel instead of changing outputs.
+            # SDPA reduces attention memory, but the decoder, encoder and reranker can
+            # still exceed physical VRAM together. The explicit spill guard below
+            # catches that case; deterministic kernels remain required.
             load_kwargs = {**kwargs, "dtype": self.torch.bfloat16, "device_map": {"": 0},
                            "attn_implementation": ATTN_IMPLEMENTATION, "use_safetensors": True}
             if self.precision != "bf16":
@@ -117,6 +131,7 @@ class HFDecoder:
             if self.model.config.max_position_embeddings < self.candidate["max_context_tokens"]:
                 raise ValueError("Configured context exceeds the locked model's native context")
             self.torch.cuda.synchronize()
+            self._reject_memory_spill("load")
             self.load_ms = (perf_counter() - start) * 1000
         except DecoderFailure:
             raise
@@ -184,6 +199,7 @@ class HFDecoder:
             raw = self.tokenizer.decode(tokens, skip_special_tokens=True)
             self.last_usage.update(output_tokens=len(tokens), raw_response=raw,
                                    generation_ms=(perf_counter() - started) * 1000, **self._peak())
+            self._reject_memory_spill("generate")
             try:
                 if self.prompt_version in LEGACY_PROMPT_VERSIONS:
                     row = parse_response(raw, question, passages)
