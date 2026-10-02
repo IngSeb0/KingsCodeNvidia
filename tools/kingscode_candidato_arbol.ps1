@@ -90,6 +90,19 @@ $Ragas = Get-Content $RagasPath -Raw | ConvertFrom-Json
 if ([int]$Ragas.validacion.errores -ne 0 -or $null -eq $Ragas.correccion_ragas.n_fallidos -or
     [int]$Ragas.correccion_ragas.n_fallidos -ne 0 -or [int]$Ragas.correccion_ragas.n_respondidos -le 0 -or
     [double]$Ragas.total_automatico.posibles -ne 80) { throw "RAGAS incompleto; no se genera informe final." }
+$ComparisonPath = "reports\legal_tree_comparison_$Stamp.json"
+[ordered]@{
+    commit = $Sha; passages_sha256 = $Selected.summary.passages_sha256
+    control_run = $Control.dir; control_score_50 = $Control.official.total_automatico.obtenidos
+    candidate_run = $Candidate.dir; candidate_score_50 = $Candidate.official.total_automatico.obtenidos
+    candidate_seconds_per_question = $Candidate.summary.segundos_por_pregunta
+    candidate_projected_992_hours = $Candidate.summary.proyeccion_992_horas
+    gates = [ordered]@{ speed = $FastEnough; score = $Better; closed = $ClosedSafe
+        citations = $CitationsSafe; proxy = $ProxySafe; alignment = $AlignmentSafe }
+    candidate_accepted = $Accepted; selected_run = $Selected.dir
+    ragas_report = $RagasPath; ragas_failed_judgments = $Ragas.correccion_ragas.n_fallidos
+    total_with_ragas_80 = $Ragas.total_automatico.obtenidos
+} | ConvertTo-Json -Depth 8 | Set-Content -Encoding UTF8 $ComparisonPath
 
 $Pdf = "informe\INFORME_TECNICO.pdf"
 & $Py tools\generate_informe_tecnico.py --run-dir $Selected.dir --output $Pdf --candidate-accepted ([string]$Accepted)
@@ -97,4 +110,5 @@ if ($LASTEXITCODE -ne 0) { throw "Fallo la generacion del PDF." }
 $Clock.Stop()
 Write-Host "Total de pared: $([math]::Round($Clock.Elapsed.TotalMinutes, 1)) min" -ForegroundColor Green
 Write-Host "PDF: $((Resolve-Path $Pdf).Path)" -ForegroundColor Green
+Write-Host "Comparacion: $((Resolve-Path $ComparisonPath).Path)" -ForegroundColor Green
 Write-Host "Resultado medido: $($Ragas.total_automatico.obtenidos)/80 (incluye RAGAS)" -ForegroundColor Green
