@@ -5,7 +5,10 @@
 # ahorrar ~2 min por variante), sigue aunque una falle y al final imprime una tabla contra la base.
 # La verificacion en vivo se hace solo en la configuracion final (sin -SkipVerify).
 #
-# Uso:
+# Uso (2026-10-02 noche: experimentos sobre la configuracion final 37,46/50):
+#   PC #1:  powershell -ExecutionPolicy Bypass -File tools\kingscode_variantes.ps1 -Pc 1 -Pull   (v6 y despues doccap3)
+#   PC #2:  powershell -ExecutionPolicy Bypass -File tools\kingscode_variantes.ps1 -Pc 2 -Pull   (option_plan)
+#   Al final: tabla de esta tanda + proxy de RAGAS (ROUGE-1/BLEU-4/legibilidad, sin credito) + taxonomia.
 #   powershell -ExecutionPolicy Bypass -File tools\kingscode_variantes.ps1
 #   ... -Variantes prompt_v4,citas            (solo esas)
 #   ... -Variantes final -Final "-PromptVersion v4 -CitationFill -Rerank -ExactLocator"
@@ -17,9 +20,13 @@
 #   rerank          -Rerank                    (~15 min; separa el efecto del locator)
 #   hybrid          -RetrieverMode hybrid      (indice denso la primera vez, ~5-10 min con el build ordenado por largo)
 #   alia            -Model alia-legal-7b       (descarga ~15 GB la primera vez)
+#   v6              -Recomendada -PromptVersion v6           (prompt de razonamiento juridico; ~15 min)
+#   option_plan     -Recomendada -RetrievalMode option_plan  (planner Qwen para texto libre; ~20 min)
+#   doccap3         -Recomendada -DocCap 3                   (max 3 pasajes por documento; ~15 min)
 # =====================================================================
 param(
-    [string[]]$Variantes = @("prompt_v4", "citas", "rerank_locator", "rerank", "hybrid", "alia"),
+    [string[]]$Variantes = @(),
+    [ValidateSet("", "1", "2")] [string]$Pc = "",
     [string]$Final = "",
     [string]$Work = "$HOME\KingsCodeGPU\KingsCodeNvidia",
     [switch]$Pull   # por defecto NO actualiza durante la tanda: todas las variantes usan el mismo commit
@@ -27,6 +34,9 @@ param(
 $ErrorActionPreference = "Continue"
 # With powershell -File, "a,b,c" arrives as ONE string: split it here.
 $Variantes = @($Variantes | ForEach-Object { $_ -split "," } | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+if (-not $Variantes) {
+    $Variantes = switch ($Pc) { "1" { @("v6", "doccap3") } "2" { @("option_plan") } default { @("v6", "option_plan", "doccap3") } }
+}
 Set-Location $Work
 if ($Pull) { git pull --ff-only origin main }
 Write-Host "Commit congelado para toda la tanda: $((git rev-parse --short HEAD).Trim())" -ForegroundColor Cyan
@@ -40,6 +50,9 @@ $Catalogo = [ordered]@{
     "rerank"         = @("-Rerank")
     "hybrid"         = @("-RetrieverMode", "hybrid")
     "alia"           = @("-Model", "alia-legal-7b")
+    "v6"             = @("-Recomendada", "-PromptVersion", "v6")
+    "option_plan"    = @("-Recomendada", "-RetrievalMode", "option_plan")
+    "doccap3"        = @("-Recomendada", "-DocCap", "3")
 }
 $Inicio = Get-Date
 foreach ($v in $Variantes) {
@@ -59,8 +72,8 @@ foreach ($v in $Variantes) {
 }
 
 # ---------------------------------------------------------------------
-$Base = 26.63   # qwen3-8b + bm25 + router, prompt v3 (2026-10-01, sha 3ec5651a...)
-$Filas = Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Sort-Object LastWriteTime | ForEach-Object {
+$Base = 37.46   # -Recomendada (k=8, 5 menciones), 2026-10-02, sha 3ef9de8d...
+$Filas = Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Where-Object { $_.LastWriteTime -ge $Inicio } | Sort-Object LastWriteTime | ForEach-Object {
     $f = "$($_.FullName)\RESUMEN.json"
     if (Test-Path $f) {
         $r = Get-Content $f -Raw | ConvertFrom-Json; $d = $r.diagnostics
@@ -70,7 +83,7 @@ $Filas = Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Sort-Object L
             cerr = $r.cerradas; citas = $r.citas; abst = $r.abstencion; fb = $r.fallbacks_pipeline_error
             s_preg = $r.segundos_por_pregunta; ret_p95_ms = [math]::Round([double]$d.retrieval_ms_p95)
             vram_gb = $d.peak_reserved_vram_gb; verif = $r.verificacion_en_vivo.all_match
-            apta = ($r.segundos_por_pregunta -le 20)
+            apta = ($r.proyeccion_992_horas -le 5)
         }
     }
 }
@@ -78,7 +91,7 @@ $Filas | Format-Table -AutoSize
 
 # Per run: why each fallback happened (saved since PR #22) and how often the parser had to fix shape.
 Write-Host "`nDetalle por corrida (fallbacks y correcciones del parser):" -ForegroundColor Cyan
-Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Sort-Object LastWriteTime | ForEach-Object {
+Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Where-Object { $_.LastWriteTime -ge $Inicio } | Sort-Object LastWriteTime | ForEach-Object {
     $run = $_
     if (-not (Test-Path "$($run.FullName)\RESUMEN.json")) { return }
     $r = Get-Content "$($run.FullName)\RESUMEN.json" -Raw | ConvertFrom-Json
@@ -94,6 +107,12 @@ Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Sort-Object LastWriteT
     $fwText = $(if ($fw) { ($fw.PSObject.Properties | ForEach-Object { "$($_.Name)=$($_.Value.n)" }) -join ", " } else { "-" })
     Write-Host ("  {0}`n    fallbacks: {1}`n    correcciones: {2}`n    avisos de extension: {3}" -f $run.Name, $(if ($why) { $why -join " | " } else { "ninguno" }), $coText, $fwText)
 }
-Write-Host ("Total: {0:N0} min. Base de referencia: {1}/50. 'apta' = <= 20 s/pregunta (presupuesto 22 s). Solo cuentan mejoras de ~2 puntos o mas." -f ((Get-Date) - $Inicio).TotalMinutes, $Base) -ForegroundColor Green
+Write-Host "`nProxy de RAGAS (sin credito; token_f1 = ROUGE-1). Base: token_f1 0.275, bleu4 0.087:" -ForegroundColor Cyan
+Get-ChildItem ".\reports\decoder_diagnostic" -Directory | Where-Object { $_.LastWriteTime -ge $Inicio -and (Test-Path "$($_.FullName)\batch\submissions.jsonl") } | Sort-Object LastWriteTime | ForEach-Object {
+    Write-Host "  $($_.Name)"
+    .\.venv\Scripts\python.exe tools\analyze_ragas_proxy.py "$($_.FullName)\batch\submissions.jsonl" --no-encoder
+    .\.venv\Scripts\python.exe tools\analyze_taxonomy.py "$($_.FullName)\batch\submissions.jsonl" --md "$($_.FullName)\taxonomia.md" | Out-Null
+}
+Write-Host ("Total: {0:N0} min. Base: {1}/50. Se adopta solo si total > base, cerradas >= 12, 0 citas sin respaldo y apta (<= 5 h para 992). Taxonomia por corrida en <corrida>\taxonomia.md." -f ((Get-Date) - $Inicio).TotalMinutes, $Base) -ForegroundColor Green
 $Filas | Export-Csv -NoTypeInformation -Encoding UTF8 ".\reports\decoder_diagnostic\comparacion.csv"
 Write-Host "Tabla guardada en reports\decoder_diagnostic\comparacion.csv"
