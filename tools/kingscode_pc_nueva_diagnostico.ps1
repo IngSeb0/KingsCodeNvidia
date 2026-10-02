@@ -413,7 +413,7 @@ $Spq = [math]::Round(($Br.seconds + $PlanSeconds) / $Processed, 1)   # incluye e
 $Summary = [ordered]@{
     main_sha = $Sha; model = $Model; gpu = $Rt.gpu; vram_gb = $Rt.vram_gb; torch = $Rt.torch
     retrieval = "$RetrieverMode$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($ExactLocator) { ' + locator exacto' }) k=$K graph router (diagnostico, no freeze)"
-    prompt_version = "grounded-formats-$PromptVersion"; citation_fill = [bool]$CitationFill; cite_mentions = $CiteMentions; verificacion_en_vivo = $Verify
+    prompt_version = "grounded-formats-$PromptVersion"; citation_fill = [bool]$CitationFill; cite_mentions = $CiteMentions; max_context_tokens = $(if ($MaxContext -gt 0) { $MaxContext } else { 8192 }); doc_cap = $DocCap; verificacion_en_vivo = $Verify
     corpus = $CorpusDir; corpus_origin = $CorpusOrigin; corpus_v01_raw_identical_and_verified = $CorpusExact; corpus_v01_comparison = $Cmp
     corpus_diagnostic_override = ($AllowKnownLocalCorpusDrift -and -not $CorpusExact)
     passages_sha256 = $PassagesSha; passages_reference = $PassagesRef
