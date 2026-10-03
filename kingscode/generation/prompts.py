@@ -109,7 +109,18 @@ respuesta debe tener exactamente 3 oraciones breves y como máximo 150 palabras:
     "open_ended": """Campos, en este orden: abstencion (false), marco_normativo, analisis, jurisprudencia, conclusion (todos strings).
 marco_normativo identifica únicamente las disposiciones aplicables aportadas, sin volver a explicar su contenido. analisis tiene exactamente 5 oraciones, en este orden: hechos relevantes; problema jurídico; regla con cita; aplicación por requisitos al caso; consecuencia jurídica. Cada oración debe añadir una proposición necesaria distinta. jurisprudencia contiene solo la regla de una decisión aportada que resuelva el punto; si no hay una decisión aplicable entre los pasajes, escribe únicamente "No hay jurisprudencia aplicable al punto." conclusion responde en una oración directa, sin repetir el análisis ni agregar hechos.""",
 }
-ACTIVE_PROMPT_VERSIONS = {PROMPT_VERSION, PROMPT_V4, PROMPT_V5_OPTION_SUPPORT, PROMPT_V6, PROMPT_V7}
+# v8 keeps v6's decision rules and sentence ranges, while targeting the format that
+# RAGAS actually scores: semi_open uses only `respuesta`; open_ended joins all four
+# substantive fields. v7's exact sentence counts shortened answers and reduced coverage.
+PROMPT_V8 = "grounded-formats-v8"
+FORMAT_INSTRUCTIONS_V8 = {
+    "multiple_choice": FORMAT_INSTRUCTIONS_V6["multiple_choice"],
+    "semi_open": """Campos, en este orden: abstencion (false), respuesta (string), palabras_clave (array de strings), referencia_legal (string).
+respuesta debe tener entre 3 y 5 oraciones completas y como máximo 150 palabras. La primera responde directamente; las siguientes cubren la regla y todos los elementos que pide la pregunta (requisitos, distinciones, condiciones, excepciones o consecuencias, según corresponda). Si pregunta un dato puntual, responde en 3 oraciones; si pide varios elementos, usa las necesarias hasta 5 para contestarlos todos. Incluye en respuesta toda la solución sustantiva: palabras_clave y referencia_legal son metadatos auxiliares y no sustituyen una parte de la respuesta. Cada oración aporta una afirmación distinta y necesaria; no añadas contexto irrelevante, no repitas ni inventes hechos.""",
+    "open_ended": """Campos, en este orden: abstencion (false), marco_normativo, analisis, jurisprudencia, conclusion (todos strings).
+marco_normativo enuncia las normas aplicables de los pasajes y la regla que aportan, sin repetir su desarrollo en los demás campos. analisis debe tener entre 5 y 8 oraciones completas: hechos jurídicamente relevantes, problema jurídico, regla aplicable con su cita, aplicación a cada requisito o elemento pedido y consecuencia jurídica. Contesta todos los componentes del caso; no reduzcas el análisis a un esquema fijo si la pregunta exige distinguir varias figuras o resolver varios puntos. jurisprudencia cita solo decisiones aportadas que resuelvan el punto y explica su regla; si no hay una decisión aplicable, escribe brevemente "No hay una decisión jurisprudencial aplicable en los pasajes." conclusion responde directamente lo que pide el caso, sin repetir el análisis. Cada campo añade contenido necesario y distinto, sin afirmaciones accesorias ni hechos inventados.""",
+}
+ACTIVE_PROMPT_VERSIONS = {PROMPT_VERSION, PROMPT_V4, PROMPT_V5_OPTION_SUPPORT, PROMPT_V6, PROMPT_V7, PROMPT_V8}
 
 MAX_USED_PASSAGES = 5
 ATTRIBUTION_INSTRUCTION = """Si respondes, añade también el campo "pasajes_usados": lista con los passage_id (como máximo {max_used}) de los pasajes de la evidencia en que realmente te basaste. Usa solo passage_id que aparezcan en la evidencia; no inventes identificadores.
@@ -118,9 +129,10 @@ LEGACY_PROMPT_VERSIONS = {"grounded-formats-v1", "grounded-formats-v2"}
 
 
 def system_prompt(fmt: str, max_used: int = MAX_USED_PASSAGES, version: str = PROMPT_VERSION) -> str:
-    if version in {PROMPT_V6, PROMPT_V7}:
+    if version in {PROMPT_V6, PROMPT_V7, PROMPT_V8}:
         common = COMMON_V7 if version == PROMPT_V7 else COMMON_V6
-        instructions = FORMAT_INSTRUCTIONS_V7 if version == PROMPT_V7 else FORMAT_INSTRUCTIONS_V6
+        instructions = (FORMAT_INSTRUCTIONS_V7 if version == PROMPT_V7 else
+                        FORMAT_INSTRUCTIONS_V8 if version == PROMPT_V8 else FORMAT_INSTRUCTIONS_V6)
         return common + "\n" + instructions[fmt] + "\n" + ATTRIBUTION_INSTRUCTION.format(max_used=max_used)
     instructions = FORMAT_INSTRUCTIONS_V4 if version == PROMPT_V4 else FORMAT_INSTRUCTIONS
     extra =("\nLa evidencia puede incluir option_support: cosenos auxiliares de Q+opción frente a cada pasaje. "
@@ -135,7 +147,7 @@ def prompt_sha256(max_used: int = MAX_USED_PASSAGES, version: str = PROMPT_VERSI
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-# Official publisher host -> deciding authority (v6 only). Deterministic metadata from the
+# Official publisher host -> deciding authority (v6-v8 only). Deterministic metadata from the
 # acquisition URL: the model must not confuse the Constitutional Court with the Supreme Court.
 _AUTHORITY_BY_HOST = {
     "corteconstitucional.gov.co": "Corte Constitucional",
@@ -158,7 +170,7 @@ def build_messages(question: Question, passages: list[dict], prompt: PromptSpec,
     if prompt.version not in LEGACY_PROMPT_VERSIONS | {PROMPT_VERSION} or version not in ACTIVE_PROMPT_VERSIONS:
         raise ValueError("Unknown prompt version")
     evidence = [{k: p.get(k) for k in ("passage_id", "doc_id", "norm_name", "article", "source_url", "text")} for p in passages]
-    if version in {PROMPT_V6, PROMPT_V7}:
+    if version in {PROMPT_V6, PROMPT_V7, PROMPT_V8}:
         for entry in evidence:
             authority = source_authority(entry.get("source_url"))
             if authority:

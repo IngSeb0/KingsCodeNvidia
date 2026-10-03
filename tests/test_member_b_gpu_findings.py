@@ -219,9 +219,26 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         self.assertIn("No hay jurisprudencia aplicable al punto.", opened)
         self.assertEqual(build_messages(Q, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version=PROMPT_V7)[0]["role"], "system")
 
-    def test_prompt_v6_adds_authority_from_official_host_only(self):
+    def test_prompt_v8_restores_coverage_without_changing_closed_question_rules(self):
+        from kingscode.generation.prompts import PROMPT_V6, PROMPT_V7, PROMPT_V8, build_messages, prompt_sha256, system_prompt
+        from kingscode.reasoning.decoder import PromptSpec
+        self.assertNotEqual(prompt_sha256(5, PROMPT_V7), prompt_sha256(5, PROMPT_V8))
+        self.assertEqual(system_prompt("multiple_choice", 5, PROMPT_V8), system_prompt("multiple_choice", 5, PROMPT_V6))
+        semi = system_prompt("semi_open", 5, PROMPT_V8)
+        self.assertIn("entre 3 y 5 oraciones", semi)
+        self.assertIn("todos los elementos que pide la pregunta", semi)
+        self.assertIn("metadatos auxiliares y no sustituyen", semi)
+        self.assertNotIn("exactamente 3 oraciones", semi)
+        opened = system_prompt("open_ended", 5, PROMPT_V8)
+        self.assertIn("entre 5 y 8 oraciones", opened)
+        self.assertIn("Contesta todos los componentes del caso", opened)
+        self.assertIn("No hay una decisión jurisprudencial aplicable en los pasajes.", opened)
+        self.assertNotIn("exactamente 5 oraciones", opened)
+        self.assertEqual(build_messages(Q, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version=PROMPT_V8)[0]["role"], "system")
+
+    def test_prompt_v6_v8_add_authority_from_official_host_only(self):
         import json
-        from kingscode.generation.prompts import PROMPT_V4, PROMPT_V6, build_messages, source_authority
+        from kingscode.generation.prompts import PROMPT_V4, PROMPT_V6, PROMPT_V8, build_messages, source_authority
         from kingscode.reasoning.decoder import PromptSpec
         self.assertEqual(source_authority("https://www.corteconstitucional.gov.co/relatoria/2025/T-256-25.htm"), "Corte Constitucional")
         self.assertEqual(source_authority("https://cortesuprema.gov.co/x"), "Corte Suprema de Justicia")
@@ -231,6 +248,7 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         passage["source_url"] = "https://www.corteconstitucional.gov.co/relatoria/2007/C-960-07.htm"
         user = lambda v: json.loads(build_messages(Q, [deepcopy(passage)], PromptSpec("semi_open"), version=v)[1]["content"])
         self.assertEqual(user(PROMPT_V6)["evidencia"][0]["autoridad"], "Corte Constitucional")
+        self.assertEqual(user(PROMPT_V8)["evidencia"][0]["autoridad"], "Corte Constitucional")
         self.assertNotIn("autoridad", user(PROMPT_V4)["evidencia"][0])  # v4 evidence unchanged
 
     def test_citation_fill_adds_verified_ranked_citations_only_where_ragas_does_not_read(self):
