@@ -1,0 +1,22 @@
+﻿{
+  "checked": 2,
+  "all_match": true,
+  "results": [
+    {
+      "id": 8,
+      "answer_identical": true,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    },
+    {
+      "id": 144,
+      "answer_identical": true,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    }
+  ]
+}
