@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KingsCode · Presentación</title>
+<style>
+:root {
+  --teal: #0e938f; --teal-dark: #08716f; --teal-soft: #e3f3f2;
+  --ink: #13232c; --muted: #5d7079; --line: #d5e2e3; --paper: #f6f9f9; --blue: #245b85;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--ink); font-family: "Segoe UI", system-ui, -apple-system, sans-serif; color: var(--ink); }
+.deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+.slide {
+  position: absolute; inset: 0; margin: auto; width: min(100vw, 177.78vh); height: min(100vh, 56.25vw);
+  background: var(--paper); padding: 3.6% 6.5% 3.2%; display: none; flex-direction: column;
+  font-size: min(1.55vw, 2.75vh);
+}
+.slide.on { display: flex; }
+.slide header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.3em; }
+.kicker { font-size: .78em; letter-spacing: .14em; text-transform: uppercase; color: var(--teal-dark); font-weight: 700; }
+.logo { height: 3.2em; }
+h1 { font-size: 3.3em; line-height: 1.05; letter-spacing: -.02em; }
+h2 { font-size: 2.1em; line-height: 1.1; letter-spacing: -.01em; margin-bottom: .8em; }
+p, li { line-height: 1.45; }
+.lead { font-size: 1.3em; color: var(--muted); max-width: 46em; }
+.foot { margin-top: auto; display: flex; justify-content: space-between; color: var(--muted); font-size: .75em; border-top: 1px solid var(--line); padding-top: .8em; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4em; }
+.cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4em; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: .6em; padding: 1.1em 1.3em; }
+.card h3 { font-size: 1.05em; margin-bottom: .45em; color: var(--teal-dark); }
+.card p, .card li { font-size: .92em; color: var(--ink); }
+ul.clean { list-style: none; } ul.clean li { padding-left: 1.1em; position: relative; margin-bottom: .55em; }
+ul.clean li::before { content: ""; position: absolute; left: 0; top: .62em; width: .45em; height: .45em; background: var(--teal); border-radius: 1px; }
+.big { font-size: 3.4em; font-weight: 750; color: var(--teal-dark); line-height: 1; letter-spacing: -.02em; }
+.big small { font-size: .38em; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+.stat { display: flex; flex-direction: column; gap: .35em; }
+.stat span { color: var(--muted); font-size: .9em; }
+/* pipeline */
+.flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: .9em; align-items: stretch; margin-top: .4em; }
+.step { background: #fff; border: 1px solid var(--line); border-top: .3em solid var(--teal); border-radius: .5em; padding: .9em 1em; position: relative; }
+.step b { display: block; font-size: 1em; margin-bottom: .35em; }
+.step p { font-size: .82em; color: var(--muted); }
+.step:not(:last-child)::after { content: "→"; position: absolute; right: -.85em; top: 42%; color: var(--teal); font-weight: 700; font-size: 1.1em; }
+.note { margin-top: 1.4em; background: var(--teal-soft); border-left: .3em solid var(--teal); padding: .9em 1.2em; border-radius: 0 .5em .5em 0; font-size: .95em; }
+/* bars */
+.bars { display: flex; flex-direction: column; gap: .55em; margin-top: .3em; }
+.bar { display: grid; grid-template-columns: 15em 1fr 4em; align-items: center; gap: .9em; font-size: .9em; }
+.track { height: 1.25em; background: #e9efef; border-radius: .25em; overflow: hidden; }
+.fill { height: 100%; background: #9fcfcc; }
+.fill.best { background: var(--teal); }
+.bar .v { font-variant-numeric: tabular-nums; font-weight: 650; text-align: right; }
+table { border-collapse: collapse; width: 100%; font-size: .9em; background: #fff; }
+th, td { text-align: left; padding: .55em .8em; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: .85em; text-transform: uppercase; letter-spacing: .06em; }
+td.n { text-align: right; font-variant-numeric: tabular-nums; }
+.cover { justify-content: center; }
+.cover .logo { height: 5.4em; }
+.tag { display: inline-block; background: var(--teal-soft); color: var(--teal-dark); border-radius: 99px; padding: .25em .8em; font-size: .8em; font-weight: 650; margin-right: .4em; }
+.mono { font-family: Consolas, "Cascadia Mono", monospace; font-size: .88em; }
+.hint { position: fixed; right: 1em; bottom: .7em; color: #8aa; font-size: 12px; opacity: .6; }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<section class="slide cover on">
+  <img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt="Software Colombia">
+  <div style="margin-top:2.2em">
+    <div class="kicker">Hackathon 2026 · AI Week · Universidad de los Andes</div>
+    <h1 style="margin:.35em 0 .5em">KingsCode<br>Derecho colombiano con citas que se pueden probar</h1>
+    <p class="lead">Un modelo abierto de 8 mil millones de parámetros que responde con la norma exacta y solo cita lo que encontró en fuentes oficiales.</p>
+  </div>
+  <div class="foot"><span>Esteban Alejandro Hernández · Luis Sebastián Contreras Díaz</span><span>1</span></div>
+</section>
+
+<section class="slide">
+  <header><span class="kicker">El reto</span><img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt=""></header>
+  <h2>992 preguntas ciegas, tres formatos, una sola regla: no inventar normas</h2>
+  <div class="cols3">
+    <div class="card stat"><div class="big">290</div><span>selección múltiple: la opción correcta y por qué se descartan las demás</span></div>
+    <div class="card stat"><div class="big">652</div><span>respuesta breve: 3 a 5 oraciones con su referencia legal</span></div>
+    <div class="card stat"><div class="big">50</div><span>casos abiertos: marco normativo, análisis, jurisprudencia y conclusión</span></div>
+  </div>
+  <div class="note">Restricciones: decoder abierto de máximo 8B, encoder abierto, temperatura 0, índice congelado. Cada cita debe aparecer en uno de los 10 pasajes recuperados: una norma sin respaldo resta el doble.</div>
+  <div class="foot"><span>KingsCode</span><span>2</span></div>
+</section>
+
+<section class="slide">
+  <header><span class="kicker">Producto</span><img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt=""></header>
+  <h2>Un asistente jurídico que muestra de dónde sale cada respuesta</h2>
+  <div class="cols3">
+    <div class="card"><h3>Para quién</h3><ul class="clean">
+      <li>Abogados y consultorios jurídicos.</li>
+      <li>Áreas de cumplimiento y entidades públicas que justifican cada concepto.</li>
+      <li>Pymes y ciudadanos que no saben qué ley aplica.</li></ul></div>
+    <div class="card"><h3>Qué problema resuelve</h3><ul class="clean">
+      <li>Encontrar la norma y el artículo correctos toma horas.</li>
+      <li>Los chatbots generales inventan normas o citan artículos que no existen.</li>
+      <li>Una cita errada en un concepto jurídico tiene costo legal.</li></ul></div>
+    <div class="card"><h3>Qué entrega</h3><ul class="clean">
+      <li>Respuesta en segundos con norma, artículo y pasaje oficial enlazado.</li>
+      <li>Si no hay evidencia suficiente, lo dice en vez de inventar.</li>
+      <li>Corre en servidor propio: los datos sensibles no salen a terceros.</li></ul></div>
+  </div>
+  <div class="note"><b>Siguiente paso:</b> actualización periódica del corpus y conexión con flujos documentales y de firma electrónica.</div>
+  <div class="foot"><span>KingsCode</span><span>3</span></div>
+</section>
+
+<section class="slide">
+  <header><span class="kicker">Arquitectura</span><img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt=""></header>
+  <h2>De la pregunta a una respuesta con evidencia</h2>
+  <div class="flow">
+    <div class="step"><b>1. Normalización</b><p>Nombres completos de códigos y señales de vigencia, modificación o remisión.</p></div>
+    <div class="step"><b>2. Recuperación</b><p>BM25 por artículo, búsqueda semántica en texto libre, una consulta por opción y grafo normativo.</p></div>
+    <div class="step"><b>3. 8 pasajes</b><p>Cada uno con norma, artículo, jerarquía y URL oficial.</p></div>
+    <div class="step"><b>4. Qwen3-8B</b><p>BF16, temperatura 0, greedy, prompt de método jurídico. Responde en el JSON oficial.</p></div>
+    <div class="step"><b>5. Guarda de citas</b><p>Repara o elimina toda cita que no esté en los pasajes.</p></div>
+  </div>
+  <div class="cols" style="margin-top:1.6em">
+    <div class="card"><h3>Encoder</h3><p>Qwen3-Embedding-0.6B: 26.167 vectores de 1.024 dimensiones, búsqueda exacta por coseno.</p></div>
+    <div class="card"><h3>Decoder</h3><p>Qwen3-8B, sin cuantizar, en una RTX 4090. Mejor puntaje medido: ALIA Legal 7B dio 5/50 por formato inválido.</p></div>
+  </div>
+  <div class="foot"><span>KingsCode</span><span>4</span></div>
+</section>
+
+<section class="slide">
+  <header><span class="kicker">Corpus</span><img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt=""></header>
+  <h2>Un corpus propio, partido por artículo y trazable hasta la fuente</h2>
+  <div class="cols">
+    <div>
+      <div class="cols" style="gap:1.2em">
+        <div class="stat"><div class="big">170</div><span>normas y sentencias de fuentes oficiales</span></div>
+        <div class="stat"><div class="big">26.665</div><span>fragmentos, uno por artículo</span></div>
+        <div class="stat"><div class="big">59 mil</div><span>nodos en el grafo normativo</span></div>
+        <div class="stat"><div class="big">75 mil</div><span>relaciones: modifica, deroga, remite, reglamenta</span></div>
+      </div>
+    </div>
+    <div>
+      <ul class="clean">
+        <li><b>Fuentes:</b> Función Pública, Secretaría del Senado, relatoría de la Corte Constitucional, Corte Suprema, normograma del SENA y Comunidad Andina.</li>
+        <li><b>Por qué por artículo:</b> en derecho la unidad de cita es el artículo, así que cada pasaje recuperado ya trae la norma que se cita.</li>
+        <li><b>Trazabilidad:</b> cada fragmento guarda URL, fecha de consulta, hash SHA-256 de la fuente y su posición en el texto.</li>
+        <li><b>Ampliación guiada por fallas:</b> se añadieron normas y sentencias según los errores medidos, no por intuición.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Bitácora: CORPUS.md · inventario: corpus_manifest.json</span><span>5</span></div>
+</section>
+
+<section class="slide">
+  <header><span class="kicker">Recuperación por formato</span><img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt=""></header>
+  <h2>Lo que aprendimos con el jurado</h2>
+  <div class="cols">
+    <div class="card">
+      <h3>El caso</h3>
+      <p>¿Puede el Gobierno acceder a la base de datos de pacientes con esclerosis múltiple para justificar la producción nacional de un medicamento?</p>
+      <p style="margin-top:.7em"><span class="tag">solo BM25</span> sumó palabras del relato ("VIH", "medicamento", "pacientes") y trajo sentencias de salud. No encontró la <b>Ley 1581 de 2012</b>, que habla de "datos sensibles", "Titular" y "Tratamiento".</p>
+    </div>
+    <div class="card">
+      <h3>La corrección</h3>
+      <ul class="clean">
+        <li><b>Selección múltiple:</b> BM25 + una consulta por opción. El término decisivo está en las opciones.</li>
+        <li><b>Respuesta breve y caso abierto:</b> BM25 + búsqueda semántica fusionadas por RRF. Encuentra la norma por su significado.</li>
+        <li>El índice semántico aplicado a todo había bajado el puntaje a 34,83; aplicado por formato no pierde en cerradas.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>--hybrid-formats semi_open,open_ended</span><span>6</span></div>
+</section>
+
+<section class="slide">
+  <header><span class="kicker">Citas y abstención</span><img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt=""></header>
+  <h2>Solo citamos lo que podemos probar</h2>
+  <div class="cols3">
+    <div class="card stat"><div class="big">0 %</div><span>citas sin respaldo en todas las corridas: la guarda usa la misma regla del evaluador</span></div>
+    <div class="card stat"><div class="big">75,7 %</div><span>citas alineadas con la afirmación que sustentan (antes 68,9 %)</span></div>
+    <div class="card stat"><div class="big">100 %</div><span>reproducible: regenerar una pregunta da las mismas normas y pasajes</span></div>
+  </div>
+  <ul class="clean" style="margin-top:1.6em">
+    <li><b>Abstención:</b> nunca en selección múltiple; en texto libre solo si la evidencia está vacía, en conflicto o no vigente. Con la regla oficial, abstenerse casi nunca conviene.</li>
+    <li><b>Robustez:</b> un punto de control por pregunta; si una pregunta falla, solo esa se abstiene y la corrida sigue.</li>
+  </ul>
+  <div class="foot"><span>Temperatura 0 · do_sample=False · torch.use_deterministic_algorithms(True)</span><span>7</span></div>
+</section>
+
+<section class="slide">
+  <header><span class="kicker">Resultados</span><img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt=""></header>
+  <h2>Una variable por corrida, medida con el evaluador oficial</h2>
+  <div class="cols" style="grid-template-columns:1.35fr 1fr">
+    <div class="bars">
+      <div class="bar"><span>Primera versión</span><div class="track"><div class="fill" style="width:53.3%"></div></div><span class="v">26,63</span></div>
+      <div class="bar"><span>Consultas por opción</span><div class="track"><div class="fill" style="width:60.8%"></div></div><span class="v">30,41</span></div>
+      <div class="bar"><span>Guarda y reparación de citas</span><div class="track"><div class="fill" style="width:70.4%"></div></div><span class="v">35,18</span></div>
+      <div class="bar"><span>Citas completadas</span><div class="track"><div class="fill" style="width:73.9%"></div></div><span class="v">36,93</span></div>
+      <div class="bar"><span>Prompt v4</span><div class="track"><div class="fill" style="width:74.9%"></div></div><span class="v">37,46</span></div>
+      <div class="bar"><span>Prompt v6 (método jurídico)</span><div class="track"><div class="fill" style="width:76.2%"></div></div><span class="v">38,08</span></div>
+      <div class="bar"><span>Corpus ampliado + semántica</span><div class="track"><div class="fill best" style="width:77.7%"></div></div><span class="v">38,84</span></div>
+    </div>
+    <div>
+      <table>
+        <tr><th>Componente</th><th>Puntos</th></tr>
+        <tr><td>Selección múltiple</td><td class="n">13,33 / 20</td></tr>
+        <tr><td>Citas (0 sin respaldo)</td><td class="n">17,14 / 20</td></tr>
+        <tr><td>Abstención calibrada</td><td class="n">8,37 / 10</td></tr>
+        <tr><td><b>Total sin RAGAS</b></td><td class="n"><b>38,84 / 50</b></td></tr>
+      </table>
+      <p style="margin-top:1em;color:var(--muted);font-size:.85em">Muestra oficial de 50 preguntas. Las 992 corrieron en tres RTX 4090 a 11–18 s por pregunta.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Detalle en informe/INFORME_TECNICO.pdf</span><span>8</span></div>
+</section>
+
+<section class="slide cover">
+  <div class="kicker">Demostración</div>
+  <h1 style="margin:.4em 0 .5em">La interfaz, de extremo a extremo</h1>
+  <p class="lead">Cargar una pregunta por id o escribir una nueva → respuesta → normas citadas → pasajes recuperados con su fuente oficial.</p>
+  <div class="foot"><span>streamlit run interfaz/app.py</span><span>9</span></div>
+</section>
+
+<section class="slide">
+  <header><span class="kicker">Limitaciones</span><img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt=""></header>
+  <h2>Lo que todavía no resolvemos</h2>
+  <div class="cols">
+    <ul class="clean">
+      <li><b>Vocabulario:</b> la búsqueda semántica ayuda en texto libre, pero en selección múltiple bajó el puntaje; la combinación por formato no tiene aún una medición completa.</li>
+      <li><b>Cobertura:</b> poca jurisprudencia del Consejo de Estado y procesal como el área más delgada.</li>
+      <li><b>Vigencia:</b> no está certificada artículo por artículo; las fuentes oficiales cambian entre descargas.</li>
+    </ul>
+    <ul class="clean">
+      <li><b>Contexto de 8.192 tokens:</b> con evidencia larga se descartan pasajes de menor rango.</li>
+      <li><b>Texto libre:</b> la longitud óptima depende de la pregunta; respuestas muy largas o muy cortas pierden corrección.</li>
+      <li><b>Muestra pequeña:</b> decidimos sobre 50 preguntas; diferencias menores a un punto pueden no generalizar.</li>
+    </ul>
+  </div>
+  <div class="foot"><span>KingsCode</span><span>10</span></div>
+</section>
+
+<section class="slide cover">
+  <img class="logo" src="../../interfaz/assets/software_colombia_logo.png" alt="Software Colombia">
+  <h1 style="margin:.7em 0 .5em">Gracias</h1>
+  <p class="lead">Repositorio: código, interfaz, informe, bitácora del corpus y las 992 respuestas.<br>Corpus e índice vectorial: enlace en la sección «Corpus e índice» del README.</p>
+  <div class="foot"><span>KingsCode · Hackathon 2026</span><span>11</span></div>
+</section>
+
+</div>
+<div class="hint">← → para avanzar · F para pantalla completa</div>
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+let i = 0;
+function show(n) { i = Math.max(0, Math.min(slides.length - 1, n)); slides.forEach((s, k) => s.classList.toggle('on', k === i)); }
+document.addEventListener('keydown', e => {
+  if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) show(i + 1);
+  else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) show(i - 1);
+  else if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
+});
+show((parseInt(location.hash.slice(1)) || 1) - 1);
+document.addEventListener('click', e => show(e.clientX > innerWidth / 3 ? i + 1 : i - 1));
+</script>
+</body>
+</html>
