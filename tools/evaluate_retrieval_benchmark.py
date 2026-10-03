@@ -21,6 +21,8 @@ def main() -> None:
     parser.add_argument("--allow-holdout", action="store_true")
     parser.add_argument("--holdout-purpose", choices=["predeclared_baseline", "post_selection_confirmation"])
     parser.add_argument("--record-gpu-blocked", action="store_true")
+    parser.add_argument("--allow-corpus-additions", action="store_true",
+                        help="R0 CPU only: compare a lossless append-only candidate to pinned v0.1 on dev/validation")
     parser.add_argument("--base-run", type=Path, help="Explicit R2-QWEN validation base for R3-R8")
     args = parser.parse_args()
     if args.record_gpu_blocked:
@@ -28,7 +30,8 @@ def main() -> None:
                                     allow_holdout=args.allow_holdout, holdout_purpose=args.holdout_purpose)
     else:
         result = run(args.variant, args.split, corpus=args.corpus, output_root=args.output_root,
-                     allow_holdout=args.allow_holdout, holdout_purpose=args.holdout_purpose, base_run=args.base_run)
+                     allow_holdout=args.allow_holdout, holdout_purpose=args.holdout_purpose, base_run=args.base_run,
+                     allow_corpus_additions=args.allow_corpus_additions)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result.get("status") == "passed" else 2
 

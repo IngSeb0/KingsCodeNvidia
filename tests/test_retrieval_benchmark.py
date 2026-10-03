@@ -7,9 +7,11 @@ from __future__ import annotations
 
 import unittest
 from pathlib import Path
+import tempfile
+from unittest.mock import patch
 
 from kingscode.benchmark_builder import BENCHMARK_ROOT, verify as verify_benchmark
-from kingscode.common import ROOT, read_jsonl
+from kingscode.common import ROOT, file_hash, read_jsonl, write_json
 from kingscode.retrieval_benchmark import (
     GPU_VARIANT_PREREQUISITES,
     aggregate,
@@ -19,6 +21,8 @@ from kingscode.retrieval_benchmark import (
     per_question_metrics,
     retrieval_input,
     run,
+    benchmark_manifest,
+    _verify_declared_hashes,
 )
 
 
@@ -155,6 +159,55 @@ class ArtifactIntegrityTests(unittest.TestCase):
             self.assertEqual(ids, {row["id"] for row in golds})
             self.assertFalse(all_ids & ids)
             all_ids |= ids
+
+    def test_explicit_candidate_gate_requires_exact_pinned_passage_prefix(self):
+        with tempfile.TemporaryDirectory(dir=ROOT) as temp:
+            repo = Path(temp)
+            base, candidate = repo / "corpus", repo / "candidate"
+            for directory in (base / "graph", base / "index", candidate / "graph", candidate / "index"):
+                directory.mkdir(parents=True, exist_ok=True)
+            base_files = {
+                "passages.jsonl": b'{"passage_id":"base:1"}\n',
+                "graph/nodes.jsonl": b'{"node_id":"base"}\n',
+                "graph/edges.jsonl": b"",
+                "index/bm25.json": b"{\"vocabulary\": []}\n",
+            }
+            for name, content in base_files.items():
+                (base / name).write_bytes(content)
+            base_manifest = {"version": "corpus-v0.1",
+                             "hashes": {name: file_hash(base / name) for name in base_files if name != "index/bm25.json"},
+                             "bm25_sha256": file_hash(base / "index/bm25.json")}
+            write_json(base / "manifest.json", base_manifest)
+            (candidate / "passages.jsonl").write_bytes(base_files["passages.jsonl"] + b'{"passage_id":"add:1"}\n')
+            for name in ("graph/nodes.jsonl", "graph/edges.jsonl"):
+                (candidate / name).write_bytes(base_files[name])
+            (candidate / "index/bm25.json").write_bytes(base_files["index/bm25.json"])
+            candidate_manifest = {
+                "version": "candidate", "status": "diagnostic_not_competitive_freeze",
+                "inputs": {"corpus": {"version": base_manifest["version"],
+                                      "manifest_sha256": file_hash(base / "manifest.json"),
+                                      "passages_sha256": file_hash(base / "passages.jsonl")}},
+                "hashes": {name: file_hash(candidate / name) for name in ("passages.jsonl", "graph/nodes.jsonl", "graph/edges.jsonl")},
+                "bm25_sha256": file_hash(candidate / "index/bm25.json"),
+                "n_documentos": 2, "n_indexed": 2,
+            }
+            write_json(candidate / "manifest.json", candidate_manifest)
+            declared = benchmark_manifest()
+            declared["corpus"] = {"version": "corpus-v0.1",
+                                   **{name: base_manifest["hashes"][name] for name in base_manifest["hashes"]},
+                                   "bm25_sha256": base_manifest["bm25_sha256"]}
+            with patch("kingscode.retrieval_benchmark.ROOT", repo), \
+                 patch("kingscode.retrieval_benchmark.benchmark_manifest", return_value=declared):
+                proof = _verify_declared_hashes(candidate, allow_corpus_additions=True)
+                self.assertEqual(proof["status"], "verified_append_only_extension")
+                self.assertTrue(proof["baseline_passage_prefix_preserved"])
+                self.assertEqual(proof["baseline_passages_sha256"], file_hash(base / "passages.jsonl"))
+
+                (candidate / "passages.jsonl").write_bytes(b'{"passage_id":"tampered"}\n')
+                candidate_manifest["hashes"]["passages.jsonl"] = file_hash(candidate / "passages.jsonl")
+                write_json(candidate / "manifest.json", candidate_manifest)
+                with self.assertRaisesRegex(ValueError, "preserve every baseline passage"):
+                    _verify_declared_hashes(candidate, allow_corpus_additions=True)
 
 
 class VariantRegistrationTests(unittest.TestCase):

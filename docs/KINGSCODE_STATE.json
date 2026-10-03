@@ -620,5 +620,17 @@
     "decoder_bakeoff": "not_run: needs GPU session and artifacts/retrieval_freeze.json",
     "base_vs_plan": "NO GENERALIZATION CLAIM. WAITING FOR A BENCHMARK HANDOFF (independent v2 retrieval_gold >= 10)",
     "gpu_lab_script": "tools/kingscode_gpu_todo.ps1"
+  },
+  "corpus_v03_candidate_work": {
+    "branch": "codex/corpus-first-final-improvement-20261003",
+    "starting_origin_main_sha": "30ef38c792c33feb7dc6d87358ab749b007e8725",
+    "status": "candidate_built; independent_c0_c1_pending",
+    "candidate_runtime_artifact_set_sha256": "019b7b3a2c6e719cd70dd082ef61e63042f1dee3113b551f1028bcd14b964b91",
+    "baseline_counts": {"documents": 163, "passages": 26558, "indexable_passages": 26060},
+    "candidate_counts": {"documents": 175, "passages": 27164, "indexable_passages": 26666},
+    "independent_retrieval_gate": "pending; no GPU sample_50 run until C1 passes",
+    "gpu_sample_50": "not_run; no RTX 4090 available in this Codex host",
+    "blind_992": "not used for acquisition, tuning, or evaluation",
+    "next_exact_action": "Run same-commit R0/BM25 on Member-A v1 DEV using v0.1 and corpus_v03_candidate, then paired comparison and tools/gate_corpus_expansion.py"
   }
 }

@@ -29,7 +29,10 @@ def _check_inputs(directory: Path, manifest: dict) -> None:
     for name in FILES:
         if not (directory / name).exists():
             raise FileNotFoundError(directory / name)
-    for name, expected in (manifest.get("hashes") or {}).items():
+    expected_hashes = dict(manifest.get("hashes") or {})
+    if manifest.get("bm25_sha256"):
+        expected_hashes.setdefault("index/bm25.json", manifest["bm25_sha256"])
+    for name, expected in expected_hashes.items():
         if (directory / name).exists() and file_hash(directory / name) != expected:
             raise ValueError(f"Input changed since its manifest: {directory / name}")
 

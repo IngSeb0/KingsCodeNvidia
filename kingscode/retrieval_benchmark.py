@@ -255,8 +255,8 @@ def _git(command: list[str]) -> str | None:
         return None
 
 
-def _verify_declared_hashes(corpus: Path) -> None:
-    """Fail closed if benchmark/corpus bytes differ from the pinned manifest."""
+def _verify_declared_hashes(corpus: Path, *, allow_corpus_additions: bool = False) -> dict | None:
+    """Verify the pinned baseline, or an explicit lossless append-only extension."""
     declared = benchmark_manifest()
     if declared.get("schema_sha256") != file_hash(BENCHMARK_ROOT / "benchmark.schema.json"):
         raise ValueError("Benchmark schema hash differs from manifest")
@@ -271,13 +271,72 @@ def _verify_declared_hashes(corpus: Path) -> None:
             raise ValueError(f"Corpus file hash differs: {name}")
     if file_hash(corpus / "index/bm25.json") != corpus_manifest["bm25_sha256"]:
         raise ValueError("BM25 file hash differs")
+    mismatches = []
     for name, expected in declared.get("corpus", {}).items():
         if name in {"version", "bm25_sha256"}:
             actual = corpus_manifest.get(name)
         else:
             actual = corpus_manifest.get("hashes", {}).get(name)
         if actual != expected:
-            raise ValueError(f"Corpus snapshot differs from benchmark manifest: {name}")
+            mismatches.append(name)
+    if not mismatches:
+        return None
+    if not allow_corpus_additions:
+        raise ValueError(f"Corpus snapshot differs from benchmark manifest: {', '.join(mismatches)}")
+    if corpus.resolve() == (ROOT / "corpus").resolve():
+        raise ValueError("The baseline corpus itself cannot be treated as an additions candidate")
+
+    # Candidate runs are restricted to R0 BM25 diagnostics on dev/validation.
+    # Resolve the base only from the candidate's recorded input inventory, then
+    # re-hash it against the benchmark snapshot before checking byte-prefix.
+    inputs = corpus_manifest.get("inputs") or {}
+    base_matches = []
+    for input_name, entry in inputs.items():
+        base = Path(input_name)
+        if not base.is_absolute():
+            base = ROOT / base
+        if base.name.casefold() == "test_992.jsonl":
+            raise ValueError("Blind competitive file is forbidden as a corpus base")
+        base_manifest_path = base / "manifest.json"
+        if not base_manifest_path.is_file():
+            continue
+        base_manifest = read_json(base_manifest_path)
+        if (base_manifest.get("version") != declared.get("corpus", {}).get("version")
+                or entry.get("version") != base_manifest.get("version")
+                or entry.get("manifest_sha256") != file_hash(base_manifest_path)
+                or entry.get("passages_sha256") != file_hash(base / "passages.jsonl")):
+            continue
+        exact = True
+        for name, expected in declared.get("corpus", {}).items():
+            if name == "version":
+                continue
+            actual = base_manifest.get("bm25_sha256") if name == "bm25_sha256" else base_manifest.get("hashes", {}).get(name)
+            if actual != expected:
+                exact = False
+                break
+            path = base / ("index/bm25.json" if name == "bm25_sha256" else name)
+            if file_hash(path) != expected:
+                exact = False
+                break
+        if exact:
+            base_matches.append((base, base_manifest))
+    if len(base_matches) != 1:
+        raise ValueError("Candidate must record exactly one intact v0.1 input matching the benchmark snapshot")
+    base, base_manifest = base_matches[0]
+    base_passages = base / "passages.jsonl"
+    candidate_passages = corpus / "passages.jsonl"
+    if not candidate_passages.read_bytes().startswith(base_passages.read_bytes()):
+        raise ValueError("Candidate does not preserve every baseline passage byte-for-byte in original order")
+    if corpus_manifest.get("status") != "diagnostic_not_competitive_freeze":
+        raise ValueError("Append-only corpus runs must remain diagnostic, not a competitive freeze")
+    return {"status": "verified_append_only_extension", "baseline_version": base_manifest["version"],
+            "baseline_passages_sha256": file_hash(base_passages),
+            "baseline_manifest_sha256": file_hash(base / "manifest.json"),
+            "candidate_passages_sha256": file_hash(candidate_passages),
+            "candidate_bm25_sha256": file_hash(corpus / "index/bm25.json"),
+            "baseline_passage_prefix_preserved": True,
+            "candidate_document_count": corpus_manifest.get("n_documentos"),
+            "candidate_indexed_passages": corpus_manifest.get("n_indexed")}
 
 
 def _holdout_declaration() -> dict:
@@ -351,7 +410,8 @@ def _assert_clean_tree() -> None:
 
 
 def run(variant: str, split: str, *, corpus: Path | None = None, output_root: Path | None = None,
-        allow_holdout: bool = False, holdout_purpose: str | None = None, base_run: Path | None = None) -> dict:
+        allow_holdout: bool = False, holdout_purpose: str | None = None, base_run: Path | None = None,
+        allow_corpus_additions: bool = False) -> dict:
     """Run verified real retrieval, keeping all labels behind the ranking boundary."""
     from .benchmark_runtime import EXECUTABLE, NeuralRuntime, execution_identity, validate_base_run
     if split not in {"dev", "validation", "holdout"}:
@@ -359,8 +419,10 @@ def run(variant: str, split: str, *, corpus: Path | None = None, output_root: Pa
     if split == "holdout" and output_root is not None:
         raise PermissionError("Holdout reports must use the repository-controlled default output root")
     _assert_holdout_policy(split, variant, allow_holdout, holdout_purpose)
+    if allow_corpus_additions and (split not in {"dev", "validation"} or variant not in {"R0", "R0-GRAPH-AUTO-DIAGNOSTIC", "R0-GRAPH-ON-DIAGNOSTIC"}):
+        raise PermissionError("Append-only corpus comparison is limited to CPU BM25 variants on dev/validation")
     corpus = corpus or ROOT / "corpus"
-    _verify_declared_hashes(corpus)
+    corpus_extension_validation = _verify_declared_hashes(corpus, allow_corpus_additions=allow_corpus_additions)
     _assert_clean_tree()
     if variant in {"R1-BGE", "R2-BGE"}:
         return record_gpu_blocked(variant, split, output_root=output_root,
@@ -379,6 +441,7 @@ def run(variant: str, split: str, *, corpus: Path | None = None, output_root: Pa
               "git": {"commit": _git(["git", "rev-parse", "HEAD"]), "branch": _git(["git", "branch", "--show-current"])},
               "corpus": corpus_id, "benchmark": identity, "source_identity": source,
               "config": config, "model": None,
+              "corpus_extension_validation": corpus_extension_validation,
               "hardware": {"platform": platform.platform(), "python": sys.version, "cuda": False},
               "directory": str(directory.resolve()), "completed_rankings": 0}
     runtime, rankings = None, []

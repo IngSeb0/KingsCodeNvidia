@@ -22,6 +22,8 @@ def main() -> None:
     parser.add_argument("--runs", type=Path, nargs="+")
     parser.add_argument("--variant", help="Exact validated variant; omit for no_selection")
     parser.add_argument("--rationale")
+    parser.add_argument("--allow-corpus-change", action="store_true",
+                        help="Only for same-commit R0 BM25 runs with verified append-only v0.1 prefix")
     args = parser.parse_args()
     if args.command == "select":
         if args.output or not args.runs or not args.rationale:
@@ -32,8 +34,11 @@ def main() -> None:
     elif args.command in {"compare", "complementarity"}:
         if not args.baseline or not args.candidate:
             parser.error("compare requires --baseline and --candidate")
-        action = write_comparison if args.command == "compare" else write_complementarity
-        result = action(args.baseline, args.candidate, args.output)
+        if args.command == "compare":
+            result = write_comparison(args.baseline, args.candidate, args.output,
+                                      allow_corpus_change=args.allow_corpus_change)
+        else:
+            result = write_complementarity(args.baseline, args.candidate, args.output)
     elif args.command == "errors":
         if not args.run:
             parser.error("errors requires --run")

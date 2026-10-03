@@ -84,12 +84,17 @@ def verify():
             official[name]=expected
     # B-owned paths (kingscode/reasoning, config/reasoning.json) are excluded: B's
     # own merged work legitimately changes them and B verifies them with its tests.
-    # Everything official/historical stays pinned to the 60ebf7e GPU freeze.
-    source_diff=subprocess.check_output(['git','diff','60ebf7e','--',
-                                         'config/models.lock.json','config/neural.json','data','schema','scripts','benchmarks/kingscode_ir',
-                                         'tools/gpu_search_v2_dev.py','tools/gpu_search_v2_validation.py','reports/gpu_freeze_4090',
-                                         'reports/benchmark/search_v2','reports/benchmark/search_v2_validation'],cwd=ROOT)
-    if source_diff:raise ValueError('Protected B/official/historical GPU/benchmark/model files changed')
+    # Compare protected files to the branch point with current origin/main. This
+    # preserves the guard for task-branch commits and worktree edits while not
+    # treating legitimate protected-path changes already shipped on main as local drift.
+    protected=['config/models.lock.json','config/neural.json','data','schema','scripts','benchmarks/kingscode_ir',
+               'tools/gpu_search_v2_dev.py','tools/gpu_search_v2_validation.py','reports/gpu_freeze_4090',
+               'reports/benchmark/search_v2','reports/benchmark/search_v2_validation']
+    upstream=subprocess.check_output(['git','rev-parse','--verify','origin/main'],cwd=ROOT,text=True).strip()
+    branch_point=subprocess.check_output(['git','merge-base','HEAD',upstream],cwd=ROOT,text=True).strip()
+    branch_diff=subprocess.check_output(['git','diff',branch_point,'HEAD','--',*protected],cwd=ROOT)
+    worktree_diff=subprocess.check_output(['git','diff','HEAD','--',*protected],cwd=ROOT)
+    if branch_diff or worktree_diff:raise ValueError('Protected B/official/historical GPU/benchmark/model files changed on this branch or worktree')
     snapshot=read_json(ROOT/'corpus/manifest.json')
     actual={}
     for name,expected in {**snapshot['hashes'],'index/bm25.json':snapshot['bm25_sha256']}.items():

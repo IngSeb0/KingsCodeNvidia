@@ -49,6 +49,22 @@ Failures are classified as `corpus_missing`, `wrong_document`, `correct_document
 
 Every run stores git branch/commit, corpus/graph/BM25 hashes, model and config identity, benchmark manifest hash, split, seed, hardware/runtime, latency, aggregate/subgroup metrics, and per-question outcomes. The final critic pass verifies schema, gold/input separation, split disjointness, corpus gold resolution, absence of closed-model content, holdout/official-50 discipline, metric tests, reproducibility, unchanged official files, and unchanged Member B code.
 
+### Append-only corpus comparison C0/C1
+
+For a corpus-only experiment, run R0 BM25/OFF on `corpus-v0.1` and on an
+append-only candidate, with the same source commit and DEV question/gold split.
+`--allow-corpus-additions` verifies the pinned baseline artifacts, candidate
+provenance, and byte-identical baseline passage prefix; it refuses validation
+for neural variants, holdout, or a changed baseline. `analyze_retrieval_benchmark.py
+compare --allow-corpus-change` then requires same-commit R0 runs and paired IDs.
+Use `tools/gate_corpus_expansion.py` for paired bootstrap checks on Evidence
+Completeness@8, Recall@10, and MRR@10 overall and by administrative, procedural,
+and tax area. This measures whether expansion perturbs retrieval for the fixed
+independent benchmark; it does not create evidence questions for newly added
+authorities. A corpus addition still needs independently accepted coverage for
+its own authority before a competitive freeze. No holdout or blind-set content
+is used in C0/C1.
+
 
 ## KC-COL-IR-v0.1 independent gold and corpus coverage
 

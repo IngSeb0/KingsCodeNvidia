@@ -1,0 +1,132 @@
+[CmdletBinding()]
+param(
+    [string]$Work = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
+    [string]$IndependentGateReport = "reports\corpus_v03_independent_retrieval_comparison.json",
+    [switch]$AllowBusyGpu,
+    [switch]$SkipSmoke
+)
+
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+$Repo = (Resolve-Path -LiteralPath $Work).Path
+Set-Location $Repo
+$ExpectedBranch = "codex/corpus-first-final-improvement-20261003"
+$Branch = (& git branch --show-current).Trim()
+if ($Branch -ne $ExpectedBranch) { throw "STOP: checkout $ExpectedBranch first (current: $Branch)." }
+$Commit = (& git rev-parse HEAD).Trim()
+$Dirty = @(& git status --porcelain --untracked-files=no)
+if ($Dirty.Count -gt 0) { throw "STOP: tracked source tree is dirty; commit or restore it before a paired GPU run.`n$($Dirty -join "`n")" }
+
+$GatePath = Join-Path $Repo $IndependentGateReport
+if (-not (Test-Path -LiteralPath $GatePath)) { throw "STOP: independent C1 report missing: $GatePath" }
+$Gate = Get-Content -LiteralPath $GatePath -Raw | ConvertFrom-Json
+if ($Gate.status -ne "PASS") { throw "STOP: C1 independent retrieval gate is $($Gate.status); no sample_50 GPU time should be spent." }
+
+$CorpusDir = Join-Path $Repo "corpus_v03_candidate"
+$ManifestPath = Join-Path $CorpusDir "manifest.json"
+if (-not (Test-Path -LiteralPath $ManifestPath)) { throw "STOP: build corpus_v03_candidate first." }
+$CorpusManifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
+$ExpectedCorpus = $Gate.candidate_run.corpus
+foreach ($Property in $ExpectedCorpus.hashes.PSObject.Properties) {
+    $File = Join-Path $CorpusDir ($Property.Name.Replace("/", "\"))
+    $Actual = (Get-FileHash -LiteralPath $File -Algorithm SHA256).Hash.ToLower()
+    if ($Actual -ne $Property.Value) { throw "STOP: candidate artifact hash differs for $($Property.Name)." }
+}
+$ActualBm25 = (Get-FileHash -LiteralPath (Join-Path $CorpusDir "index\bm25.json") -Algorithm SHA256).Hash.ToLower()
+if ($ActualBm25 -ne $ExpectedCorpus.bm25_sha256 -or $CorpusManifest.status -ne "diagnostic_not_competitive_freeze") {
+    throw "STOP: candidate BM25/status does not match the independently evaluated corpus."
+}
+
+$Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$CommonArgs = @(
+    "-Work", $Repo, "-CorpusSet", "v01+v02+v03", "-InputFile", "data\sample_50.jsonl",
+    "-NoPull", "-Recomendada", "-PromptVersion", "v6", "-RetrieverMode", "bm25",
+    "-RetrievalMode", "option", "-K", "8", "-CandidateK", "30", "-GraphBudget", "10"
+)
+if ($AllowBusyGpu) { $CommonArgs += "-AllowBusyGpu" }
+if ($SkipSmoke) { $CommonArgs += "-SkipSmoke" }
+$Runs = @(
+    @{ Name = "corpus_v03_v6_control_$Stamp"; Fit = $false },
+    @{ Name = "corpus_v03_v6_fit_$Stamp"; Fit = $true }
+)
+$Python = Join-Path $Repo ".venv\Scripts\python.exe"
+if (-not (Test-Path -LiteralPath $Python)) { throw "STOP: crea/verifica .venv antes de la corrida." }
+$Results = @()
+foreach ($Profile in $Runs) {
+    $Args = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".\tools\kingscode_pc_nueva_diagnostico.ps1") + $CommonArgs + @("-RunName", $Profile.Name)
+    if ($Profile.Fit) { $Args += "-FitPassages" }
+    & powershell @Args
+    if ($LASTEXITCODE -ne 0) { throw "STOP: falló $($Profile.Name); los artefactos de la corrida se conservaron." }
+    foreach ($Property in $ExpectedCorpus.hashes.PSObject.Properties) {
+        $File = Join-Path $CorpusDir ($Property.Name.Replace("/", "\"))
+        $Actual = (Get-FileHash -LiteralPath $File -Algorithm SHA256).Hash.ToLower()
+        if ($Actual -ne $Property.Value) { throw "STOP: corrida $($Profile.Name) cambió $($Property.Name) respecto al gate C1." }
+    }
+    $ActualBm25 = (Get-FileHash -LiteralPath (Join-Path $CorpusDir "index\bm25.json") -Algorithm SHA256).Hash.ToLower()
+    if ($ActualBm25 -ne $ExpectedCorpus.bm25_sha256) { throw "STOP: corrida $($Profile.Name) cambió el índice BM25 del gate C1." }
+
+    $Out = Join-Path $Repo "reports\decoder_diagnostic\$($Profile.Name)"
+    $Summary = Get-Content -LiteralPath (Join-Path $Out "RESUMEN.json") -Raw | ConvertFrom-Json
+    $Evaluation = Get-Content -LiteralPath (Join-Path $Out "evaluation_official.json") -Raw | ConvertFrom-Json
+    $CitationDiagnostic = Get-Content -LiteralPath (Join-Path $Out "diagnostico_citas.json") -Raw | ConvertFrom-Json
+    $BatchReport = Get-Content -LiteralPath (Join-Path $Out "batch\batch_report.json") -Raw | ConvertFrom-Json
+    $BatchPath = Join-Path $Out "batch\submissions.jsonl"
+    $Rows = @([IO.File]::ReadAllLines($BatchPath) | Where-Object { $_.Trim() } | ForEach-Object { $_ | ConvertFrom-Json })
+    $Ids = @($Rows | ForEach-Object { [string]$_.id })
+    $UniqueIds = @($Ids | Sort-Object -Unique)
+    if ($Rows.Count -ne 50 -or $UniqueIds.Count -ne 50) { throw "STOP: $($Profile.Name) no produjo 50 filas/IDs únicos." }
+    & $Python tools\validate_test_submission.py --test data\sample_50.jsonl $BatchPath | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "STOP: schema/ID validation failed for $($Profile.Name)." }
+    $Results += [ordered]@{
+        run = $Profile.Name; fit_passages = $Profile.Fit; summary = $Summary; official = $Evaluation
+        rows = $Rows.Count; unique_ids = $UniqueIds.Count
+        submission_sha256 = (Get-FileHash -LiteralPath $BatchPath -Algorithm SHA256).Hash.ToLower()
+        timing_ms = [ordered]@{ retrieval_p50 = $Summary.diagnostics.retrieval_ms_p50; retrieval_p95 = $Summary.diagnostics.retrieval_ms_p95
+                               generation_p50 = $Summary.diagnostics.generation_ms_p50; generation_p95 = $Summary.diagnostics.generation_ms_p95
+                               seconds_per_question = $Summary.segundos_por_pregunta; projected_hours_992 = $Summary.proyeccion_992_horas }
+        peak_reserved_vram_gb = $Summary.diagnostics.peak_reserved_vram_gb
+        citation_metrics = $CitationDiagnostic.metrics
+        unsupported_citation_rate_official = $Evaluation.citas.tasa_sin_respaldo
+        fallback_ids = $BatchReport.fallback_ids
+        evidence_and_batch_diagnostics = $BatchReport.diagnostics
+    }
+}
+
+$ProxyLines = @(& $Python tools\analyze_ragas_proxy.py --no-encoder `
+    (Join-Path $Repo "reports\decoder_diagnostic\$($Runs[0].Name)\batch\submissions.jsonl") `
+    (Join-Path $Repo "reports\decoder_diagnostic\$($Runs[1].Name)\batch\submissions.jsonl"))
+if ($LASTEXITCODE -ne 0) { throw "No se pudieron calcular proxies locales de sample_50." }
+$AlignmentLines = @(& $Python tools\analyze_citation_alignment.py `
+    (Join-Path $Repo "reports\decoder_diagnostic\$($Runs[0].Name)\batch\submissions.jsonl") `
+    (Join-Path $Repo "reports\decoder_diagnostic\$($Runs[1].Name)\batch\submissions.jsonl"))
+if ($LASTEXITCODE -ne 0) { throw "No se pudo calcular alineación de citas." }
+$Proxy = @($ProxyLines | ForEach-Object { $_ | ConvertFrom-Json })
+$Alignment = @($AlignmentLines | ForEach-Object { $_ | ConvertFrom-Json })
+
+$BaselineScore = [double]$Results[0].official.total_automatico.obtenidos
+$CandidateScore = [double]$Results[1].official.total_automatico.obtenidos
+$ScoreGate = $CandidateScore -gt $BaselineScore
+$ClosedGate = [double]$Results[1].official.cerradas.puntos -ge [double]$Results[0].official.cerradas.puntos
+$NoUnsupportedCitations = @($Results | Where-Object { $_.official.citas.tasa_sin_respaldo -ne 0 }).Count -eq 0
+$CitationGate = $NoUnsupportedCitations -and
+                [double]$Results[1].official.citas.puntos -ge ([double]$Results[0].official.citas.puntos - 0.5)
+$RuntimeGate = [double]$Results[1].summary.proyeccion_992_horas -le 5
+$StructureGate = $Results[1].official.validacion.errores -eq 0 -and
+                  $Results[1].summary.fallbacks_pipeline_error -le $Results[0].summary.fallbacks_pipeline_error
+$ProxyGate = [double]$Proxy[1].token_f1_mean -ge ([double]$Proxy[0].token_f1_mean - 0.03) -and
+             [double]$Proxy[1].bleu4_mean -ge ([double]$Proxy[0].bleu4_mean - 0.03)
+$Eligible = $ScoreGate -and $ClosedGate -and $CitationGate -and $RuntimeGate -and $StructureGate -and $ProxyGate
+$Comparison = [ordered]@{
+    status = $(if ($Eligible) { "FIT_PASSAGES_ELIGIBLE_FOR_REVIEW" } else { "FIT_PASSAGES_NOT_ADOPTED" })
+    branch = $Branch; commit = $Commit; sample_sha256 = (Get-FileHash -LiteralPath "data\sample_50.jsonl" -Algorithm SHA256).Hash.ToLower()
+    model_lock_sha256 = (Get-FileHash -LiteralPath "config\models.lock.json" -Algorithm SHA256).Hash.ToLower()
+    candidate_corpus = $ExpectedCorpus; independent_c1_report_sha256 = (Get-FileHash -LiteralPath $GatePath -Algorithm SHA256).Hash.ToLower()
+    runs = $Results; local_proxy = $Proxy; citation_alignment = $Alignment
+    gates = [ordered]@{ score_strictly_higher = $ScoreGate; closed_not_lower = $ClosedGate; citations_no_material_regression = $CitationGate
+                       projected_runtime_le_5h = $RuntimeGate; schema_ids_fallbacks = $StructureGate; lexical_proxy_not_collapsed = $ProxyGate }
+    ragas = "not run; requires separate explicit approval after a single complete candidate wins"
+}
+$ComparisonPath = Join-Path $Repo "reports\corpus_v03_sample50_comparison_$Stamp.json"
+$Comparison | ConvertTo-Json -Depth 12 | Out-File -LiteralPath $ComparisonPath -Encoding utf8
+$Comparison | ConvertTo-Json -Depth 6
+Write-Host "Comparación guardada: $ComparisonPath" -ForegroundColor Green

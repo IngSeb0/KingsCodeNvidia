@@ -334,3 +334,19 @@ por GPU/configuración. El reporte de selección declara honestamente
 Corpus-v0.1 (163 documentos, 26,558 pasajes, 26,060 indexables) queda inmutable como base medida de RTX4090/Search V2. Hashes de pasajes/grafo/BM25 contrastados con `reports/gpu_freeze_4090/CRITICAL_ARTIFACT_HASHES.json`; ver `reports/member_a_v02/gpu_reconciliation.json`. Dense histórico: `0c156c5e95dce92d6abd6404a39242bd724228bfdf99f4e9e44ddf5dd16b8347` (registro del entorno GPU; bytes no disponibles en este checkout CPU). No se infiere vigencia ni calidad total del parser de estos hashes.
 
 Toda nueva fuente, parsing corregido, grafo o BM25 pertenece a `corpora/corpus-v0.2/`. La prioridad es revisar los 28 targets originales, cerrar brechas CSJ/Consejo de Estado y resolver nodos externos con evidencia oficial. El plan distingue fuente localizada, texto adquirido y documento aceptado. No se construye dense v0.2 durante esta sesión.
+
+## Candidato separado corpus-v0.3 (2026-10-03)
+
+`corpora/corpus-v03-additions/` conserva tres sentencias oficiales de unificación del Consejo de Estado, preseleccionadas antes de su descarga en `docs/CORPUS_V03_ACQUISITION_PLAN.md`. El candidato combinado `corpus_v03_candidate/` es diagnóstico y no modifica este snapshot histórico.
+
+| Fuente oficial | Motivo de cobertura | SHA-256 del PDF |
+|---|---|---|
+| [SUJ-032-CE-S2-2023, Sección Segunda](https://www.consejodeestado.gov.co/wp-content/uploads/2023/113_660013333001202200016011SENTENCIA2023101119112_231012_124317%20%281%29.pdf) | Empleo público, cesantías, prescripción y reclamación administrativa; cubre la sección laboral pública. | `9038a2e16b477b283ab61c296569b46bc583996f74f5892eee13c8597e89e8c0` |
+| [Unificación 24897, Sección Tercera](https://consejodeestado.gov.co/documentos/boletines/115/S3/73001-23-31-000-2000-03075-01%2824897%29.pdf) | Actio in rem verso / enriquecimiento sin causa y procedencia procesal contencioso-administrativa. | `0a505e152dcf7a5c37183b1126fc26bfbbd1214b930145ee7109e40aa05a329c` |
+| [2022CE-SUJ-4-002, Sección Cuarta](https://consejodeestado.gov.co/wp-content/uploads/2022/UnifImp.pdf) | Corrección tributaria, imputaciones y término del artículo 43 de la Ley 962/2005. | `c9f5acf699f0a97f7b602daa9ef3e6f1d7c284fe8f756e32fb82e27d7eb26e7f` |
+
+El add-on tiene 3 documentos, 162 pasajes indexables, 69 nodos y 247 aristas. El candidato completo tiene 175 documentos, 27.164 pasajes (26.666 indexables, 498 excluidos) y conserva los 163 documentos/pasajes de v0.1 como prefijo byte a byte. La cobertura del Consejo de Estado pasa de 0 a 3 decisiones; administrativo pasa de 16 a 22 documentos (3.484 a 3.825 pasajes indexables), procesal de 10 a 13 (2.438 a 2.600), y tributario de 18 a 19 (4.139 a 4.151).
+
+Fingerprints del candidato combinado: passages `69e60632dc22c51e218d45cbc90cf52f2b55c71367c597768f5b0aff6a00c030`; grafo/nodos `0205c7ee6d85af869ad40cb60940757472d2f250dd5dad90b2747527f8ecf0fc`; grafo/aristas `ad80a17039fecc9b8ecc107d812df082ab2101b5585c46c06547bbf03ba80f7b`; BM25 `547c2de1568d72e0b7fdbd44bdc24320c4cf69efde37e83b0c7a224b991edaf0`. El fingerprint path-independiente del conjunto runtime es `019b7b3a2c6e719cd70dd082ef61e63042f1dee3113b551f1028bcd14b964b91`.
+
+No es un freeze competitivo. La prueba BM25 C0/C1 del benchmark interno Member-A y la puerta sample_50 en RTX 4090 se registran por separado; no hay resultado GPU de este candidato en este host.

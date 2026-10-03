@@ -68,6 +68,13 @@ class CombinedCorpusTests(unittest.TestCase):
         rows = Retriever(self.tmp / "out3").retrieve("acciones populares y de grupo Ley 472 de 1998", 8, "off")
         self.assertTrue(any(r["doc_id"] == "ley_472_de_1998" for r in rows))
 
+    def test_corrupt_bm25_index_is_refused(self):
+        base_manifest = read_json(self.tmp / "base/manifest.json")
+        base_manifest["bm25_sha256"] = "0" * 64
+        write_json(self.tmp / "base/manifest.json", base_manifest)
+        with self.assertRaisesRegex(ValueError, r"bm25\.json"):
+            combine(self.tmp / "base", V02, self.tmp / "out_corrupt")
+
 
 if __name__ == "__main__":
     unittest.main()

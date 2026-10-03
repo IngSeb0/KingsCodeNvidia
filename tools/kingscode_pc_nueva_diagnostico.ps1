@@ -51,7 +51,7 @@ param(
     [string]$CorpusArchive = "",
     [string]$Model = "qwen3-8b",
     [string]$RunName = "",
-    [ValidateSet("v01+v02", "v01")] [string]$CorpusSet = "v01+v02",
+    [ValidateSet("v01+v02", "v01+v02+v03", "v01")] [string]$CorpusSet = "v01+v02",
     [switch]$AllowKnownLocalCorpusDrift,
     [switch]$AllowBusyGpu,
     [switch]$FitPassages,   # recorta los pasajes largos en el prompt para que el modelo vea los 8   # no detenerse si otra sesion/proceso ya ocupa la VRAM
@@ -253,7 +253,33 @@ elseif ($AllowKnownLocalCorpusDrift -and $CorpusOrigin -eq "existente" -and
 else { throw "STOP: el corpus no coincide con los hashes de A (verify_member_a_v02)." }
 
 Step "[3b] Corpus combinado v0.1 + v0.2 (corpora\corpus-v0.2, provisional)"
-if ($CorpusSet -eq "v01+v02") {
+if ($CorpusSet -eq "v01+v02+v03") {
+    $CorpusDir = "corpus_v03_candidate"
+    & $Py tools\build_corpus_v03_additions.py | Out-Null; Check "build_corpus_v03_additions"
+    $Inputs = @("corpus", "corpora\corpus-v0.2", "corpora\corpus-additions-v1", "corpora\corpus-v03-additions")
+    if (-not (Test-Path "$CorpusDir\manifest.json")) {
+        $BuildArgs = @("tools\build_combined_corpus.py", "--base", $Inputs[0])
+        foreach ($Addition in $Inputs[1..($Inputs.Length - 1)]) { $BuildArgs += @("--addition", $Addition) }
+        $BuildArgs += @("--out", $CorpusDir)
+        & $Py @BuildArgs | Out-Null; Check "build_combined_corpus v0.3 candidate"
+    } else {
+        $Candidate = Get-Content "$CorpusDir\manifest.json" -Raw | ConvertFrom-Json
+        foreach ($InputDir in $Inputs) {
+            $InputKey = $InputDir.Replace("\", "/")
+            $EntryProperty = $Candidate.inputs.PSObject.Properties[$InputKey]
+            if (-not $EntryProperty) { throw "STOP: corpus candidato sin entrada congelada $InputKey; no lo sobrescribo." }
+            $InputManifest = Get-Content "$InputDir\manifest.json" -Raw | ConvertFrom-Json
+            $ManifestHash = (Get-FileHash "$InputDir\manifest.json" -Algorithm SHA256).Hash.ToLower()
+            $PassagesHash = (Get-FileHash "$InputDir\passages.jsonl" -Algorithm SHA256).Hash.ToLower()
+            if ($EntryProperty.Value.manifest_sha256 -ne $ManifestHash -or $EntryProperty.Value.passages_sha256 -ne $PassagesHash) {
+                throw "STOP: $CorpusDir está obsoleto frente a $InputKey. Archiva ese directorio generado y vuelve a ejecutar."
+            }
+        }
+        $PreflightDir = Join-Path ([System.IO.Path]::GetTempPath()) ("corpus-v03-preflight-" + [guid]::NewGuid().ToString("N"))
+        & $Py tools\analyze_corpus_coverage.py --corpus $CorpusDir --output-json "$PreflightDir\coverage.json" --output-md "$PreflightDir\coverage.md" | Out-Null
+        Check "verificación del corpus candidato existente"
+    }
+} elseif ($CorpusSet -eq "v01+v02") {
     # Con corpora\corpus-additions-v1 (normas faltantes en v0.1, 2026-10-02) se usa un directorio propio.
     $CorpusDir = $(if (Test-Path "corpora\corpus-additions-v1\manifest.json") { "corpus_v01_v02_a1" } else { "corpus_v01_v02" })
     if (-not (Test-Path "$CorpusDir\manifest.json")) { & $Py tools\build_combined_corpus.py --out $CorpusDir | Out-Null; Check "build_combined_corpus" }

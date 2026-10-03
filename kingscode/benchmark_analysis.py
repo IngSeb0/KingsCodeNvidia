@@ -29,11 +29,24 @@ def load_run(directory: Path) -> tuple[dict, list[dict]]:
     return report, rows
 
 
-def _compatible_runs(baseline, candidate):
+def _compatible_runs(baseline, candidate, *, allow_corpus_change: bool = False):
     if baseline["benchmark"]["manifest_sha256"] != candidate["benchmark"]["manifest_sha256"]:
         raise ValueError("Cannot compare runs from different benchmark manifests")
-    if baseline["split"] != candidate["split"] or baseline["corpus"] != candidate["corpus"]:
-        raise ValueError("Cannot compare different splits/corpus snapshots")
+    if baseline["split"] != candidate["split"]:
+        raise ValueError("Cannot compare different splits")
+    if baseline["corpus"] != candidate["corpus"]:
+        if not allow_corpus_change:
+            raise ValueError("Cannot compare different corpus snapshots without the explicit append-only comparison gate")
+        pinned = benchmark_identity()["manifest"]["corpus"]
+        candidate_proof = candidate.get("corpus_extension_validation") or {}
+        if (baseline["variant"] != "R0" or candidate["variant"] != "R0"
+                or baseline["corpus"].get("version") != pinned.get("version")
+                or not candidate_proof.get("baseline_passage_prefix_preserved")
+                or candidate_proof.get("baseline_passages_sha256") != pinned.get("passages.jsonl")
+                or baseline.get("git", {}).get("commit") != candidate.get("git", {}).get("commit")
+                or baseline.get("source_identity") != candidate.get("source_identity")
+                or baseline.get("config") != candidate.get("config")):
+            raise ValueError("Corpus comparison requires same-commit R0 runs and a verified lossless baseline prefix")
 
 
 def write_complementarity(baseline_dir: Path, candidate_dir: Path, output: Path) -> dict:
@@ -115,13 +128,16 @@ def record_selection(run_dirs: list[Path], *, variant: str | None, rationale: st
     return result
 
 
-def compare(baseline_dir: Path, candidate_dir: Path) -> dict:
+def compare(baseline_dir: Path, candidate_dir: Path, *, allow_corpus_change: bool = False) -> dict:
     baseline, base_rows = load_run(baseline_dir)
     candidate, candidate_rows = load_run(candidate_dir)
-    _compatible_runs(baseline, candidate)
+    _compatible_runs(baseline, candidate, allow_corpus_change=allow_corpus_change)
     return {"version": "benchmark-comparison-v1", "benchmark": benchmark_identity(),
             "baseline": {"variant": baseline["variant"], "directory": baseline["directory"], "metrics": baseline["metrics"]},
             "candidate": {"variant": candidate["variant"], "directory": candidate["directory"], "metrics": candidate["metrics"]},
+            "corpus_comparison": {"enabled": baseline["corpus"] != candidate["corpus"],
+                                  "baseline_corpus": baseline["corpus"], "candidate_corpus": candidate["corpus"],
+                                  "candidate_extension_validation": candidate.get("corpus_extension_validation")},
             "bootstrap": bootstrap_reports(base_rows, candidate_rows),
             "note": "If a confidence interval includes zero, the paired difference is inconclusive."}
 
@@ -154,8 +170,8 @@ def error_analysis(directory: Path) -> dict:
             "policy": "Failures drive targeted investigation; no blind corpus expansion."}
 
 
-def write_comparison(baseline_dir: Path, candidate_dir: Path, output: Path) -> dict:
-    result = compare(baseline_dir, candidate_dir)
+def write_comparison(baseline_dir: Path, candidate_dir: Path, output: Path, *, allow_corpus_change: bool = False) -> dict:
+    result = compare(baseline_dir, candidate_dir, allow_corpus_change=allow_corpus_change)
     write_json(output, result)
     return result
 

@@ -16,6 +16,7 @@ param(
     [string]$Flags = "-Recomendada -PromptVersion v6",   # mejor medido el 2-oct: v6 38,08 vs v4 37,46 (mismo corpus)
     [string]$InputFile = "data\sample_50.jsonl",
     [string]$RunName = "",
+    [ValidateSet("v01", "v01+v02", "v01+v02+v03")] [string]$CorpusSet = "v01+v02",
     [switch]$Resume,
     [switch]$Ragas,
     [switch]$Pull,
@@ -28,7 +29,7 @@ if (-not $RunName) { $RunName = "final_$((Get-Date).ToString('yyyyMMdd_HHmmss'))
 $Py = "$Work\.venv\Scripts\python.exe"
 $S = (Resolve-Path ".\tools\kingscode_pc_nueva_diagnostico.ps1").Path
 $Args2 = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$S`"", "-SkipSmoke", "-NoPull",
-           "-InputFile", $InputFile, "-RunName", $RunName) + @($Flags -split "\s+" | Where-Object { $_ })
+           "-CorpusSet", $CorpusSet, "-InputFile", $InputFile, "-RunName", $RunName) + @($Flags -split "\s+" | Where-Object { $_ })
 if ($Resume) { $Args2 += "-Resume" }
 if ($Ragas) { $Args2 += "-Ragas" }
 Write-Host "Commit: $((git rev-parse --short HEAD).Trim()) | Flags: $Flags | Entrada: $InputFile | Corrida: $RunName" -ForegroundColor Cyan

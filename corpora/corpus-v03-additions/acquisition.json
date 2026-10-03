@@ -1,0 +1,122 @@
+{
+  "version": "corpus-v0.3-additions",
+  "selection_plan": "docs/CORPUS_V03_ACQUISITION_PLAN.md",
+  "selection_plan_commit": "3808846",
+  "selection_pre_registered_before_download": true,
+  "downloaded": 3,
+  "documents": [
+    {
+      "doc_id": "consejo_estado_suj_032_ce_s2_2023",
+      "norm_name": "Sentencia de unificación SUJ-032-CE-S2-2023 (Consejo de Estado, Sección Segunda; rad. 66001-33-33-001-2022-00016-01)",
+      "canonical_body": [
+        "jurisprudencia",
+        "SUJ-032-CE-S2-2023",
+        "2023"
+      ],
+      "source_type": "decision",
+      "norm_number": "SUJ-032-CE-S2-2023",
+      "year": 2023,
+      "areas": [
+        "Derecho administrativo",
+        "Derecho laboral",
+        "Derecho procesal"
+      ],
+      "priority": 0,
+      "source_url": "https://www.consejodeestado.gov.co/wp-content/uploads/2023/113_660013333001202200016011SENTENCIA2023101119112_231012_124317%20%281%29.pdf",
+      "url": "https://www.consejodeestado.gov.co/wp-content/uploads/2023/113_660013333001202200016011SENTENCIA2023101119112_231012_124317%20%281%29.pdf",
+      "requested_url": "https://www.consejodeestado.gov.co/wp-content/uploads/2023/113_660013333001202200016011SENTENCIA2023101119112_231012_124317%20%281%29.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "bytes": 869723,
+      "source_sha256": "9038a2e16b477b283ab61c296569b46bc583996f74f5892eee13c8597e89e8c0",
+      "retrieved_at": "2026-10-03T15:49:06.630045+00:00",
+      "tls_verified": true,
+      "retrieval_method": "Invoke-WebRequest; platform TLS certificate validation enabled",
+      "raw_path": "corpora/corpus-v03-additions/raw/suj_032_ce_s2_2023.pdf",
+      "source_title": "Sentencia de unificación SUJ-032-CE-S2-2023 (Consejo de Estado, Sección Segunda; rad. 66001-33-33-001-2022-00016-01)",
+      "source_identity_check": "PDF page 1 contains the selected judgment identifier and date/radicacion",
+      "pdf_pages": 73,
+      "institution": "Consejo de Estado",
+      "court": "Consejo de Estado",
+      "status": "downloaded",
+      "pdf_skip_pages": [
+        73
+      ],
+      "parser_note": "La página 73 renderiza en blanco (sin texto legible); excluida únicamente de la extracción, preservada en el PDF fuente."
+    },
+    {
+      "doc_id": "consejo_estado_unif_s3_24897_2012",
+      "norm_name": "Sentencia de unificación del Consejo de Estado, Sección Tercera, rad. 73001-23-31-000-2000-03075-01 (24897)",
+      "canonical_body": [
+        "jurisprudencia",
+        "CE-S3-24897",
+        "2012"
+      ],
+      "source_type": "decision",
+      "norm_number": "CE-S3-24897",
+      "year": 2012,
+      "areas": [
+        "Derecho administrativo",
+        "Derecho comercial y sociedades",
+        "Derecho procesal"
+      ],
+      "priority": 0,
+      "source_url": "https://consejodeestado.gov.co/documentos/boletines/115/S3/73001-23-31-000-2000-03075-01%2824897%29.pdf",
+      "url": "https://consejodeestado.gov.co/documentos/boletines/115/S3/73001-23-31-000-2000-03075-01%2824897%29.pdf",
+      "requested_url": "https://consejodeestado.gov.co/documentos/boletines/115/S3/73001-23-31-000-2000-03075-01%2824897%29.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "bytes": 343533,
+      "source_sha256": "0a505e152dcf7a5c37183b1126fc26bfbbd1214b930145ee7109e40aa05a329c",
+      "retrieved_at": "2026-10-03T15:51:39.678633+00:00",
+      "tls_verified": true,
+      "retrieval_method": "curl.exe --location --fail; TLS certificate validation enabled",
+      "raw_path": "corpora/corpus-v03-additions/raw/s3_unificacion_enriquecimiento_24897_2012.pdf",
+      "source_title": "Sentencia de unificación del Consejo de Estado, Sección Tercera, rad. 73001-23-31-000-2000-03075-01 (24897)",
+      "source_identity_check": "PDF page 51 contains the selected judgment identifier and date/radicacion",
+      "pdf_pages": 69,
+      "institution": "Consejo de Estado",
+      "court": "Consejo de Estado",
+      "status": "downloaded",
+      "pdf_skip_pages": [
+        69
+      ],
+      "parser_note": "La página 69 renderiza en blanco (2 caracteres de extracción sin contenido); excluida únicamente de la extracción, preservada en el PDF fuente."
+    },
+    {
+      "doc_id": "consejo_estado_suj_4_002_2022",
+      "norm_name": "Sentencia de unificación 2022CE-SUJ-4-002 (Consejo de Estado, Sección Cuarta; rad. 25000-23-37-000-2014-00507-01)",
+      "canonical_body": [
+        "jurisprudencia",
+        "2022CE-SUJ-4-002",
+        "2022"
+      ],
+      "source_type": "decision",
+      "norm_number": "2022CE-SUJ-4-002",
+      "year": 2022,
+      "areas": [
+        "Derecho administrativo",
+        "Derecho procesal",
+        "Derecho tributario"
+      ],
+      "priority": 0,
+      "source_url": "https://consejodeestado.gov.co/wp-content/uploads/2022/UnifImp.pdf",
+      "url": "https://consejodeestado.gov.co/wp-content/uploads/2022/UnifImp.pdf",
+      "requested_url": "https://consejodeestado.gov.co/wp-content/uploads/2022/UnifImp.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "bytes": 385659,
+      "source_sha256": "c9f5acf699f0a97f7b602daa9ef3e6f1d7c284fe8f756e32fb82e27d7eb26e7f",
+      "retrieved_at": "2026-10-03T15:52:05.142431+00:00",
+      "tls_verified": true,
+      "retrieval_method": "curl.exe --location --fail; TLS certificate validation enabled",
+      "raw_path": "corpora/corpus-v03-additions/raw/suj_4_002_2022.pdf",
+      "source_title": "Sentencia de unificación 2022CE-SUJ-4-002 (Consejo de Estado, Sección Cuarta; rad. 25000-23-37-000-2014-00507-01)",
+      "source_identity_check": "PDF page 1 contains the selected judgment identifier and date/radicacion",
+      "pdf_pages": 9,
+      "institution": "Consejo de Estado",
+      "court": "Consejo de Estado",
+      "status": "downloaded"
+    }
+  ]
+}
