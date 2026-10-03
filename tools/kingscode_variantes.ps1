@@ -19,6 +19,8 @@
 #   rerank_locator  -Rerank -ExactLocator      (~15 min; el locator solo actua con reranker)
 #   rerank          -Rerank                    (~15 min; separa el efecto del locator)
 #   hybrid          -RetrieverMode hybrid      (indice denso la primera vez, ~5-10 min con el build ordenado por largo)
+#   hybrid_recommended_fanout_cache -Recomendada + hybrid + reranker + cache exacta; ruta option legacy
+#   hybrid_recommended_native_cache -igual, usando query_views nativo de A para fusionar opciones
 #   alia            -Model alia-legal-7b       (descarga ~15 GB la primera vez)
 #   v6              -Recomendada -PromptVersion v6           (prompt de razonamiento juridico; ~15 min)
 #   option_plan     -Recomendada -RetrievalMode option_plan  (planner Qwen para texto libre; ~20 min)
@@ -53,6 +55,11 @@ $Catalogo = [ordered]@{
     "rerank_locator" = @("-Rerank", "-ExactLocator")
     "rerank"         = @("-Rerank")
     "hybrid"         = @("-RetrieverMode", "hybrid")
+    # Pareja controlada sobre la salida recomendada: solo cambia el fan-out vs.
+    # la fusión query_views de A. La cache exacta está activa en ambas; locator
+    # se deja apagado porque el camino legacy lo aplicaría también a cada opción.
+    "hybrid_recommended_fanout_cache" = @("-Recomendada", "-RetrieverMode", "hybrid", "-Rerank", "-RerankerScoreCache")
+    "hybrid_recommended_native_cache" = @("-Recomendada", "-RetrieverMode", "hybrid", "-Rerank", "-RerankerScoreCache", "-NativeOptionFusion")
     "alia"           = @("-Model", "alia-legal-7b")
     "v6"             = @("-Recomendada", "-PromptVersion", "v6")
     "v7_concise"     = @("-Recomendada", "-PromptVersion", "v7")
@@ -66,7 +73,7 @@ $Catalogo = [ordered]@{
 # invoked as "powershell -File ..." from a script, PowerShell 5.1 redirects the child's streams and
 # the [batch] progress lines (stderr) only appeared at the end (2026-10-02).
 function Invoke-Diagnostico([string[]]$Flags) {
-    $ArgList = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$((Resolve-Path $S).Path)`"") + $Flags
+    $ArgList = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$((Resolve-Path $S).Path)`"", "-Work", "`"$Work`"") + $Flags
     $p = Start-Process -FilePath "powershell.exe" -ArgumentList $ArgList -NoNewWindow -Wait -PassThru
     if ($p.ExitCode -ne 0) { Write-Host "La corrida termino con codigo $($p.ExitCode) (se sigue con la siguiente)." -ForegroundColor Yellow }
 }

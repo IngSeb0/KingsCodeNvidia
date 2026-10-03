@@ -2,6 +2,31 @@
 
 Status: preregistered diagnostic plan; no GPU result is implied by this document.
 
+## Follow-up candidate on the current recommended B profile (2026-10-03)
+
+`-Recomendada` currently uses B's `option` orchestration and A's BM25 backend; it does not load A's dense encoder. The following two catalog entries keep the recommended prompt/citation settings, hybrid retrieval, reranker, graph router, candidate depth and exact reranker-score cache constant. They differ only in how the trusted multiple-choice options reach A:
+
+- `hybrid_recommended_fanout_cache`: legacy B fan-out, one call to A per option.
+- `hybrid_recommended_native_cache`: A's `query_views` fusion, one call per graph pass.
+
+The exact locator stays off in this pair because the legacy path would apply it to each option while A's native path intentionally applies it only to Q0. Compare both candidates with a separate `-Recomendada` run on the same corpus snapshot. This is a runtime/quality experiment, not a change to the default or proof that native fusion improves score. Native fusion changes ranking semantics.
+
+On the RTX 4090, after confirming no other user/process occupies the GPU, run:
+
+```powershell
+$Repo = "$HOME\KingsCodeGPU\KingsCodeNvidia"
+Set-Location $Repo
+
+# Use the same corpus/model snapshot as the baseline run. If its score is not
+# 37.46, pass the measured same-snapshot score to -Base for the comparison table.
+powershell -ExecutionPolicy Bypass -File .\tools\kingscode_variantes.ps1 `
+  -Work $Repo `
+  -Variantes hybrid_recommended_fanout_cache,hybrid_recommended_native_cache `
+  -Base 37.46
+```
+
+For each run compare `evaluation_official.json`, `batch_report.json` and `RESUMEN.json`: official total and per-format points; `reranker_computed_pairs`, cache hits, `reranker_ms`, `dense_ms`, graph-pass count, generation and retrieval percentiles, peak VRAM and seconds/question. Then run the official baseline and candidate comparison to completion before choosing a winner. Run RAGAS only once on a selected complete run; this pair does not invoke it.
+
 ## What this tests
 
 The current `option` path makes one retrieval call for Q0 and another for each multiple-choice option. With hybrid retrieval and reranking, each call builds its own candidate pool and reranks it. The opt-in `--native-option-fusion` path sends Q0 plus all trusted option text to A's existing `query_views` interface. A encodes uncached dense query views in configured batches, fuses their sparse/dense rankings, and applies the reranker once to the fused pool using Q0. This changes ranking semantics, so the default remains the existing fan-out path until the paired GPU run is reviewed.
