@@ -1,0 +1,1854 @@
+{
+  "run": "reports\\decoder_diagnostic\\mejora_muestra\\batch",
+  "sample": "C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\data\\sample_50.jsonl",
+  "items_with_reference_citations": 41,
+  "metrics": {
+    "expected_bodies": 49,
+    "expected_bodies_supported_by_delivered_evidence": 43,
+    "expected_bodies_cited_and_supported": 42,
+    "expected_bodies_dropped_for_context": 2,
+    "expected_bodies_missing_from_delivered_evidence": 4,
+    "expected_bodies_available_but_not_cited": 1,
+    "unsupported_cited_bodies": 0,
+    "extra_supported_cited_bodies": 244,
+    "evidence_coverage": 0.8776,
+    "supported_citation_recall": 0.8571
+  },
+  "items_requiring_review": [
+    {
+      "id": 51,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "jurisprudencia",
+          "C-713",
+          "2008"
+        ],
+        [
+          "jurisprudencia",
+          "SU-214",
+          "2016"
+        ],
+        [
+          "jurisprudencia",
+          "SU-429",
+          "2024"
+        ],
+        [
+          "jurisprudencia",
+          "SU-455",
+          "2020"
+        ],
+        [
+          "ley",
+          "1285",
+          "2009"
+        ],
+        [
+          "ley",
+          "270",
+          "1996"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "sentencia_c_259_de_2015:00009:1a0174281fcf",
+        "sentencia_su_429_de_2024:00001:c6f8eb4a737f",
+        "codigo_nacional_policia:00054:9aed0cdab1f8"
+      ]
+    },
+    {
+      "id": 58,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [
+        [
+          "estatuto_consumidor",
+          null,
+          null
+        ]
+      ],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "cpaca",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "2591",
+          "1991"
+        ],
+        [
+          "jurisprudencia",
+          "C-590",
+          "2005"
+        ],
+        [
+          "jurisprudencia",
+          "C-748",
+          "2011"
+        ],
+        [
+          "jurisprudencia",
+          "SU-429",
+          "2024"
+        ],
+        [
+          "jurisprudencia",
+          "T-232",
+          "2025"
+        ],
+        [
+          "ley",
+          "153",
+          "1887"
+        ],
+        [
+          "ley",
+          "472",
+          "1998"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 60,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [
+        [
+          "codigo_general_proceso",
+          null,
+          null
+        ]
+      ],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "jurisprudencia",
+          "SU-16",
+          "2020"
+        ],
+        [
+          "jurisprudencia",
+          "T-323",
+          "2024"
+        ],
+        [
+          "ley",
+          "16",
+          "1972"
+        ],
+        [
+          "ley",
+          "270",
+          "1996"
+        ],
+        [
+          "ley",
+          "74",
+          "1968"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "sentencia_su_500_de_2015:00030:1a0700efdc3e",
+        "codigo_general_proceso:00050:94645e1b54fd",
+        "ley_2452_de_2025:00335:4f7ac5deff87"
+      ]
+    },
+    {
+      "id": 79,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_sustantivo_trabajo",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-282",
+          "2007"
+        ],
+        [
+          "jurisprudencia",
+          "T-262",
+          "2025"
+        ],
+        [
+          "jurisprudencia",
+          "T-317",
+          "2020"
+        ],
+        [
+          "ley",
+          "734",
+          "2002"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "ley_1010_de_2006:00005:68b3af1ab339",
+        "ley_1010_de_2006:00013:c9f2ee35a4a3"
+      ]
+    },
+    {
+      "id": 128,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "2816",
+          "1991"
+        ],
+        [
+          "estatuto_tributario",
+          null,
+          null
+        ],
+        [
+          "ley",
+          "1819",
+          "2016"
+        ],
+        [
+          "ley",
+          "510",
+          "1999"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 140,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_civil",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-447",
+          "2015"
+        ],
+        [
+          "ley",
+          "1116",
+          "2006"
+        ],
+        [
+          "ley",
+          "1676",
+          "2013"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_c_145_de_2018:00022:4b9680b22d10",
+        "sentencia_c_145_de_2018:00033:4db06e328a80"
+      ]
+    },
+    {
+      "id": 218,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "decreto",
+          "2363",
+          "2015"
+        ],
+        [
+          "ley",
+          "101",
+          "1993"
+        ],
+        [
+          "ley",
+          "1151",
+          "2007"
+        ],
+        [
+          "ley",
+          "160",
+          "1994"
+        ],
+        [
+          "ley",
+          "2294",
+          "2023"
+        ],
+        [
+          "ley",
+          "2462",
+          "2025"
+        ],
+        [
+          "ley",
+          "2539",
+          "2025"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 239,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "jurisprudencia",
+          "SC-13630",
+          "2015"
+        ],
+        [
+          "jurisprudencia",
+          "SC-13925",
+          "2016"
+        ],
+        [
+          "jurisprudencia",
+          "SC-18594",
+          "2016"
+        ],
+        [
+          "jurisprudencia",
+          "SC-4420",
+          "2020"
+        ],
+        [
+          "jurisprudencia",
+          "SC-562",
+          "2020"
+        ],
+        [
+          "jurisprudencia",
+          "SU-315",
+          "2025"
+        ],
+        [
+          "jurisprudencia",
+          "SU-455",
+          "2020"
+        ]
+      ],
+      "retrieved_passage_count": 7,
+      "context_dropped_passage_ids": [
+        "sentencia_su_315_de_2025:00086:0f49de4eb27e"
+      ]
+    },
+    {
+      "id": 247,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [
+        [
+          "ley",
+          "472",
+          "1998"
+        ]
+      ],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_nacional_policia",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-468",
+          "2024"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_c_468_de_2024:00039:1c00a17279b3",
+        "sentencia_su_11_de_2020:00052:fd0b6b197421"
+      ]
+    },
+    {
+      "id": 253,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [
+        [
+          "codigo_sustantivo_trabajo",
+          null,
+          null
+        ]
+      ],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "jurisprudencia",
+          "SL-64",
+          "2020"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "sentencia_sl_3385_de_2022:00009:549330dcec1f",
+        "codigo_sustantivo_trabajo:00206:165ad45af47b",
+        "ley_1562_de_2012:00007:d3a8db714767"
+      ]
+    },
+    {
+      "id": 272,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "decreto",
+          "1082",
+          "2015"
+        ],
+        [
+          "decreto",
+          "663",
+          "1993"
+        ],
+        [
+          "jurisprudencia",
+          "C-145",
+          "2018"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "ley_1116_de_2006:00021:1efed5c478fa",
+        "ley_1116_de_2006:00052:e8ecfb330b7f",
+        "sentencia_c_145_de_2018:00032:dad2883033e1"
+      ]
+    },
+    {
+      "id": 280,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_procedimiento_penal",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "ley",
+          "1709",
+          "2014"
+        ],
+        [
+          "ley",
+          "2098",
+          "2021"
+        ],
+        [
+          "ley",
+          "600",
+          "2000"
+        ],
+        [
+          "ley",
+          "890",
+          "2004"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 290,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "decreto",
+          "1082",
+          "2015"
+        ],
+        [
+          "decreto",
+          "1510",
+          "2013"
+        ],
+        [
+          "decreto",
+          "438",
+          "2021"
+        ],
+        [
+          "ley",
+          "1508",
+          "2012"
+        ],
+        [
+          "ley",
+          "1882",
+          "2018"
+        ],
+        [
+          "ley",
+          "80",
+          "1993"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 352,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_comercio",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-1299",
+          "2005"
+        ],
+        [
+          "jurisprudencia",
+          "C-1300",
+          "2005"
+        ],
+        [
+          "jurisprudencia",
+          "C-239",
+          "1997"
+        ],
+        [
+          "jurisprudencia",
+          "C-355",
+          "2006"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_c_239_de_1997:00102:7f429cd67b33",
+        "sentencia_su_214_de_2016:00217:89ed0ec89393"
+      ]
+    },
+    {
+      "id": 358,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_comercio",
+          null,
+          null
+        ],
+        [
+          "codigo_general_proceso",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "508",
+          "1974"
+        ],
+        [
+          "jurisprudencia",
+          "SU-214",
+          "2016"
+        ],
+        [
+          "jurisprudencia",
+          "T-77",
+          "2025"
+        ],
+        [
+          "ley",
+          "1116",
+          "2006"
+        ],
+        [
+          "ley",
+          "160",
+          "1994"
+        ],
+        [
+          "ley",
+          "200",
+          "1936"
+        ],
+        [
+          "ley",
+          "2220",
+          "2022"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "codigo_procedimiento_penal:00075:34b0feb2b224",
+        "codigo_civil:00971:8f1814731196"
+      ]
+    },
+    {
+      "id": 442,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "decreto",
+          "2158",
+          "1948"
+        ],
+        [
+          "decreto",
+          "2663",
+          "1950"
+        ],
+        [
+          "jurisprudencia",
+          "C-38",
+          "2021"
+        ],
+        [
+          "jurisprudencia",
+          "C-781",
+          "2003"
+        ],
+        [
+          "jurisprudencia",
+          "C-892",
+          "2009"
+        ],
+        [
+          "ley",
+          "789",
+          "2002"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 453,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_nacional_policia",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-148",
+          "2022"
+        ],
+        [
+          "jurisprudencia",
+          "C-283",
+          "2014"
+        ],
+        [
+          "jurisprudencia",
+          "C-408",
+          "2024"
+        ],
+        [
+          "jurisprudencia",
+          "C-47",
+          "2019"
+        ],
+        [
+          "jurisprudencia",
+          "C-666",
+          "2010"
+        ],
+        [
+          "jurisprudencia",
+          "C-889",
+          "2012"
+        ],
+        [
+          "ley",
+          "2047",
+          "2020"
+        ],
+        [
+          "ley",
+          "2545",
+          "2025"
+        ],
+        [
+          "ley",
+          "84",
+          "1989"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "sentencia_c_468_de_2024:00022:828a165888bb",
+        "sentencia_c_332_de_2025:00020:12d64e4f047c",
+        "sentencia_su_16_de_2020:00109:d4312efad931"
+      ]
+    },
+    {
+      "id": 472,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_civil",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "2153",
+          "1992"
+        ],
+        [
+          "jurisprudencia",
+          "C-172",
+          "2014"
+        ],
+        [
+          "ley",
+          "155",
+          "1959"
+        ],
+        [
+          "ley",
+          "222",
+          "1995"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 487,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_general_proceso",
+          null,
+          null
+        ],
+        [
+          "ley",
+          "1996",
+          "2019"
+        ],
+        [
+          "ley",
+          "2220",
+          "2022"
+        ],
+        [
+          "ley",
+          "2447",
+          "2025"
+        ],
+        [
+          "ley",
+          "54",
+          "1990"
+        ],
+        [
+          "ley",
+          "57",
+          "1887"
+        ],
+        [
+          "ley",
+          "640",
+          "2001"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 490,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-283",
+          "2011"
+        ],
+        [
+          "ley",
+          "2447",
+          "2025"
+        ],
+        [
+          "ley",
+          "57",
+          "1887"
+        ],
+        [
+          "ley",
+          "84",
+          "1873"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 528,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "estatuto_tributario",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-149",
+          "1993"
+        ],
+        [
+          "jurisprudencia",
+          "C-507",
+          "2014"
+        ],
+        [
+          "ley",
+          "100",
+          "1993"
+        ],
+        [
+          "ley",
+          "1122",
+          "2007"
+        ],
+        [
+          "ley",
+          "1150",
+          "2007"
+        ],
+        [
+          "ley",
+          "2452",
+          "2025"
+        ],
+        [
+          "ley",
+          "51",
+          "1990"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_c_55_de_2022:00084:da9791621e96",
+        "sentencia_c_117_de_2018:00048:c99ffeef81ee"
+      ]
+    },
+    {
+      "id": 563,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "cpaca",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "2591",
+          "1991"
+        ],
+        [
+          "jurisprudencia",
+          "T-760",
+          "2008"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_t_760_de_2008:00460:82471dcc712e",
+        "sentencia_su_277_de_2025:00045:b5fac9c33fa0"
+      ]
+    },
+    {
+      "id": 589,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "ley",
+          "2452",
+          "2025"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 600,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_procedimiento_penal",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "2153",
+          "1992"
+        ],
+        [
+          "jurisprudencia",
+          "C-15",
+          "2018"
+        ],
+        [
+          "jurisprudencia",
+          "C-80",
+          "2025"
+        ],
+        [
+          "ley",
+          "1142",
+          "2007"
+        ],
+        [
+          "ley",
+          "1474",
+          "2011"
+        ],
+        [
+          "ley",
+          "1944",
+          "2018"
+        ],
+        [
+          "ley",
+          "813",
+          "2003"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "sentencia_c_15_de_2018:00028:bdd00881d1c7",
+        "sentencia_c_239_de_1997:00013:a5942dc4f56a",
+        "codigo_civil:01423:9ed957a4a06b"
+      ]
+    },
+    {
+      "id": 617,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "2351",
+          "1965"
+        ],
+        [
+          "jurisprudencia",
+          "C-201",
+          "2002"
+        ],
+        [
+          "ley",
+          "50",
+          "1990"
+        ],
+        [
+          "ley",
+          "584",
+          "2000"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "sentencia_c_201_de_2002:00002:ac7c3f21b76c",
+        "sentencia_c_201_de_2002:00031:6209ce2cf8f9",
+        "ley_2452_de_2025:00321:d03bc8c96b33"
+      ]
+    },
+    {
+      "id": 647,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "2820",
+          "1974"
+        ],
+        [
+          "jurisprudencia",
+          "C-131",
+          "2018"
+        ],
+        [
+          "jurisprudencia",
+          "C-164",
+          "2022"
+        ],
+        [
+          "jurisprudencia",
+          "C-257",
+          "2015"
+        ],
+        [
+          "jurisprudencia",
+          "C-660",
+          "2000"
+        ],
+        [
+          "jurisprudencia",
+          "C-985",
+          "2010"
+        ],
+        [
+          "jurisprudencia",
+          "SU-214",
+          "2016"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "sentencia_su_214_de_2016:00166:f0e80dd25c48",
+        "sentencia_su_214_de_2016:00058:c1e814d0863e",
+        "sentencia_c_507_de_2004:00070:4ba606b72e29"
+      ]
+    },
+    {
+      "id": 661,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "jurisprudencia",
+          "C-891",
+          "2012"
+        ],
+        [
+          "ley",
+          "1421",
+          "2010"
+        ]
+      ],
+      "retrieved_passage_count": 5,
+      "context_dropped_passage_ids": [
+        "sentencia_c_389_de_2023:00021:333d6af4a487",
+        "sentencia_c_389_de_2023:00020:c1cd1f99f3bd",
+        "sentencia_c_891_de_2012:00018:1091475fdba1"
+      ]
+    },
+    {
+      "id": 674,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_comercio",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "1026",
+          "1990"
+        ],
+        [
+          "decreto",
+          "663",
+          "1993"
+        ],
+        [
+          "ley",
+          "3",
+          "1991"
+        ],
+        [
+          "ley",
+          "389",
+          "1997"
+        ],
+        [
+          "ley",
+          "9",
+          "1989"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 679,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [
+        [
+          "ley",
+          "1581",
+          "2012"
+        ]
+      ],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-145",
+          "2020"
+        ],
+        [
+          "jurisprudencia",
+          "C-233",
+          "2021"
+        ],
+        [
+          "jurisprudencia",
+          "C-748",
+          "2011"
+        ]
+      ],
+      "retrieved_passage_count": 4,
+      "context_dropped_passage_ids": [
+        "sentencia_c_748_de_2011:00034:3ae4ee28430c",
+        "sentencia_t_67_de_2025:00068:9162819aaf31",
+        "sentencia_c_145_de_2020:00071:61e12298a848",
+        "sentencia_c_145_de_2020:00005:abcdf7cf7a0b"
+      ]
+    },
+    {
+      "id": 748,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [
+        [
+          "cpaca",
+          null,
+          null
+        ]
+      ],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "decreto",
+          "1848",
+          "2017"
+        ],
+        [
+          "decreto",
+          "780",
+          "2016"
+        ],
+        [
+          "ley",
+          "1151",
+          "2007"
+        ],
+        [
+          "ley",
+          "160",
+          "1994"
+        ],
+        [
+          "ley",
+          "2294",
+          "2023"
+        ],
+        [
+          "ley",
+          "2539",
+          "2025"
+        ],
+        [
+          "ley",
+          "344",
+          "1996"
+        ],
+        [
+          "ley",
+          "388",
+          "1997"
+        ]
+      ],
+      "retrieved_passage_count": 7,
+      "context_dropped_passage_ids": [
+        "ley_678_de_2001:00004:80c69cb8e6ef"
+      ]
+    },
+    {
+      "id": 865,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-394",
+          "2017"
+        ],
+        [
+          "jurisprudencia",
+          "C-577",
+          "2011"
+        ],
+        [
+          "jurisprudencia",
+          "SU-214",
+          "2016"
+        ],
+        [
+          "ley",
+          "57",
+          "1887"
+        ],
+        [
+          "ley",
+          "84",
+          "1873"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_su_214_de_2016:00019:8265c935ab57",
+        "sentencia_su_214_de_2016:00249:12d1ef8dd253"
+      ]
+    },
+    {
+      "id": 879,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_civil",
+          null,
+          null
+        ],
+        [
+          "ley",
+          "1607",
+          "2012"
+        ],
+        [
+          "ley",
+          "2452",
+          "2025"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 919,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_civil",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "2591",
+          "1991"
+        ],
+        [
+          "jurisprudencia",
+          "SU-116",
+          "2018"
+        ],
+        [
+          "jurisprudencia",
+          "T-80",
+          "2015"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_c_55_de_2022:00275:71dec94ba057",
+        "sentencia_su_455_de_2020:00016:0a2300bcf0dc"
+      ]
+    },
+    {
+      "id": 946,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_civil",
+          null,
+          null
+        ],
+        [
+          "codigo_infancia",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-183",
+          "2025"
+        ],
+        [
+          "jurisprudencia",
+          "C-35",
+          "2009"
+        ],
+        [
+          "jurisprudencia",
+          "C-394",
+          "2017"
+        ],
+        [
+          "jurisprudencia",
+          "C-539",
+          "2016"
+        ],
+        [
+          "jurisprudencia",
+          "C-55",
+          "2022"
+        ],
+        [
+          "jurisprudencia",
+          "C-667",
+          "2006"
+        ],
+        [
+          "ley",
+          "1306",
+          "2009"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 960,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "decreto",
+          "1663",
+          "1994"
+        ],
+        [
+          "decreto",
+          "575",
+          "2020"
+        ],
+        [
+          "decreto",
+          "780",
+          "2016"
+        ],
+        [
+          "jurisprudencia",
+          "C-172",
+          "2014"
+        ],
+        [
+          "ley",
+          "155",
+          "1959"
+        ],
+        [
+          "ley",
+          "590",
+          "2000"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 991,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-131",
+          "2018"
+        ],
+        [
+          "jurisprudencia",
+          "C-164",
+          "2022"
+        ],
+        [
+          "jurisprudencia",
+          "C-259",
+          "2015"
+        ],
+        [
+          "jurisprudencia",
+          "C-467",
+          "1993"
+        ],
+        [
+          "jurisprudencia",
+          "C-583",
+          "1996"
+        ],
+        [
+          "jurisprudencia",
+          "C-683",
+          "2015"
+        ],
+        [
+          "jurisprudencia",
+          "C-690",
+          "2003"
+        ],
+        [
+          "jurisprudencia",
+          "C-842",
+          "2000"
+        ],
+        [
+          "jurisprudencia",
+          "C-931",
+          "2006"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_c_94_de_2021:00044:aa09d62f8884",
+        "sentencia_c_355_de_2006:00265:922925b16f26"
+      ]
+    },
+    {
+      "id": 1005,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "acto_legislativo",
+          "1",
+          "2001"
+        ],
+        [
+          "jurisprudencia",
+          "C-614",
+          "2002"
+        ],
+        [
+          "ley",
+          "1739",
+          "2014"
+        ],
+        [
+          "ley",
+          "1819",
+          "2016"
+        ],
+        [
+          "ley",
+          "5",
+          "1992"
+        ],
+        [
+          "ley",
+          "50",
+          "1990"
+        ],
+        [
+          "ley",
+          "819",
+          "2003"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 1015,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_civil",
+          null,
+          null
+        ],
+        [
+          "codigo_penal",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "decreto",
+          "3096",
+          "1973"
+        ],
+        [
+          "jurisprudencia",
+          "C-55",
+          "2022"
+        ],
+        [
+          "ley",
+          "1257",
+          "2008"
+        ]
+      ],
+      "retrieved_passage_count": 6,
+      "context_dropped_passage_ids": [
+        "sentencia_c_355_de_2006:00411:72ec1ca64d68",
+        "sentencia_c_55_de_2022:00025:1b75b530231a"
+      ]
+    },
+    {
+      "id": 1065,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_disciplinario",
+          null,
+          null
+        ],
+        [
+          "constitucion",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-4",
+          "1996"
+        ],
+        [
+          "ley",
+          "1150",
+          "2007"
+        ],
+        [
+          "ley",
+          "1709",
+          "2014"
+        ],
+        [
+          "ley",
+          "200",
+          "1995"
+        ],
+        [
+          "ley",
+          "80",
+          "1993"
+        ]
+      ],
+      "retrieved_passage_count": 7,
+      "context_dropped_passage_ids": [
+        "sentencia_c_106_de_2018:00015:57875296b9a6"
+      ]
+    },
+    {
+      "id": 1073,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [
+        [
+          "constitucion",
+          null,
+          null
+        ]
+      ],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "estatuto_tributario",
+          null,
+          null
+        ],
+        [
+          "jurisprudencia",
+          "C-201",
+          "2002"
+        ],
+        [
+          "jurisprudencia",
+          "C-665",
+          "1998"
+        ],
+        [
+          "jurisprudencia",
+          "C-934",
+          "2004"
+        ],
+        [
+          "jurisprudencia",
+          "T-243",
+          "2018"
+        ],
+        [
+          "jurisprudencia",
+          "T-290",
+          "1993"
+        ],
+        [
+          "ley",
+          "50",
+          "1990"
+        ],
+        [
+          "ley",
+          "863",
+          "2003"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    },
+    {
+      "id": 1089,
+      "status": "answered",
+      "missing_expected_bodies_dropped_for_context": [],
+      "missing_expected_bodies_absent_from_evidence": [],
+      "expected_bodies_in_evidence_but_not_cited": [],
+      "unsupported_cited_bodies": [],
+      "extra_supported_cited_bodies": [
+        [
+          "codigo_general_proceso",
+          null,
+          null
+        ],
+        [
+          "ley",
+          "1395",
+          "2010"
+        ],
+        [
+          "ley",
+          "2080",
+          "2021"
+        ],
+        [
+          "ley",
+          "2220",
+          "2022"
+        ]
+      ],
+      "retrieved_passage_count": 8,
+      "context_dropped_passage_ids": []
+    }
+  ],
+  "scope": "Offline post-run body-level diagnosis using the same citation extractor as scripts/evaluate.py; it does not prove claim-level entailment."
+}

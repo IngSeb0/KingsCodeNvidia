@@ -1,0 +1,30 @@
+﻿{
+  "checked": 3,
+  "all_match": true,
+  "results": [
+    {
+      "id": 51,
+      "answer_identical": true,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    },
+    {
+      "id": 24,
+      "answer_identical": true,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    },
+    {
+      "id": 247,
+      "answer_identical": true,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    }
+  ]
+}

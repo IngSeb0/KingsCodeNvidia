@@ -1,0 +1,245 @@
+﻿{
+    "main_sha":  "aeeda815976cbeb953bd561130e90439aed1f22e",
+    "model":  "qwen3-8b",
+    "gpu":  "NVIDIA GeForce RTX 4090",
+    "vram_gb":  24.0,
+    "torch":  "2.14.1+cu126",
+    "retrieval":  "hybrid (hibrido solo en semi_open,open_ended; resto bm25) candidate_k=30 graph_budget=10 reranker_batch_size=2 k=8 graph router (diagnostico, no freeze)",
+    "prompt_version":  "grounded-formats-v6",
+    "citation_fill":  true,
+    "cite_mentions":  5,
+    "max_context_tokens":  8192,
+    "doc_cap":  0,
+    "verificacion_en_vivo":  {
+                                 "ids":  [
+                                             51,
+                                             24,
+                                             247
+                                         ],
+                                 "all_match":  true,
+                                 "row_identical":  [
+                                                       true,
+                                                       true,
+                                                       true
+                                                   ]
+                             },
+    "corpus":  "corpus_v01_v02_a1",
+    "corpus_origin":  "descarga oficial (acquire + build)",
+    "corpus_v01_raw_identical_and_verified":  false,
+    "corpus_v01_comparison":  {
+                                  "v01_docs":  163,
+                                  "identical_raw":  95,
+                                  "changed":  [
+                                                  "codigo_comercio",
+                                                  "codigo_disciplinario",
+                                                  "codigo_general_proceso",
+                                                  "codigo_infancia",
+                                                  "codigo_nacional_policia",
+                                                  "codigo_penal",
+                                                  "codigo_procedimiento_penal",
+                                                  "codigo_sustantivo_trabajo",
+                                                  "constitucion",
+                                                  "cpaca",
+                                                  "decreto_1082_de_2015",
+                                                  "decreto_1742_de_2020",
+                                                  "decreto_175_de_2025",
+                                                  "decreto_2067_de_1991",
+                                                  "decreto_2153_de_1992",
+                                                  "decreto_24_de_2016",
+                                                  "decreto_405_de_2025",
+                                                  "decreto_4334_de_2008",
+                                                  "decreto_4436_de_2005",
+                                                  "decreto_4886_de_2011",
+                                                  "decreto_663_de_1993",
+                                                  "decreto_780_de_2016",
+                                                  "decreto_960_de_1970",
+                                                  "estatuto_consumidor",
+                                                  "estatuto_tributario",
+                                                  "ley_1010_de_2006",
+                                                  "ley_1095_de_2006",
+                                                  "ley_1116_de_2006",
+                                                  "ley_1150_de_2007",
+                                                  "ley_1151_de_2007",
+                                                  "ley_1258_de_2008",
+                                                  "ley_1340_de_2009",
+                                                  "ley_137_de_1994",
+                                                  "ley_1473_de_2011",
+                                                  "ley_153_de_1887",
+                                                  "ley_155_de_1959",
+                                                  "ley_1562_de_2012",
+                                                  "ley_1581_de_2012",
+                                                  "ley_1607_de_2012",
+                                                  "ley_160_de_1994",
+                                                  "ley_1700_de_2013",
+                                                  "ley_1755_de_2015",
+                                                  "ley_1819_de_2016",
+                                                  "ley_1909_de_2018",
+                                                  "ley_2114_de_2021",
+                                                  "ley_2141_de_2021",
+                                                  "ley_2157_de_2021",
+                                                  "ley_2160_de_2021",
+                                                  "ley_2220_de_2022",
+                                                  "ley_2251_de_2022",
+                                                  "ley_2437_de_2024",
+                                                  "ley_2452_de_2025",
+                                                  "ley_2466_de_2025",
+                                                  "ley_256_de_1996",
+                                                  "ley_29_de_1982",
+                                                  "ley_50_de_1990",
+                                                  "ley_527_de_1999",
+                                                  "ley_54_de_1990",
+                                                  "ley_600_de_2000",
+                                                  "ley_640_de_2001",
+                                                  "ley_678_de_2001",
+                                                  "ley_721_de_2001",
+                                                  "ley_75_de_1968",
+                                                  "ley_769_de_2002",
+                                                  "ley_80_de_1993",
+                                                  "ley_820_de_2003",
+                                                  "ley_979_de_2005"
+                                              ],
+                                  "missing":  [
+                                                  "decision_andina_486"
+                                              ],
+                                  "same_retrieved_at":  0
+                              },
+    "corpus_diagnostic_override":  false,
+    "passages_sha256":  "58135a0cf92c502115415756835807870cd47c2af55ff7bd7771d897555ca6f8",
+    "passages_reference":  "distinto de ambas referencias",
+    "input":  "data\\sample_50.jsonl",
+    "filas":  50,
+    "completo":  true,
+    "reanudadas":  0,
+    "automatico_sin_ragas":  "38.84 / 50.0",
+    "cerradas":  13.33,
+    "citas":  17.14,
+    "abstencion":  8.37,
+    "errores_validacion":  0,
+    "fallbacks_pipeline_error":  0,
+    "segundos_por_pregunta":  16.0,
+    "proyeccion_992_horas":  4.41,
+    "diagnostics":  {
+                        "questions":  50,
+                        "abstention_source":  {
+                                                  "none":  {
+                                                               "n":  50,
+                                                               "rate":  1.0
+                                                           }
+                                              },
+                        "attribution_status":  {
+                                                   "explicit":  {
+                                                                    "n":  50,
+                                                                    "rate":  1.0
+                                                                }
+                                               },
+                        "abstentions":  0,
+                        "abstention_reasons":  {
+
+                                               },
+                        "abstentions_by_format":  {
+
+                                                  },
+                        "normalization_action":  {
+                                                     "none":  {
+                                                                  "n":  50,
+                                                                  "rate":  1.0
+                                                              }
+                                                 },
+                        "repair_actions":  {
+                                               "renamed_to_evidence_name":  100,
+                                               "rewritten_to_body":  7,
+                                               "suppressed_fragment":  18,
+                                               "suppressed_sentence":  32
+                                           },
+                        "pipeline_error_codes":  {
+
+                                                 },
+                        "format_warnings":  {
+                                                "semi_open_sentences_outside_3_5":  {
+                                                                                        "n":  12,
+                                                                                        "rate":  0.24
+                                                                                    }
+                                            },
+                        "field_coercions":  {
+
+                                            },
+                        "citations_before_repair":  266,
+                        "citations_after_repair":  594,
+                        "citation_guard_fallback_rate":  0.0,
+                        "supported_citations":  594,
+                        "unsupported_citations":  0,
+                        "citation_support_rate":  1.0,
+                        "input_tokens":  326353,
+                        "output_tokens":  17949,
+                        "generation_ms_p50":  13311.282900016522,
+                        "generation_ms_p95":  25992.631600005552,
+                        "retrieval_ms_p50":  65.41740000830032,
+                        "retrieval_ms_p95":  156.08750001410954,
+                        "peak_reserved_vram_gb":  19.0,
+                        "rerank_skipped":  0,
+                        "retrieval_profile_samples":  59,
+                        "retrieval_stage_ms":  {
+                                                   "bm25_ms":  {
+                                                                   "p50":  19.831,
+                                                                   "p95":  97.381,
+                                                                   "sum":  1813.967
+                                                               },
+                                                   "dense_ms":  {
+                                                                    "p50":  41.094,
+                                                                    "p95":  64.064,
+                                                                    "sum":  1770.212
+                                                                },
+                                                   "fusion_ms":  {
+                                                                     "p50":  0.072,
+                                                                     "p95":  0.626,
+                                                                     "sum":  12.02
+                                                                 },
+                                                   "locator_ms":  {
+                                                                      "p50":  0.0,
+                                                                      "p95":  0.0,
+                                                                      "sum":  0.0
+                                                                  },
+                                                   "graph_ms":  {
+                                                                    "p50":  0.0,
+                                                                    "p95":  0.468,
+                                                                    "sum":  9.381
+                                                                },
+                                                   "reranker_ms":  {
+                                                                       "p50":  0.0,
+                                                                       "p95":  0.0,
+                                                                       "sum":  0.0
+                                                                   },
+                                                   "reranker_tokenization_ms":  {
+                                                                                    "p50":  null,
+                                                                                    "p95":  null,
+                                                                                    "sum":  null
+                                                                                },
+                                                   "reranker_forward_ms":  {
+                                                                               "p50":  null,
+                                                                               "p95":  null,
+                                                                               "sum":  null
+                                                                           },
+                                                   "rerank_skip_recovery_ms":  {
+                                                                                   "p50":  null,
+                                                                                   "p95":  null,
+                                                                                   "sum":  null
+                                                                               },
+                                                   "total_ms":  {
+                                                                    "p50":  60.775,
+                                                                    "p95":  105.077,
+                                                                    "sum":  3614.446
+                                                                }
+                                               },
+                        "dense_query_encodes":  35,
+                        "dense_encode_batches":  35,
+                        "reranker_pairs":  0,
+                        "reranker_computed_pairs":  0,
+                        "reranker_cache_hits":  0,
+                        "reranker_duplicate_pairs":  0,
+                        "reranker_batches":  0,
+                        "native_option_fusion_questions":  0,
+                        "note":  "Label-free diagnostics; no thresholds derived from the official 50."
+                    },
+    "diagnostico_citas":  "reports\\decoder_diagnostic\\mejora_muestra\\diagnostico_citas.json",
+    "ragas":  "no ejecutado"
+}
