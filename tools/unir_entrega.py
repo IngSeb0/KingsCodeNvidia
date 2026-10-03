@@ -69,9 +69,7 @@ def unir(args):
             rows[i] = better[i]
             replaced += 1
     if args.mejora and args.ids_mejora:
-        Path(args.ids_mejora).write_text("
-".join(str(i) for i in want) + "
-", encoding="utf-8")
+        Path(args.ids_mejora).write_text("".join(f"{i}\n" for i in want), encoding="utf-8")
     out = Path(args.out)
     out.write_text("".join(json.dumps(rows[i], ensure_ascii=False) + "\n" for i in order), encoding="utf-8")
     from scripts.evaluate import validate  # validador oficial (solo lectura)
