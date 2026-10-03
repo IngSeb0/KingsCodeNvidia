@@ -32,7 +32,7 @@ else { $Run = "mejora_p$Parte"; $InFile = "data\test_992.mejora_parte$Parte.json
 Paso "1/5 Codigo de main (con la busqueda semantica)"
 $ErrorActionPreference = "Continue"
 git fetch origin main 2>&1 | Out-Host
-git checkout -B main origin/main 2>&1 | Out-Host
+git checkout -f -B main origin/main 2>&1 | Out-Host   # -f: archivos locales sueltos (p.ej. data	est_992.jsonl) no frenan; reports no se toca
 $ok = $LASTEXITCODE
 $ErrorActionPreference = "Stop"
 if ($ok -ne 0) { throw "STOP: git no pudo pasar a origin/main (cambios locales en archivos versionados?). Revisar 'git status'." }
