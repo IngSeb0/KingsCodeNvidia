@@ -114,3 +114,14 @@ Siguiente comando para repetir Gate 1B: `.venv/Scripts/python.exe tools/member_b
 `decoder-smoke --model qwen3-8b`, `sample --model qwen3-8b` y `bakeoff` son ramas nuevas de `tools/member_b.py`. Admiten `--dry-run` para inspección futura sin modelos; no se ejecutaron durante la preparación. Usan `kingscode/generation/`, no sustituyen al dummy y vuelven a pasar por `answer`/citation guard/schema. `sample` requiere evidencia congelada y validada. Runbook completo: `GPU_DAY_RUNBOOK.md`.
 
 La auditoría histórica `verify_member_b_second.py` ahora permite entradas adicionales de decoders en el lock, pero sigue exigiendo igualdad de las dos entradas originales de retrieval. Los informes anteriores que dicen 15 archivos intactos corresponden a Gate 1B; una ejecución futura distingue 14 archivos idénticos más dos entradas originales del lock.
+
+## Corrida sample50 con v7, DocCap 3, diagnóstico de citas y RAGAS
+
+En la PC con RTX 4090, usa el mismo corpus y el mismo checkout congelado durante toda la corrida:
+
+    cd "$HOME\KingsCodeGPU\KingsCodeNvidia"
+    git switch main
+    git pull --ff-only origin main
+    powershell -ExecutionPolicy Bypass -File .\tools\kingscode_pc_nueva_diagnostico.ps1 -Work "$PWD" -RunName "v7_doccap3_bm25_ragas_$(Get-Date -Format yyyyMMdd_HHmmss)" -CorpusSet v01+v02 -RetrieverMode bm25 -PromptVersion v7 -DocCap 3 -Ragas -ShowAnswers -NoPull
+
+RAGAS se aplica a las 35 preguntas de texto libre; el evaluador oficial puntúa las 50. La llave de OpenRouter se pega en el prompt oculto y se elimina de las variables de entorno al terminar. La corrida imprime cada pregunta y respuesta al completarse, y al final muestra correctness, puntos e ítems sin veredicto. El informe post-run diagnostico_citas.json separa citas faltantes por truncamiento, ausencia de la norma en la evidencia y evidencia disponible que el modelo no citó. Los archivos quedan en reports/decoder_diagnostic/<RunName>/; revise el JSON RAGAS si hay timeouts.

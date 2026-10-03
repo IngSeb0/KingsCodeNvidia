@@ -40,6 +40,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--run-dir", type=Path, help="batch: checkpoint/output directory")
     parser.add_argument("--fresh", action="store_true", help="batch: refuse to resume an existing run directory")
     parser.add_argument("--retries", type=int, default=2)
+    parser.add_argument("--show-answers", action="store_true",
+                        help="batch: print each question and generated answer to stderr as it completes")
     parser.add_argument("--retrieval-mode", choices=["base", "option", "plan", "option_plan"], default="option")
     parser.add_argument("--plans", type=Path, help="plan mode: frozen reports/query_plans/<id> directory (replay)")
     parser.add_argument("--k", type=int, default=8)
@@ -314,7 +316,8 @@ def run_b_command(args, parser) -> int:
         parser.error("batch needs --run-dir")
     if args.synthetic:
         questions = synthetic_questions(questions, args.synthetic)
-    report = BatchRunner(pipeline, args.run_dir, identity=identity, retries=args.retries).run(questions, resume=not args.fresh)
+    report = BatchRunner(pipeline, args.run_dir, identity=identity, retries=args.retries,
+                         show_answers=args.show_answers).run(questions, resume=not args.fresh)
     print(json.dumps({k: report[k] for k in ("submission", "rows", "complete", "fallback_ids", "submission_sha256", "counts", "seconds")},
                      ensure_ascii=False, indent=2))
     return 0

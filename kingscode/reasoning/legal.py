@@ -35,9 +35,9 @@ CODE_ALIASES = {
 NORM = re.compile(r"\b(ley|decreto(?:[-\s]+ley| legislativo| reglamentario| unico reglamentario)?|acto legislativo|resolucion|circular(?: externa)?|acuerdo|decision(?: andina)?)\s+(?:(?:n(?:o|ro)?[.°º]*|numero)\s*)?(\d+(?:\.\d{3})*)(?:\s*(?:de|del|/|-)\s*(\d{4}))?\b", re.I)
 SENTENCE = re.compile(r"\b(?:sentencia\s+)?(su|stc|stl|sl|sc|sp|c|t|ac|au)\s*[- ]?\s*(\d{1,5})\s*(?:de|del|/|-)\s*(\d{2}|\d{4})\b", re.I)
 DOCKET = re.compile(r"\b(?:radicado|radicacion|expediente)\s*(?:(?:n(?:o|ro)?[.°º]?|numero)\s*)?[:.]?\s*([A-Za-z]?[- ]?\d[\d -]{3,}\d)\b", re.I)
-NUMBER = r"\d+(?:\.\d+)*(?:-\d+)?(?:[a-z](?!\w)|[ \t]+[a-z](?=\s*[.,:;)]|\s+de\b|\s+del\b|$))?"
+NUMBER = r"\d+(?:\.\d+)*(?:-\d+)?(?:[a-z](?!\w)|[ \t]+[a-z](?=\s*[.,:;)]|\s+de\b|\s+del\b|$))?(?:[º°])?"
 ARTICLES = re.compile(r"\b(?:arts?\.?|articulos?)\s+(transitorio\s+)?(" + NUMBER + r"(?:\s*(?:,|y|e)\s*" + NUMBER + r")*)(?!\w)", re.I)
-ARTICLE_LINK = re.compile(r"^[\s.,:;]*(?:(?:de|del|de la|del mismo|de esta|de este)\s+)?$", re.I)
+ARTICLE_LINK = re.compile(r"^[\s.,:;]*(?:[º°])?\s*(?:(?:del mismo|de esta|de este|de la|del|de)\s+)?$", re.I)
 
 
 @dataclass(frozen=True)

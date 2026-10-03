@@ -7,6 +7,7 @@ from pathlib import Path
 import json
 import subprocess
 import sys
+import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
@@ -72,6 +73,13 @@ class QueryTests(unittest.TestCase):
         for text, number in [("Artículo 2.2.1.2 del Decreto 1082 de 2015", "2.2.1.2"),
                              ("Artículo 134 A del Código Penal", "134a"), ("Artículo 861-1 del Estatuto Tributario", "861-1")]:
             self.assertEqual(next(r.article for r in references(text) if r.kind == "article"), number)
+
+    def test_ordinal_article_link_keeps_article_identity(self):
+        for marker in ("º", "°"):
+            refs = references(f"Artículo 5{marker} de la Ley 1010 de 2006")
+            article = next(r for r in refs if r.kind == "article")
+            self.assertEqual(article.article, "5")
+            self.assertEqual(article.body, ("ley", "1010", "2006"))
 
     def test_ranges_and_incomplete_citations_fail_closed(self):
         for text in ["Artículos 13 a 15", "Artículo 13 bis", "Ley 1010", "Sentencia T-999", "T-999", "Artículo XIV", "Leyes 80 y 1150", "Ley número 999"]:
@@ -228,6 +236,67 @@ class GuardSchemaTests(unittest.TestCase):
 
 
 class PipelineTests(unittest.TestCase):
+    def test_context_dropped_passages_are_removed_from_submission_and_guard(self):
+        p0, p1 = deepcopy(FIXTURES[0]), deepcopy(FIXTURES[1])
+
+        class ContextTrimmingBackend:
+            name, version = "unit_context_trim", "1"
+            last_usage = {"evidence_dropped_for_context": [p1["passage_id"]]}
+            def generate(self, question, passages, prompt, generation):
+                return {"id": question.id, "formato": question.format, "abstencion": False,
+                        "respuesta": "La Ley 1010 de 2006 regula el acoso laboral.",
+                        "palabras_clave": ["acoso laboral"], "referencia_legal": "",
+                        "pasajes_recuperados": [evidence_record(p) for p in passages]}
+
+        retrieve = Mock(side_effect=lambda *args: [deepcopy(p0), deepcopy(p1)])
+        row, trace = Pipeline(retrieve, decoder=ContextTrimmingBackend(), graph_policy="off",
+                              retrieval_mode="base").run(Question(79, "¿Qué regula el acoso laboral?", "semi_open"))
+        delivered = {p["passage_id"] for p in row["pasajes_recuperados"]}
+        self.assertEqual(delivered, {p0["passage_id"]})
+        self.assertEqual(trace["diagnostics"]["evidence_dropped_for_context"], [p1["passage_id"]])
+        dropped = trace["diagnostics"]["evidence_dropped_bodies"]
+        self.assertIn(["ley", "1010", "2006"], [body for item in dropped for body in item["bodies"]])
+        self.assertEqual(trace["citation_guard"]["unsupported_count"], 0)
+
+    def test_batch_show_answers_prints_question_and_generated_fields(self):
+        from contextlib import redirect_stderr
+        from io import StringIO
+        from kingscode.reasoning.batch import _print_answer
+        question = Question(51, "¿Cuál opción aplica?", "multiple_choice", {"A": "primera", "B": "segunda"})
+        row = {"respuesta_correcta": "B", "justificacion": "Aplica por la regla indicada.",
+               "descarte_opciones": {"A": "No corresponde."}, "abstencion": False}
+        output = StringIO()
+        with redirect_stderr(output):
+            _print_answer(question, row)
+        rendered = output.getvalue()
+        self.assertIn("id=51 formato=multiple_choice", rendered)
+        self.assertIn("¿Cuál opción aplica?", rendered)
+        self.assertIn("B) segunda", rendered)
+        self.assertIn('respuesta_correcta: "B"', rendered)
+
+    def test_batch_runner_streams_answer_when_show_answers_enabled(self):
+        from contextlib import redirect_stderr
+        from io import StringIO
+        from kingscode.reasoning.batch import BatchRunner
+
+        class AnsweringBackend:
+            name, version = "unit_show_answer", "1"
+            def generate(self, question, passages, prompt, generation):
+                return {"id": question.id, "formato": question.format, "abstencion": False,
+                        "respuesta": "La Ley 1010 de 2006 regula el acoso laboral.",
+                        "palabras_clave": ["acoso laboral"], "referencia_legal": "",
+                        "pasajes_recuperados": [evidence_record(p) for p in passages]}
+
+        question = Question(79, "¿Qué regula el acoso laboral?", "semi_open")
+        pipeline = Pipeline(lambda *args: [evidence()], decoder=AnsweringBackend(),
+                            graph_policy="off", retrieval_mode="base")
+        output = StringIO()
+        with tempfile.TemporaryDirectory() as temp, redirect_stderr(output):
+            report = BatchRunner(pipeline, Path(temp), retries=0, show_answers=True).run([question])
+        self.assertTrue(report["complete"])
+        self.assertIn("¿Qué regula el acoso laboral?", output.getvalue())
+        self.assertIn("respuesta: \"La Ley 1010 de 2006 regula el acoso laboral.\"", output.getvalue())
+
     def test_public_retrieval_two_passes_and_modes(self):
         for query, decision, modes in [("Artículo 1 de la Ley 1010 de 2006", "off", ["off"]),
                                        ("Artículo 999 de la Ley 1010 de 2006", "auto", ["off", "auto"]),

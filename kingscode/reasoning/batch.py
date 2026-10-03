@@ -112,11 +112,36 @@ class _Heartbeat:
         return False
 
 
+def _print_answer(question: Question, row: dict, trace: dict | None = None) -> None:
+    """Show the generated question/answer on stderr without corrupting JSON stdout."""
+    print(f"\n[respuesta] id={question.id} formato={question.format}", file=sys.stderr, flush=True)
+    print(f"Pregunta: {question.text}", file=sys.stderr, flush=True)
+    for key, value in sorted((question.options or {}).items()):
+        print(f"  {key}) {value}", file=sys.stderr, flush=True)
+    if row.get("abstencion"):
+        reason = (trace or {}).get("abstention_reason") or "sin detalle"
+        print(f"Abstención: sí ({reason})",
+              file=sys.stderr, flush=True)
+    else:
+        fields = {
+            "multiple_choice": ("respuesta_correcta", "justificacion", "descarte_opciones"),
+            "semi_open": ("respuesta", "palabras_clave", "referencia_legal"),
+            "open_ended": ("marco_normativo", "analisis", "jurisprudencia", "conclusion"),
+        }[question.format]
+        for field in fields:
+            print(f"{field}: {json.dumps(row.get(field), ensure_ascii=False)}", file=sys.stderr, flush=True)
+    print("[/respuesta]\n", file=sys.stderr, flush=True)
+
+
 class BatchRunner:
-    def __init__(self, pipeline, run_dir: Path, *, identity: dict | None = None, retries: int = 2):
+    def __init__(self, pipeline, run_dir: Path, *, identity: dict | None = None, retries: int = 2,
+                 show_answers: bool = False):
         if type(retries) is not int or not 0 <= retries <= 2:
             raise ValueError("retries must be 0, 1 or 2")
+        if type(show_answers) is not bool:
+            raise ValueError("show_answers must be a boolean")
         self.pipeline, self.run_dir, self.retries = pipeline, Path(run_dir), retries
+        self.show_answers = show_answers
         self.identity = dict(identity or {})
 
     def _check_identity(self, questions: list[Question], resume: bool) -> dict:
@@ -156,7 +181,10 @@ class BatchRunner:
         counts = {"resumed": 0, "answered": 0, "retried_ok": 0, "fallback": 0}
         for question in questions:
             item_path = self.run_dir / "items" / f"{question.id}.json"
-            if resume and item_path.exists() and _valid_checkpoint(item_path, question):
+            checkpoint = _valid_checkpoint(item_path, question) if item_path.exists() else None
+            if resume and checkpoint is not None:
+                if self.show_answers:
+                    _print_answer(question, checkpoint["row"], checkpoint.get("trace"))
                 counts["resumed"] += 1
                 continue
             # Start line: a slow or stuck item (VRAM spilling to shared memory, a very long prompt)
@@ -183,6 +211,8 @@ class BatchRunner:
             validate_submission(row)
             atomic_write_text(item_path, _dumps({"row": row, "status": status, "attempts": len(errors) + (status == "ok"),
                                                   "trace": trace}) + "\n")
+            if self.show_answers:
+                _print_answer(question, row, trace)
             done = sum(counts.values())                      # includes items resumed from checkpoints
             processed = done - counts["resumed"]             # generated in this session (>= 1 here)
             elapsed = perf_counter() - started
@@ -197,7 +227,6 @@ class BatchRunner:
                       finished_at=datetime.now(timezone.utc).isoformat())
         atomic_write_text(self.run_dir / "batch_report.json", json.dumps(report, ensure_ascii=False, indent=2, default=str) + "\n")
         return report
-
     def diagnostics(self, questions: list[Question]) -> dict:
         """Aggregate rates over per-item traces (kept intact in items/<id>.json)."""
         from collections import Counter

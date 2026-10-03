@@ -59,6 +59,16 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         self.assertIn(("ley", "1010", "2006"), {tuple(b) for b in official_bodies(row["referencia_legal"])})
         self.assertEqual(trace["diagnostics"]["format_warnings"], ["semi_open_sentences_2_outside_3_5"])
 
+    def test_semi_open_builder_preserves_existing_supported_reference(self):
+        from kingscode.reasoning.citation_builder import attach_references
+        evidence = [deepcopy(FIXTURES[0]), deepcopy(FIXTURES[1])]
+        row = {"id": 1, "formato": "semi_open", "abstencion": False, "respuesta": "Respuesta.",
+               "palabras_clave": ["respuesta"], "referencia_legal": "Constitución Política"}
+        row, refs = attach_references(row, evidence, {"status": "explicit", "ids": [p["passage_id"] for p in evidence]})
+        self.assertIn("Constitución Política", row["referencia_legal"])
+        self.assertIn("Ley 1010 de 2006", row["referencia_legal"])
+        self.assertEqual(len({tuple(body) for body in official_bodies(row["referencia_legal"])}), 2)
+
     def test_deterministic_decoder_failure_is_not_retried(self):
         from kingscode.generation.hf_decoder import DecoderFailure
         from kingscode.reasoning.batch import BatchRunner
@@ -259,6 +269,7 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         self.assertIn("--prompt-version", out)
         self.assertIn("--citation-fill", out)
         self.assertIn("--native-option-fusion", out)
+        self.assertIn("--show-answers", out)
         self.assertIn("--candidate-k", out)
         self.assertIn("--reranker-batch-size", out)
         self.assertIn("--graph-budget", out)

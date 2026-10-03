@@ -38,6 +38,7 @@
 #   ... -Recomendada -DocCap 3                             (maximo 3 pasajes por documento: evidencia mas diversa)
 #   ... -Recomendada -RetrievalMode option_plan            (texto libre con consultas extra del planner Qwen; cerradas igual)
 #   ... -SkipVerify                                        (omite regenerar 3 preguntas para comprobar reproducibilidad)
+#   ... -ShowAnswers                                       (imprime pregunta y respuesta al completar cada ítem)
 #   SABADO (set ciego, misma configuracion elegida):
 #   ... -InputFile data\test_992.jsonl -RunName final_992 <flags elegidos>      -> copia submissions.jsonl a la raiz
 #   ... -InputFile data\test_992.jsonl -RunName final_992 -Resume <mismos flags> (si se corta: reanuda sin repetir)
@@ -73,6 +74,7 @@ param(
     [switch]$Recomendada,
     [switch]$SkipVerify,
     [switch]$Ragas,
+    [switch]$ShowAnswers,
     [switch]$SkipSmoke,
     [switch]$PilotRun,
     [switch]$NoPull   # congela el codigo actual (comparaciones y sabado): no hace git pull
@@ -346,7 +348,9 @@ if ($RetrievalMode -eq "option_plan") {
 # string passes it character by character ("- - f r e s h", 2026-10-01).
 $FreshArg = @()
 if (-not $Resume) { $FreshArg += "--fresh" }
-& $Py tools\member_b.py batch --run-dir $Run @FreshArg --retries 0 @CommonArgs
+$ShowAnswersArg = @()
+if ($ShowAnswers) { $ShowAnswersArg += "--show-answers" }
+& $Py tools\member_b.py batch --run-dir $Run @FreshArg --retries 0 @CommonArgs @ShowAnswersArg
 Check "corrida integrada (conserva $Run; reanudar con -Resume -RunName $RunName)"
 if ($IsSample) {
     & $Py scripts\evaluate.py --submission "$Run\submissions.jsonl" --split sample --out "$Out\evaluation_official.json"
@@ -406,9 +410,24 @@ if ($Ragas -and $IsSample) {
 }
 
 # ---------------------------------------------------------------------
+$CitationDiagnostic = $null
+if ($IsSample) {
+    Step "[8] Diagnóstico de cobertura de citas (post-run, solo lectura)"
+    $CitationDiagnosticPath = "$Out\diagnostico_citas.json"
+    & $Py tools\diagnose_citation_pipeline.py --run $Run --output $CitationDiagnosticPath
+    Check "diagnóstico de citas"
+    $CitationDiagnostic = Get-Content $CitationDiagnosticPath -Raw | ConvertFrom-Json
+    $Cm = $CitationDiagnostic.metrics
+    Write-Host ("Citas de referencia: cobertura en evidencia {0:P1} | recall citado y respaldado {1:P1} | faltantes por contexto {2} | faltantes de evidencia {3} | evidencia sin citar {4}" -f `
+        $Cm.evidence_coverage, $Cm.supported_citation_recall, $Cm.expected_bodies_dropped_for_context,
+        $Cm.expected_bodies_missing_from_delivered_evidence, $Cm.expected_bodies_available_but_not_cited) -ForegroundColor Cyan
+}
+
+# ---------------------------------------------------------------------
 Step "Resumen"
 $Br = Get-Content "$Run\batch_report.json" -Raw | ConvertFrom-Json
 $Ev = $(if ($IsSample) { Get-Content "$Out\evaluation_official.json" -Raw | ConvertFrom-Json } else { $null })
+$Rg = $(if ($Ragas -and $IsSample -and (Test-Path "$Out\evaluation_ragas.json")) { Get-Content "$Out\evaluation_ragas.json" -Raw | ConvertFrom-Json } else { $null })
 # Seconds of this session over the items generated in it (resumed items are not re-timed).
 $Processed = [math]::Max(1, [int]$Br.rows - [int]$Br.counts.resumed)
 $Spq = [math]::Round(($Br.seconds + $PlanSeconds) / $Processed, 1)   # incluye el planner de option_plan
@@ -426,11 +445,24 @@ $Summary = [ordered]@{
     fallbacks_pipeline_error = @($Br.fallback_ids).Count
     segundos_por_pregunta = $Spq; proyeccion_992_horas = [math]::Round($Spq * 992 / 3600, 2)
     diagnostics = $Br.diagnostics
-    ragas = $(if ($Ragas) { "$Out\evaluation_ragas.json" } else { "no ejecutado" })
+    diagnostico_citas = $(if ($CitationDiagnostic) { "$CitationDiagnosticPath" } else { "no ejecutado" })
+    ragas = $(if ($Rg) { [ordered]@{ archivo = "$Out\evaluation_ragas.json"; correctness = $Rg.correccion_ragas.correctness
+        puntos = $Rg.correccion_ragas.puntos; items_juzgados = $Rg.correccion_ragas.n_juzgados
+        fallidos = $Rg.correccion_ragas.n_fallidos; juez = $Rg.correccion_ragas.modelo_juez; encoder = $Rg.correccion_ragas.encoder } }
+        elseif ($Ragas) { [ordered]@{ archivo = "$Out\evaluation_ragas.json"; estado = "sin resultado" } }
+        else { "no ejecutado" })
 }
 $Summary | ConvertTo-Json -Depth 8 | Out-File -Encoding utf8 "$Out\RESUMEN.json"
 Write-Host ("{0}: {1} automatico sin RAGAS | cerradas {2}, citas {3}, abstencion {4} | {5} s/pregunta -> 992 en {6} h | fallbacks {7}" -f `
     $Model, $Summary.automatico_sin_ragas, $Summary.cerradas, $Summary.citas, $Summary.abstencion, $Spq, $Summary.proyeccion_992_horas, $Summary.fallbacks_pipeline_error) -ForegroundColor Green
+if ($Rg) {
+    $Rj = $Rg.correccion_ragas
+    Write-Host ("RAGAS: correctness {0:P2} | {1}/{2} puntos | juez fallido {3}/{4} | modelo {5} | encoder {6}" -f `
+        $Rj.correctness, $Rj.puntos, 30, $Rj.n_fallidos, $Rj.n_juzgados, $Rj.modelo_juez, $Rj.encoder) -ForegroundColor Green
+    if ($Rj.n_fallidos -gt 0) { Warn "RAGAS dejó ítems sin veredicto: se cuentan como cero; revisar $Out\evaluation_ragas.json." }
+} elseif ($Ragas) {
+    Warn "Se pidió RAGAS pero no apareció evaluation_ragas.json; revisar el log del juez."
+}
 if ($Summary.proyeccion_992_horas -gt 5) { Warn "la proyeccion para 992 supera 5 h: la ventana del sabado es de 6 h." }
 # Presupuesto del enunciado (B.5): ~22 s/pregunta para 992 en 6 h. Margen de seguridad: 20 s.
 if ($Spq -gt 20) { Warn "$Spq s/pregunta supera el margen de 20 s (presupuesto 22 s): esta configuracion NO es apta para el sabado." }
@@ -440,4 +472,4 @@ Write-Host ("Tiempos: generacion p50 {0} ms / p95 {1} ms | retrieval p50 {2} ms 
     [math]::Round([double]$D.retrieval_ms_p95), $D.peak_reserved_vram_gb, $D.rerank_skipped)
 if ($D.peak_reserved_vram_gb -gt 22) { Warn "VRAM pico $($D.peak_reserved_vram_gb) GB (tarjeta 24 GB): riesgo de desborde a RAM del sistema y caida de velocidad." }
 if ($D.rerank_skipped -gt 0) { Warn "$($D.rerank_skipped) preguntas usaron el orden previo al reranker (pasaje mas largo que max_length del reranker)." }
-Write-Host "Envia a Esteban: $Work\$Out\RESUMEN.json, $Out\evaluation_official.json y $Run\batch_report.json"
+Write-Host "Archivos: $Out\RESUMEN.json, $Out\evaluation_official.json, $Run\batch_report.json$(if ($Rg) { ", $Out\evaluation_ragas.json" })$(if ($CitationDiagnostic) { ", $CitationDiagnosticPath" })"

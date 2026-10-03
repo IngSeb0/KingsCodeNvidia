@@ -13,6 +13,7 @@ from .guards import CitationGuardError, check_passages, citation_guard, validate
 from .policy import assess_evidence, blocking_reasons
 from .query import NormalizedQuery, normalize_query
 from .routing import RetrieverGraphRouter, route_graph
+from .official import official_bodies
 
 
 def query_variants(question: Question, query: NormalizedQuery) -> tuple[str, ...]:
@@ -135,6 +136,23 @@ def _answer(question: Question, passages: list[dict], decoder: Decoder, *, max_r
     else:
         row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))
         usage = _usage(decoder)
+        # HFDecoder removes low-ranked passages from the prompt when the context
+        # budget is tight. They must not remain eligible for citation repair or
+        # be reported as evidence the model actually saw.
+        dropped_ids = set(usage.get("evidence_dropped_for_context") or [])
+        if dropped_ids:
+            dropped = [p for p in evidence if p.get("passage_id") in dropped_ids]
+            usage["evidence_dropped_bodies"] = [
+                {"passage_id": p.get("passage_id"),
+                 "bodies": [list(body) for body in sorted(official_bodies(p.get("text") or ""), key=str)]}
+                for p in dropped
+            ]
+            evidence = [p for p in evidence if p.get("passage_id") not in dropped_ids]
+            if isinstance(row, dict) and isinstance(row.get("pasajes_recuperados"), list):
+                row["pasajes_recuperados"] = [
+                    p for p in row["pasajes_recuperados"]
+                    if not isinstance(p, dict) or p.get("passage_id") not in dropped_ids
+                ]
         dummy = isinstance(decoder, DummyDecoder)
         reason = "dummy_backend_no_legal_reasoning" if dummy else None
         source = "dummy_backend" if dummy else "decoder"
@@ -190,6 +208,7 @@ def generation_diagnostics(decoder, usage, attribution, before, guard, repair, e
             "json_grammar_sha256": usage.get("json_grammar_sha256"),
             "xgrammar_version": usage.get("xgrammar_version"),
             "evidence_dropped_for_context": list(usage.get("evidence_dropped_for_context") or []),
+            "evidence_dropped_bodies": list(usage.get("evidence_dropped_bodies") or []),
             "citations_before_repair": before, "citations_after_repair": guard["citation_count"],
             "repair_actions": actions, "evidence_passages": len(evidence),
             "evidence_ids_delivered": [p.get("passage_id") for p in row["pasajes_recuperados"]],

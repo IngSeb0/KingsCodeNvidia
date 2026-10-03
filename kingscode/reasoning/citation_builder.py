@@ -101,7 +101,8 @@ def attach_references(row: dict, evidence: list[dict], attribution: dict | None 
     attribution None/legacy_fallback (dummy, v1/v2 prompts): first passages, as before.
     attribution explicit: only the passages the decoder declared it used.
     attribution malformed/not_applicable: nothing is added (attribution is never invented).
-    semi_open: referencia_legal is replaced (the juez RAGAS never reads it).
+    semi_open: preserve supported citations already in referencia_legal and add
+    any missing references from attributed evidence (the judge does not read it).
     multiple_choice: appended to justificacion unless its bodies are already cited.
     open_ended: append any missing declared-source citations to marco_normativo
     (max 3; RAGAS reads it), without duplicating citations already present in any
@@ -125,7 +126,15 @@ def attach_references(row: dict, evidence: list[dict], attribution: dict | None 
     if not refs:
         return row, refs
     if fmt == "semi_open":
-        row["referencia_legal"] = "; ".join(refs)
+        current = (row.get("referencia_legal") or "").strip()
+        current_bodies = official_bodies(current)
+        # Legacy decoders may place passage IDs in this field. Preserve only
+        # legal citations recognized by the official extractor.
+        if current and not current_bodies:
+            current = ""
+        missing = [ref for ref in refs if not official_bodies(ref) <= current_bodies]
+        if missing:
+            row["referencia_legal"] = (current + "; " if current else "") + "; ".join(missing) + "."
     elif fmt == "multiple_choice":
         just = (row.get("justificacion") or "").strip()
         new = [r for r in refs if not official_bodies(r) <= official_bodies(just)]
