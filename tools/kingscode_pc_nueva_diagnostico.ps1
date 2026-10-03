@@ -59,6 +59,7 @@ param(
     [ValidateRange(1, 500)] [int]$CandidateK = 30,
     [ValidateRange(1, 10)] [int]$K = 8,
     [ValidateRange(0, 8)] [int]$DocCap = 0,
+    [string]$HybridFormats = "",   # p.ej. "semi_open,open_ended": BM25+semantica en esos formatos (requiere -RetrieverMode hybrid)
     [ValidateSet(0, 12288, 16384)] [int]$MaxContext = 0,   # 0 = 8192 del config; 16384: el modelo ve todos los pasajes   # >0: maximo N pasajes por documento (trae 10 y diversifica)
     [ValidateSet("option", "option_plan")] [string]$RetrievalMode = "option",   # option_plan: cerradas por opcion, texto libre con plan de Qwen   # pasajes entregados; el evaluador mira los 10 primeros
     [ValidateSet("1", "2")] [int]$RerankerBatchSize = 2,
@@ -352,6 +353,7 @@ if ($ExactLocator) { $CommonArgs += "--exact-locator" }
 if ($CitationFill) { $CommonArgs += "--citation-fill" }
 if ($CiteMentions -gt 0) { $CommonArgs += @("--cite-mentions", [string]$CiteMentions) }
 if ($DocCap -gt 0) { $CommonArgs += @("--doc-cap", [string]$DocCap) }
+if ($HybridFormats) { $CommonArgs += @("--hybrid-formats", $HybridFormats) }
 if ($FitPassages) { $CommonArgs += "--fit-passages" }
 if ($MaxContext -gt 0) {
     Warn "-MaxContext $MaxContext es EXPERIMENTAL: prompts de hasta ~12k tokens pueden desbordar la VRAM de 24 GB (la atencion determinista no cabe) y la corrida se vuelve casi congelada. Si [batch] muestra sigue generando > 120 s por pregunta, cortar con Ctrl+C."
@@ -461,7 +463,7 @@ $Processed = [math]::Max(1, [int]$Br.rows - [int]$Br.counts.resumed)
 $Spq = [math]::Round(($Br.seconds + $PlanSeconds) / $Processed, 1)   # incluye el planner de option_plan
 $Summary = [ordered]@{
     main_sha = $Sha; model = $Model; gpu = $Rt.gpu; vram_gb = $Rt.vram_gb; torch = $Rt.torch
-    retrieval = "$RetrieverMode$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($RerankerScoreCache) { ' + reranker score cache' })$(if ($ExactLocator) { ' + locator exacto' }) k=$K graph router (diagnostico, no freeze)"
+    retrieval = "$RetrieverMode$(if ($HybridFormats) { " (hibrido solo en $HybridFormats; resto bm25)" })$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($RerankerScoreCache) { ' + reranker score cache' })$(if ($ExactLocator) { ' + locator exacto' }) k=$K graph router (diagnostico, no freeze)"
     prompt_version = "grounded-formats-$PromptVersion"; citation_fill = [bool]$CitationFill; cite_mentions = $CiteMentions; max_context_tokens = $(if ($MaxContext -gt 0) { $MaxContext } else { 8192 }); doc_cap = $DocCap; verificacion_en_vivo = $Verify
     corpus = $CorpusDir; corpus_origin = $CorpusOrigin; corpus_v01_raw_identical_and_verified = $CorpusExact; corpus_v01_comparison = $Cmp
     corpus_diagnostic_override = ($AllowKnownLocalCorpusDrift -and -not $CorpusExact)

@@ -60,12 +60,26 @@ h1 { border-bottom: 3px solid var(--kc-teal); padding-bottom: .35rem; }
     margin: .25rem 0 .7rem; border-radius: 0 8px 8px 0; color: var(--kc-ink);
 }
 .kc-evidence small { color: var(--kc-muted); }
+.kc-header { display: flex; align-items: center; justify-content: space-between; gap: 1.2rem;
+    background: #fff; border-radius: 12px; padding: .9rem 1.3rem; border-bottom: 4px solid var(--kc-teal);
+    box-shadow: 0 1px 4px rgba(19,35,44,.08); margin-bottom: .4rem; flex-wrap: wrap; }
+.kc-title { margin: 0; padding: 0; border: none; font-size: 1.85rem; }
+.kc-sub { color: var(--kc-muted); font-size: .95rem; margin-top: .25rem; }
+.kc-logo { height: 78px; width: auto; }
 .stButton > button[kind="primary"] { background: var(--kc-teal); border-color: var(--kc-teal); }
 .stButton > button[kind="primary"]:hover { background: var(--kc-teal-dark); border-color: var(--kc-teal-dark); }
 </style>""", unsafe_allow_html=True)
 
-st.title("KingsCode · Consulta de derecho colombiano")
-st.caption("Hackathon 2026 · AI Week · Universidad de los Andes · Software Colombia")
+import base64  # noqa: E402
+
+_LOGO = ROOT / "interfaz" / "assets" / "software_colombia_logo.png"
+_logo_html = (f'<img src="data:image/png;base64,{base64.b64encode(_LOGO.read_bytes()).decode()}" '
+              'alt="Software Colombia" class="kc-logo">' if _LOGO.exists() else "")
+st.markdown(f"""<div class="kc-header">
+  <div><h1 class="kc-title">KingsCode · Consulta de derecho colombiano</h1>
+  <div class="kc-sub">Hackathon 2026 · AI Week · Universidad de los Andes · Patrocina <b>Software Colombia</b></div></div>
+  {_logo_html}
+</div>""", unsafe_allow_html=True)
 
 
 RECOMMENDED_ARGS = [
@@ -99,7 +113,7 @@ def default_corpus() -> Path:
 
 
 @st.cache_resource(show_spinner="Cargando corpus, índice y decoder…")
-def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str):
+def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str, semantic: bool = False):
     """Build the exact recommended pipeline via tools/member_b.py::_pipeline."""
     from member_b import _pipeline
 
@@ -141,6 +155,9 @@ def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_pol
     parser = build_parser()
     args = ["batch", "--corpus", corpus_dir, "--k", str(k), "--graph-policy", graph_policy]
     args.extend(RECOMMENDED_ARGS)
+    if semantic:
+        # Misma configuracion que tools/kingscode_mejora.ps1: BM25 + encoder en semiabiertas y abiertas.
+        args.extend(["--retriever-mode", "hybrid", "--hybrid-formats", "semi_open,open_ended"])
     available_options = {option for action in parser._actions for option in action.option_strings}
     if "--cite-mentions" in available_options:
         args.extend(["--cite-mentions", "5"])
@@ -157,9 +174,9 @@ def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_pol
     return pipeline, note, identity
 
 
-def get_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str):
+def get_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str, semantic: bool = False):
     """Keep one configured decoder resident instead of caching GPU copies per setting."""
-    settings = (str(Path(corpus_dir).resolve()), alias, precision, k, graph_policy)
+    settings = (str(Path(corpus_dir).resolve()), alias, precision, k, graph_policy, semantic)
     previous = st.session_state.get("_pipeline_settings")
     if previous is not None and previous != settings:
         load_pipeline.clear()
@@ -172,7 +189,7 @@ def get_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_poli
         except Exception:
             pass
     st.session_state["_pipeline_settings"] = settings
-    return load_pipeline(corpus_dir, alias, precision, k, graph_policy)
+    return load_pipeline(corpus_dir, alias, precision, k, graph_policy, semantic)
 
 
 with st.sidebar:
@@ -200,6 +217,11 @@ with st.sidebar:
     precision = st.selectbox("Precisión", ["bf16", "int8", "int4"], disabled=decoder_alias == "dummy_abstain")
     k = st.slider("Pasajes recuperados", 1, 10, 8)
     graph_policy = st.selectbox("Política de grafo", ["router", "off", "auto", "on"], index=0)
+    dense_ready = (Path(corpus_dir) / "index" / "dense.meta.json").exists()
+    semantic = st.checkbox("Búsqueda semántica (BM25 + encoder Qwen3-Embedding) en respuesta breve y caso abierto",
+                           value=dense_ready, disabled=not dense_ready,
+                           help="Busca por significado además de por palabras. Requiere el índice denso del corpus "
+                                "(tools/member_a.py dense --corpus <corpus>).")
     debug_mode = st.checkbox("Mostrar traza técnica", value=False)
 
 if not (Path(corpus_dir) / "manifest.json").exists():
@@ -208,13 +230,13 @@ if not (Path(corpus_dir) / "manifest.json").exists():
     st.stop()
 
 try:
-    pipeline, decoder_note, pipeline_identity = get_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy)
+    pipeline, decoder_note, pipeline_identity = get_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy, semantic)
 except Exception as exc:
     st.warning(f"No se pudo cargar `{decoder_alias}` ({type(exc).__name__}). Se usará DummyDecoder.")
     pipeline, decoder_note, pipeline_identity = get_pipeline(corpus_dir, "dummy_abstain", "bf16", k, graph_policy)
 
 st.markdown(
-    f'<div class="kc-banner">{html.escape(decoder_note)} · corpus: '
+    f'<div class="kc-banner">{html.escape(decoder_note)}{" · búsqueda semántica + BM25" if semantic else " · BM25"} · corpus: '
     f'<code>{html.escape(Path(corpus_dir).name)}</code></div>',
     unsafe_allow_html=True,
 )
@@ -372,7 +394,7 @@ with single_tab:
             question = Question(0, pregunta.strip(), formato, {key: value.strip() for key, value in opciones.items() if value.strip()})
             # Temperature 0: the same question returns the same answer, so a repeat is served instantly.
             memo = st.session_state.setdefault("single_memo", {})
-            memo_key = (question.text, question.format, tuple(sorted(question.options.items())), str(corpus_dir), decoder_alias, k, graph_policy)
+            memo_key = (question.text, question.format, tuple(sorted(question.options.items())), str(corpus_dir), decoder_alias, k, graph_policy, semantic)
             try:
                 if memo_key in memo:
                     row, trace = memo[memo_key]

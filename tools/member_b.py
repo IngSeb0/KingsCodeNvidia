@@ -80,6 +80,9 @@ def build_parser() -> argparse.ArgumentParser:
                         help="decoder: shorten the longest passages in the prompt (head kept) before dropping any")
     parser.add_argument("--max-context", type=int, default=None, metavar="N",
                         help="decoder context window in tokens (default 8192 from the bakeoff config; up to 32768)")
+    parser.add_argument("--hybrid-formats", default="", metavar="F1,F2",
+                        help="formats answered with BM25+semantic (dense) retrieval; the rest keep BM25 "
+                             "(needs the dense index; e.g. open_ended,semi_open)")
     parser.add_argument("--doc-cap", type=int, default=0, metavar="N",
                         help="batch/verify: fetch 10 passages and keep at most N per document (0 = off, default)")
     parser.add_argument("--native-option-fusion", action="store_true",
@@ -249,6 +252,19 @@ def _pipeline(args):
                               reranker_instruction=(reranker_instruction if args.reranker_instruction_profile != "baseline" else None),
                               reranker_score_cache=args.reranker_score_cache)
         retriever = base_retriever
+        hybrid_formats = tuple(f.strip() for f in (getattr(args, "hybrid_formats", "") or "").split(",") if f.strip())
+        format_retrieves = None
+        if hybrid_formats:
+            from copy import copy as _copy
+            if args.retriever_mode != "hybrid" or args.rerank:
+                raise ValueError("--hybrid-formats needs --retriever-mode hybrid and no --rerank")
+            if set(hybrid_formats) - {"multiple_choice", "semi_open", "open_ended"}:
+                raise ValueError("--hybrid-formats: multiple_choice, semi_open, open_ended")
+            # Same loaded index, BM25-only view: the other formats keep exactly the measured BM25 path.
+            sparse = _copy(base_retriever)
+            sparse.mode, sparse.dense = "bm25", None
+            format_retrieves = {f: base_retriever.retrieve for f in hybrid_formats}
+            retriever = sparse
         if args.rerank:
             retriever = _RerankSafeRetriever(retriever)
         if args.option_support and base_retriever.dense is None:
@@ -278,6 +294,7 @@ def _pipeline(args):
                 "option_support": args.option_support, "constrained_json": args.constrained_json,
                 "plan_roles": list(plan_roles) if plan_roles else None,
                 "prompt_version": getattr(decoder, "prompt_version", None), "citation_fill": args.citation_fill, "cite_mentions": args.cite_mentions, "doc_cap": args.doc_cap, "max_context": args.max_context, "fit_passages": args.fit_passages,
+                "hybrid_formats": list(hybrid_formats) if base_retriever is not None else [],
                 "retriever": {"mode": args.retriever_mode, "rerank": args.rerank,
                               "graph_budget": args.graph_budget,
                               "exact_locator": args.exact_locator, "fixture_evidence": args.fixture_evidence,
@@ -286,7 +303,8 @@ def _pipeline(args):
     return Pipeline(retriever.retrieve, adapter=adapter, decoder=decoder, k=args.k, graph_policy=args.graph_policy,
                     retrieval_mode=args.retrieval_mode, plans=plans, max_refs=5 if args.citation_fill else 3,
                     citation_fill=args.citation_fill, cite_mentions=args.cite_mentions, native_option_fusion=args.native_option_fusion,
-                    plan_roles=plan_roles, option_supporter=option_supporter, doc_cap=args.doc_cap), identity
+                    plan_roles=plan_roles, option_supporter=option_supporter, doc_cap=args.doc_cap,
+                    format_retrieves=format_retrieves if base_retriever is not None else None), identity
 
 
 def run_b_command(args, parser) -> int:

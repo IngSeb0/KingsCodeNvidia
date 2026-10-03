@@ -227,7 +227,8 @@ class Pipeline:
     def __init__(self, retrieve, *, adapter: RetrieverGraphRouter | None = None, decoder: Decoder | None = None,
                  k: int = 8, graph_policy: str = "router", retrieval_mode: str = "option", plans=None,
                  max_refs: int = 3, citation_fill: bool = False, cite_mentions: int = 0, native_option_fusion: bool = False,
-                 plan_roles: tuple[str, ...] | None = None, option_supporter=None, doc_cap: int = 0):
+                 plan_roles: tuple[str, ...] | None = None, option_supporter=None, doc_cap: int = 0,
+                 format_retrieves: dict | None = None):
         if type(k) is not int or not 1 <= k <= 10 or graph_policy not in {"router", "off", "auto", "on"}:
             raise ValueError("Invalid evidence count/graph policy")
         if retrieval_mode not in RETRIEVAL_MODES:
@@ -254,6 +255,9 @@ class Pipeline:
         self.fetch_k = 10 if doc_cap else k
         self.locator_kwarg = locator_switch(retrieve)
         self.native_views = supports_query_views(retrieve)
+        # Optional per-format retriever (2026-10-03): e.g. BM25+semantic (hybrid) for long case
+        # questions while the other formats keep the exact measured BM25 calls. None = off.
+        self.format_retrieves = dict(format_retrieves or {})
 
     def _call(self, text: str, trusted: bool, mode: str) -> list[dict]:
         if not trusted and self.locator_kwarg:
@@ -344,6 +348,18 @@ class Pipeline:
     def run(self, question: Question):
         if not isinstance(question, Question):
             raise TypeError("Pipeline only accepts a public Question")
+        special = getattr(self, "format_retrieves", {}).get(question.format)
+        if special is None:
+            return self._run(question)
+        default, self.retrieve = self.retrieve, special
+        try:
+            row, trace = self._run(question)
+        finally:
+            self.retrieve = default
+        trace["format_retriever"] = "hybrid"
+        return row, trace
+
+    def _run(self, question: Question):
         start = perf_counter()
         query = normalize_query(question.text)
         plan = (self.plans.get(question.id, question.text)
