@@ -3,7 +3,7 @@
 Run from the repository root after building the corpus:
     streamlit run interfaz/app.py
 
-Both modes use tools/member_b.py's recommended BM25/option/v4 pipeline builder.
+The live demo uses the measured hybrid profile for brief and open answers; BM25 delivery artifacts remain separate.
 Uploaded rows are allowlisted to the public Question contract.
 """
 from __future__ import annotations
@@ -217,11 +217,9 @@ with st.sidebar:
     precision = st.selectbox("Precisión", ["bf16", "int8", "int4"], disabled=decoder_alias == "dummy_abstain")
     k = st.slider("Pasajes recuperados", 1, 10, 8)
     graph_policy = st.selectbox("Política de grafo", ["router", "off", "auto", "on"], index=0)
-    dense_ready = (Path(corpus_dir) / "index" / "dense.meta.json").exists()
-    semantic = st.checkbox("Búsqueda semántica (BM25 + encoder Qwen3-Embedding) en respuesta breve y caso abierto",
-                           value=dense_ready, disabled=not dense_ready,
-                           help="Busca por significado además de por palabras. Requiere el índice denso del corpus "
-                                "(tools/member_a.py dense --corpus <corpus>).")
+    semantic = True
+    st.info("Demo oficial: búsqueda híbrida (BM25 + Qwen3-Embedding) en respuesta breve y caso abierto. "
+            "Selección múltiple conserva búsqueda por opciones BM25.")
     debug_mode = st.checkbox("Mostrar traza técnica", value=False)
 
 if not (Path(corpus_dir) / "manifest.json").exists():
@@ -229,19 +227,26 @@ if not (Path(corpus_dir) / "manifest.json").exists():
     st.info("Construya el índice de A con `tools/member_a.py` o corrija la ruta del corpus.")
     st.stop()
 
+dense_index = Path(corpus_dir) / "index" / "dense.npy"
+dense_metadata = Path(corpus_dir) / "index" / "dense.meta.json"
+if not dense_index.is_file() or not dense_metadata.is_file():
+    st.error("La demo híbrida requiere el índice denso completo para este corpus.")
+    st.code(f".venv\\Scripts\\python.exe tools\\member_a.py dense --corpus \"{corpus_dir}\"", language="powershell")
+    st.stop()
+
 try:
     pipeline, decoder_note, pipeline_identity = get_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy, semantic)
 except Exception as exc:
-    st.warning(f"No se pudo cargar `{decoder_alias}` ({type(exc).__name__}). Se usará DummyDecoder.")
-    pipeline, decoder_note, pipeline_identity = get_pipeline(corpus_dir, "dummy_abstain", "bf16", k, graph_policy)
+    st.error(f"No se pudo cargar el perfil híbrido de demo ({type(exc).__name__}): {exc}")
+    st.stop()
 
 st.markdown(
-    f'<div class="kc-banner">{html.escape(decoder_note)}{" · búsqueda semántica + BM25" if semantic else " · BM25"} · corpus: '
+    f'<div class="kc-banner">{html.escape(decoder_note)} · HÍBRIDO (BM25 + Qwen3-Embedding en breve/abiertas) · corpus: '
     f'<code>{html.escape(Path(corpus_dir).name)}</code></div>',
     unsafe_allow_html=True,
 )
-st.caption("Perfil entregado: BM25 + búsqueda por opciones + router de grafo + prompt v6 + citas completadas y 5 menciones verificadas. "
-           "Para comprobar el candidato 37,46 la pestaña de jueces fija además Qwen3-8B BF16 y 5 menciones verificadas.")
+st.caption("Perfil de demo en vivo: búsqueda híbrida en respuesta breve y caso abierto, búsqueda BM25 por opciones en selección múltiple, "
+           "router de grafo, prompt v6 y citation-fill. La entrega y sus manifiestos conservan la corrida BM25; sus puntajes no son del híbrido.")
 
 
 FORMAT_LABELS = {
