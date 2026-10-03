@@ -1,0 +1,4 @@
+# Dependencias del pipeline (GPU) y de la interfaz. PyTorch CUDA se instala aparte con el
+# indice de la rueda correcta: ver tools/kingscode_pc_nueva_diagnostico.ps1 (paso [2]).
+-r requirements-gpu.txt
+-r requirements-ui.txt
