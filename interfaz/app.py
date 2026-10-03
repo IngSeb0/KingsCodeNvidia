@@ -71,7 +71,7 @@ st.caption("Hackathon 2026 · AI Week · Universidad de los Andes · Software Co
 RECOMMENDED_ARGS = [
     "--retrieval-mode", "option",
     "--retriever-mode", "bm25",
-    "--prompt-version", "v4",
+    "--prompt-version", "v6",   # configuracion entregada (-Recomendada -PromptVersion v6)
     "--citation-fill",
 ]
 CANDIDATE_3746 = {
@@ -133,7 +133,7 @@ def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_pol
         parser.add_argument("--model")
         parser.add_argument("--precision", choices=["bf16", "int8", "int4"], default="bf16")
         parser.add_argument("--allow-optional", action="store_true")
-        parser.add_argument("--prompt-version", choices=["v3", "v4", "v6"], default="v4")
+        parser.add_argument("--prompt-version", choices=["v3", "v4", "v6"], default="v6")
         parser.add_argument("--citation-fill", action="store_true")
         parser.add_argument("--native-option-fusion", action="store_true")
         build_parser = lambda: parser
@@ -153,7 +153,7 @@ def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_pol
         note = "DummyDecoder: se abstiene siempre; no genera respuestas jurídicas."
     else:
         pipeline.decoder.load()
-        note = f"Decoder local: {alias} · {precision} · temp. 0 · prompt v4 · citas verificadas"
+        note = f"Decoder local: {alias} · {precision} · temp. 0 · prompt v6 · citas verificadas"
     return pipeline, note, identity
 
 
@@ -218,7 +218,7 @@ st.markdown(
     f'<code>{html.escape(Path(corpus_dir).name)}</code></div>',
     unsafe_allow_html=True,
 )
-st.caption("Perfil base: BM25 + búsqueda por opciones + router de grafo + prompt v4 + citation-fill. "
+st.caption("Perfil entregado: BM25 + búsqueda por opciones + router de grafo + prompt v6 + citas completadas y 5 menciones verificadas. "
            "Para comprobar el candidato 37,46 la pestaña de jueces fija además Qwen3-8B BF16 y 5 menciones verificadas.")
 
 
@@ -313,8 +313,33 @@ single_tab, batch_tab, judge_tab = st.tabs(
     ["Consulta individual", "Cargar lote", "Verificar ID del jurado"]
 )
 
+@st.cache_data(show_spinner=False)
+def _question_bank() -> dict:
+    """Public fields of the sample (50) and the blind set (992): the jury's id loads the exact text."""
+    bank = {}
+    for name in ("sample_50.jsonl", "test_992.jsonl"):
+        path = ROOT / "data" / name
+        if path.exists():
+            for line in path.read_text(encoding="utf-8-sig").splitlines():
+                if line.strip():
+                    r = json.loads(line)
+                    bank[int(r["id"])] = {"pregunta": r["pregunta"], "formato": r["formato"], "opciones": r.get("opciones") or {}}
+    return bank
+
+
 with single_tab:
     st.subheader("Analiza una pregunta")
+    id_col, id_btn = st.columns([3, 1], vertical_alignment="bottom")
+    load_id = id_col.text_input("ID de la pregunta (muestra o set de 992)", key="single_load_id", placeholder="Ej. 24")
+    if id_btn.button("Cargar por ID", key="single_load_btn", disabled=not load_id.strip()):
+        record = _question_bank().get(int(load_id)) if load_id.strip().isdigit() else None
+        if record:
+            st.session_state["single_format"] = record["formato"]
+            st.session_state["single_question"] = record["pregunta"]
+            for letter in "ABCD":
+                st.session_state[f"single_option_{letter}"] = record["opciones"].get(letter, "")
+        else:
+            st.error(f"No existe la pregunta con ID {load_id} en data/sample_50.jsonl ni en data/test_992.jsonl.")
     formato = st.radio(
         "Formato",
         list(FORMATS),
@@ -345,9 +370,16 @@ with single_tab:
             st.error("Complete las opciones A, B, C y D.")
         else:
             question = Question(0, pregunta.strip(), formato, {key: value.strip() for key, value in opciones.items() if value.strip()})
+            # Temperature 0: the same question returns the same answer, so a repeat is served instantly.
+            memo = st.session_state.setdefault("single_memo", {})
+            memo_key = (question.text, question.format, tuple(sorted(question.options.items())), str(corpus_dir), decoder_alias, k, graph_policy)
             try:
-                with st.spinner("Recuperando evidencia y generando respuesta…"):
-                    row, trace = pipeline.run(question)
+                if memo_key in memo:
+                    row, trace = memo[memo_key]
+                else:
+                    with st.spinner("Recuperando evidencia y generando respuesta…"):
+                        row, trace = pipeline.run(question)
+                    memo[memo_key] = (row, trace)
                 st.session_state["single_result"] = {"question": question, "row": row, "trace": trace}
             except Exception as exc:
                 st.error(f"No se pudo analizar la pregunta: {type(exc).__name__}: {exc}")
