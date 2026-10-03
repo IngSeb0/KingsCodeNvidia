@@ -1,4 +1,0 @@
-{"backend": "openai", "base_url": "http://localhost:11434/v1", "model": "qwen3:8b",
- "json_mode": "object", "disable_thinking": true, "max_tokens": 900, "concurrency": 2,
- "retriever": "retrieval_adapter:retrieve", "k": 6, "k_submit": 10, "tag": "qwen3_8b_ollama",
- "extra": {"no_think_tag": true, "request": {"options": {"num_ctx": 8192}}}}

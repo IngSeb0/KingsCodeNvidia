@@ -622,7 +622,7 @@
     "gpu_lab_script": "tools/kingscode_gpu_todo.ps1"
   },
   "corpus_v03_candidate_work": {
-    "branch": "codex/corpus-first-final-improvement-20261003",
+    "branch": "exp/corpus-first-final-improvement-20261003",
     "starting_origin_main_sha": "30ef38c792c33feb7dc6d87358ab749b007e8725",
     "status": "candidate_built; independent_c0_c1_not_passed",
     "candidate_runtime_artifact_set_sha256": "019b7b3a2c6e719cd70dd082ef61e63042f1dee3113b551f1028bcd14b964b91",
@@ -641,7 +641,7 @@
       "mrr_at_10_ci95": [-0.0044675925925925924, 0.0034027777777777776],
       "sample_50_authorized_by_gate": false
     },
-    "gpu_sample_50": "not_run; no RTX 4090 available in this Codex host",
+    "gpu_sample_50": "not_run; no RTX 4090 available in this host",
     "blind_992": "not used for acquisition, tuning, or evaluation",
     "next_exact_action": "Do not freeze corpus_v03_candidate or run sample_50; obtain independent retrieval gold covering the added authorities or address the measured procedural EC@8 loss before proposing another candidate"
   }

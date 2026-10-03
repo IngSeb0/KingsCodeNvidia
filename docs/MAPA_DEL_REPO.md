@@ -101,8 +101,6 @@ Lectura: el salto viene del **locator exacto** (inyecta el artículo citado en l
 |---|---|
 | `README.md` | Portada: cómo empezar, interfaz, comando único, sección `## Corpus e índice` (enlace pendiente). |
 | `START_HERE.md` | Orden de lectura para humanos y agentes; primer bloque = estado vigente. |
-| `AGENTS.md` | Reglas del proyecto para cualquier agente (roles A/B, reglas que descalifican, definición de "hecho"). |
-| `CLAUDE.md` | Contexto específico para Claude Code (importa `AGENTS.md`), mapa del código y comandos. |
 | `CORPUS.md`, `corpus_manifest.json` | Bitácora oficial del corpus v0.1 (entregable 4). |
 | `README_KINGSCODE.md` | Resumen histórico del proyecto. |
 | `run.sh`, `Dockerfile`, `.dockerignore` | Comando único de reproducción (entregable de reproducibilidad). `./run.sh --fixture` corre sin corpus. |
@@ -234,14 +232,11 @@ Regla común: los rankings se escriben **antes** de leer el gold; el holdout no 
 |---|---|
 | `KINGSCODE_STATE.json` | Estado de máquina del proyecto (incluye `member_b_v2`). |
 | `DECISION_LOG.md` | Todas las decisiones, en orden, con motivo. |
-| `CORPUS_V02_PLAN.md` | Plan de A (C0–C8): locator, benchmark v2, adquisición acotada. |
-| `B_PLAN_POST_GPU.md` | Plan de B (B0–B8) y su tabla de estado. |
 | `experiments/B_BASE_VS_PLAN_v1.json` | Experimento BASE vs PLAN predeclarado (no ejecutado). |
 | `TEAM_SPLIT.md`, `INTEGRATION_CONTRACTS.md` | Quién hace qué y el contrato A↔B. |
 | `GPU_DAY_RUNBOOK.md`, `MODEL_LOCKS_GATE2.md` | Día de GPU y licencias/revisiones de modelos. |
 | `MEMBER_A_RUNBOOK.md`, `MEMBER_B_RUNBOOK.md` | Cómo operar cada capa. |
 | `BENCHMARK_METHODOLOGY.md`, `BENCHMARK_V2_METHODOLOGY.md` | Reglas de medición. |
-| `reference_b_prototype/`, `reference_esteban_prototype/` | Prototipos anteriores de B: solo referencia, no se importan. |
 | Resto (`ARCHITECTURE_*`, `ROADMAP`, `LITERATURE_REVIEW…`) | Historial de diseño. |
 
 ---
@@ -253,7 +248,6 @@ Regla común: los rankings se escriben **antes** de leer el gold; el holdout no 
 | `tests/` | Suite CPU (265 tests). `fixtures/` tiene pasajes oficiales reales para probar sin corpus. Correr: `python -m unittest discover -s tests -v`. |
 | `interfaz/` | `app.py` (Streamlit, identidad Software Colombia). `streamlit run interfaz/app.py`; requiere `corpus/`. |
 | `artifacts/` | Salidas del preflight y verificaciones iniciales. |
-| `.claude/commands/` | Comandos de Claude Code: `/b-contexto`, `/b-medir`, `/b-tarea`, `/b2-tarea`, `/corpus-tarea`. |
 | `corpus/`, `models/`, `tmp/`, `runs/`, `.venv/` | **Locales, fuera de git.** Corpus v0.1, pesos de modelos, artefactos temporales (pools de benchmarks de A), corridas del batch, entorno Python. |
 
 ---

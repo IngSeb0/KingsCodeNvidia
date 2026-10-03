@@ -10,7 +10,7 @@ Writes next to the run:
                   declared passages, tokens and timings.
   revision.md     the same, readable.
 --labels reads data/sample_50.jsonl (expected letter and legal_basis) only to mark MC right/wrong
-and whether the reference norm was retrieved and cited. Allowed here: CLAUDE.md lets tools/analyze_*
+and whether the reference norm was retrieved and cited. Allowed here: the team rules let tools/analyze_*
 read labels for measurement. Runs before 2026-10-01 have no raw_response for answered items.
 """
 from __future__ import annotations

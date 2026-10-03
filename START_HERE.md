@@ -1,7 +1,5 @@
 # START HERE — KingsCode v0.5
 
-## Para Claude Code
-`CLAUDE.md` (importa `AGENTS.md` y fija el orden de lectura), luego `docs/B_EXTENSION_PLAN.md` y `docs/DECISION_LOG.md` para lo más reciente. Comandos: `/b-contexto`, `/b-medir`, `/b-tarea T1`.
 
 ## Mapa del repositorio
 `docs/MAPA_DEL_REPO.md`: qué es cada carpeta, dónde está cada corpus (`corpus/` v0.1 fuera de git vs `corpora/corpus-v0.2/` agregado provisional) y qué falta para el sábado.
@@ -11,15 +9,14 @@ El resumen de esa fecha registra los cambios fusionados entonces. Para estado,
 resultados y próximos pasos usar la sección reconciliada del 2026-10-01 abajo,
 `docs/KINGSCODE_STATE.json` y la última entrada de `docs/DECISION_LOG.md`.
 
-## Para cualquier humano o agente
-1. `AGENTS.md`
-2. `docs/KINGSCODE_MASTER_KNOWLEDGE.md`
-3. `docs/KINGSCODE_STATE.json`
-4. `docs/TEAM_SPLIT.md`
-5. `docs/ARCHITECTURE_V05.md`
-6. `docs/INTEGRATION_CONTRACTS.md`
-7. `config/strategy.json`
-8. `docs/DECISION_LOG.md`
+## Orden de lectura
+1. `docs/KINGSCODE_MASTER_KNOWLEDGE.md`
+2. `docs/KINGSCODE_STATE.json`
+3. `docs/TEAM_SPLIT.md`
+4. `docs/ARCHITECTURE_V05.md`
+5. `docs/INTEGRATION_CONTRACTS.md`
+6. `config/strategy.json`
+7. `docs/DECISION_LOG.md`
 
 ## Trabajo actual en paralelo
 - **A:** Corpus v0 + grafo + retrieval baseline implementados. Ver `CORPUS.md`, `docs/MEMBER_A_RUNBOOK.md` y reportes de verificación; pendiente benchmark neuronal completo y ampliar/desambiguar fuentes.
@@ -37,7 +34,7 @@ A ya tiene resultados RTX4090/Search V2 preservados en 60ebf7e. La fase vigente 
 
 ## Estado más reciente: KC-COL-IR pre-CUDA (2026-09-30)
 
-`main` está en `e528161`. KC-COL-IR CUJ 2026 tiene 10 gold independientes y 10/10 completos en el perfil controlado de 190 pasajes; el corpus competitivo v0.1 sigue sin esas fuentes. `CUDA_READY=false`; el handoff vigente detiene la ejecución antes de C0-C3. El trabajo local de hardening está en `codex/pre-cuda-hardening`; consultar `docs/KC_COL_IR_PRE_CUDA_HARDENING.md` y `docs/experiments/KC_COL_IR_CUJ2026_SHORTLIST_V1.json`. Javeriana validation sigue sin parsear ni inspeccionar.
+`main` está en `e528161`. KC-COL-IR CUJ 2026 tiene 10 gold independientes y 10/10 completos en el perfil controlado de 190 pasajes; el corpus competitivo v0.1 sigue sin esas fuentes. `CUDA_READY=false`; el handoff vigente detiene la ejecución antes de C0-C3. El trabajo local de hardening está en `exp/pre-cuda-hardening`; consultar `docs/KC_COL_IR_PRE_CUDA_HARDENING.md` y `docs/experiments/KC_COL_IR_CUJ2026_SHORTLIST_V1.json`. Javeriana validation sigue sin parsear ni inspeccionar.
 
 ## Estado reconciliado: optimización de corrida sample50 (2026-10-01)
 

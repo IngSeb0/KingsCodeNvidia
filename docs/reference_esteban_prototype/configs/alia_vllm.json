@@ -1,3 +1,0 @@
-{"backend": "openai", "base_url": "http://localhost:8000/v1", "model": "SINAI/ALIA-es-legal-7B-Instruct",
- "json_mode": "schema", "disable_thinking": false, "max_tokens": 700, "concurrency": 16,
- "retriever": "retrieval_adapter:retrieve", "k": 5, "k_submit": 10, "max_passage_chars": 1200, "tag": "alia_7b"}

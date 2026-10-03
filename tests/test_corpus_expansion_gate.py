@@ -33,7 +33,7 @@ class CorpusExpansionGateTests(unittest.TestCase):
     def _write_run(self, directory, rows, *, candidate=False):
         write_jsonl(directory / "per_question.jsonl", rows)
         report = {"status": "passed", "variant": "R0", "split": "dev",
-                  "git": {"commit": "same-sha", "branch": "codex/test"},
+                  "git": {"commit": "same-sha", "branch": "exp/test"},
                   "benchmark": {"manifest_sha256": "benchmark-sha"},
                   "corpus": {"version": "candidate" if candidate else "corpus-v0.1",
                              "hashes": {"passages.jsonl": "different" if candidate else "baseline"}},

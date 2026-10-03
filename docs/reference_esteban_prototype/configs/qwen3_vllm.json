@@ -1,3 +1,0 @@
-{"backend": "openai", "base_url": "http://localhost:8000/v1", "model": "Qwen/Qwen3-8B-AWQ",
- "json_mode": "schema", "disable_thinking": true, "max_tokens": 900, "concurrency": 16,
- "retriever": "retrieval_adapter:retrieve", "k": 8, "k_submit": 10, "tag": "qwen3_8b"}

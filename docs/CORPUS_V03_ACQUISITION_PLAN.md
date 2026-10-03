@@ -1,7 +1,7 @@
 # Pre-registered corpus v0.3 acquisition plan
 
 Date: 2026-10-03
-Branch: `codex/corpus-first-final-improvement-20261003`
+Branch: `exp/corpus-first-final-improvement-20261003`
 Baseline commit: `30ef38c792c33feb7dc6d87358ab749b007e8725` (`origin/main` at branch creation)
 
 ## Purpose and decision basis

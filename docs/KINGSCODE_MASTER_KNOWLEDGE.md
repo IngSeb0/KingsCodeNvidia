@@ -395,7 +395,6 @@ No asumir versión de CUDA/PyTorch antes de diagnosticar la máquina.
 - arquitectura Graph-Aware;
 - división A/B revisada para v0.5;
 - contratos de integración;
-- `AGENTS.md` para continuidad multi-agente.
 - Corpus v0.1: 163 documentos oficiales, 26.558 pasajes conservados y 26.060 elegibles; 498 históricos/ambiguos excluidos de recuperación. Raw, clean, hashes, URLs, fechas y offsets disponibles en `../corpus_manifest.json`.
 - Capa v0.6 de A (metadatos + recuperación): identidad canónica determinista independiente de la URL (`canonical_document_id`/`canonical_fragment_id`), metadatos temporales conservadores (`unknown` por defecto), `content_hash`, clasificación de los 28 objetivos de adquisición, dedup/diversificación configurable, taxonomía de fallos con `document_mismatch_rate`, experimentos opcionales R6/R7/R8 y representación de embedding experimental. Todo aditivo y determinista; el corpus se reconstruye byte a byte idéntico (mismos hashes que v0.1). Módulos en `kingscode/metadata.py`, `acquisition_backlog.py`, `diversify.py`, `metadata_experiments.py`, `failure_analysis.py`, `coverage_report.py`; reportes `reports/*_v06.json`. 44 tests nuevos en verde; sin GPU/bakeoff/RAGAS/fine-tuning; B intacto. La idea de que el corpus responda casi cualquier pregunta es solo hipótesis de diseño, no requisito oficial.
 - Grafo desde ingesta: 59.236 nodos y 75.380 edges con evidencia; no se inventan tipos de relación ni se certifica vigencia. Tags y relaciones adicionales quedan pendientes de evidencia explícita.
@@ -448,7 +447,7 @@ Comando local exacto para repetir el gate actual: `.venv/Scripts/python.exe tool
 
 ## 16. Protocolo de continuidad
 
-`AGENTS.md` es la guía operativa universal para cualquier agente que entre al proyecto. Cada cambio importante debe actualizar:
+Cada cambio importante debe actualizar:
 1. este archivo;
 2. `KINGSCODE_STATE.json`;
 3. `config/strategy.json`;
@@ -506,4 +505,4 @@ KC-COL-IR-v0.1 uses 30 frozen item numbers from the current JEP CUJ 2026 fourth-
 
 ### Pre-CUDA hardening (2026-09-30)
 
-The continuation starts from `main` `e52816145970adddc70300b1a9988c02b4cd1c8d` on the separate local branch `codex/pre-cuda-hardening`. It prepares a pinned local-tokenizer length audit, execution identity, Candidate@30 and duplicate diagnostics, explicit retrieval timing, unique `passage_id` checks, and a preregistered shortlist of at most two configurations. The controlled profile and tokenizer audit are not available in this checkout, so the audit has not run. No C0-C3, CUDA, validation scoring, decoder, or tests ran. `CUDA_READY` remains false and the current handoff still stops before ranking. See `docs/KC_COL_IR_PRE_CUDA_HARDENING.md`.
+The continuation starts from `main` `e52816145970adddc70300b1a9988c02b4cd1c8d` on the separate local branch `exp/pre-cuda-hardening`. It prepares a pinned local-tokenizer length audit, execution identity, Candidate@30 and duplicate diagnostics, explicit retrieval timing, unique `passage_id` checks, and a preregistered shortlist of at most two configurations. The controlled profile and tokenizer audit are not available in this checkout, so the audit has not run. No C0-C3, CUDA, validation scoring, decoder, or tests ran. `CUDA_READY` remains false and the current handoff still stops before ranking. See `docs/KC_COL_IR_PRE_CUDA_HARDENING.md`.
