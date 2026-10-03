@@ -63,6 +63,7 @@ param(
     [ValidateRange(0, 100)] [int]$GraphBudget = 10,
     [switch]$Rerank,
     [switch]$NativeOptionFusion,
+    [switch]$RerankerScoreCache,
     [switch]$ExactLocator,
     [ValidateSet("v3", "v4", "v6", "v7")] [string]$PromptVersion = "v3",
     [string]$InputFile = "data\sample_50.jsonl",
@@ -86,7 +87,7 @@ function Check($w) { if ($LASTEXITCODE -ne 0) { throw "STOP: $w (exit $LASTEXITC
 function RefreshPath { $env:Path = [Environment]::GetEnvironmentVariable("Path", "User") + ";" + [Environment]::GetEnvironmentVariable("Path", "Machine") }
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
 if ($Recomendada) { if ($PromptVersion -eq "v3") { $PromptVersion = "v4" }; $CitationFill = [switch]::new($true); if ($CiteMentions -eq 0) { $CiteMentions = 5 } }
-if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })$(if ($DocCap -gt 0) { "_cap$DocCap" })$(if ($MaxContext -gt 0) { "_ctx$MaxContext" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
+if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })$(if ($DocCap -gt 0) { "_cap$DocCap" })$(if ($MaxContext -gt 0) { "_ctx$MaxContext" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($RerankerScoreCache) { '_rcache' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
 
 # ---------------------------------------------------------------------
 Step "[0] Herramientas: Git, Python 3.12, GPU"
@@ -317,6 +318,7 @@ $CommonArgs = @(
 )
 if ($Rerank) { $CommonArgs += "--rerank" }
 if ($NativeOptionFusion) { $CommonArgs += "--native-option-fusion" }
+if ($RerankerScoreCache) { $CommonArgs += "--reranker-score-cache" }
 if ($ExactLocator) { $CommonArgs += "--exact-locator" }
 if ($CitationFill) { $CommonArgs += "--citation-fill" }
 if ($CiteMentions -gt 0) { $CommonArgs += @("--cite-mentions", [string]$CiteMentions) }
@@ -412,7 +414,7 @@ $Processed = [math]::Max(1, [int]$Br.rows - [int]$Br.counts.resumed)
 $Spq = [math]::Round(($Br.seconds + $PlanSeconds) / $Processed, 1)   # incluye el planner de option_plan
 $Summary = [ordered]@{
     main_sha = $Sha; model = $Model; gpu = $Rt.gpu; vram_gb = $Rt.vram_gb; torch = $Rt.torch
-    retrieval = "$RetrieverMode$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($ExactLocator) { ' + locator exacto' }) k=$K graph router (diagnostico, no freeze)"
+    retrieval = "$RetrieverMode$(if ($Rerank) { ' + Qwen reranker' }) candidate_k=$CandidateK graph_budget=$GraphBudget reranker_batch_size=$RerankerBatchSize$(if ($NativeOptionFusion) { ' + native option fusion' })$(if ($RerankerScoreCache) { ' + reranker score cache' })$(if ($ExactLocator) { ' + locator exacto' }) k=$K graph router (diagnostico, no freeze)"
     prompt_version = "grounded-formats-$PromptVersion"; citation_fill = [bool]$CitationFill; cite_mentions = $CiteMentions; max_context_tokens = $(if ($MaxContext -gt 0) { $MaxContext } else { 8192 }); doc_cap = $DocCap; verificacion_en_vivo = $Verify
     corpus = $CorpusDir; corpus_origin = $CorpusOrigin; corpus_v01_raw_identical_and_verified = $CorpusExact; corpus_v01_comparison = $Cmp
     corpus_diagnostic_override = ($AllowKnownLocalCorpusDrift -and -not $CorpusExact)

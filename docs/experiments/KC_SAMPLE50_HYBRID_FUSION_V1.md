@@ -10,18 +10,19 @@ The new profile records BM25, dense, fusion, exact locator, graph and reranker t
 
 ## Fixed conditions
 
-Use the same 4090 PC, repository commit, Python environment, Qwen revisions, input file, corpus path and corpus hashes for paired runs. Keep Qwen3-8B, BF16, temperature zero, prompt v3, `k=8`, graph router, exact-locator off, citation fill off, and RAGAS off for the retrieval-speed comparison. The controlled hyperparameters are option-view fusion (legacy fan-out vs native), candidate depth (30 vs 15), and reranker GPU forward batch size (2 vs 1). Do not change these together when interpreting a pair. The combined v0.1+v0.2 corpus remains diagnostic only; a changed live source snapshot is not a competitive corpus freeze.
+Use the same 4090 PC, repository commit, Python environment, Qwen revisions, input file, corpus path and corpus hashes for paired runs. Keep Qwen3-8B, BF16, temperature zero, prompt v3, `k=8`, graph router, exact-locator off, citation fill off, and RAGAS off for the retrieval-speed comparison. The controlled hyperparameters are option-view fusion (legacy fan-out vs native), exact reranker-score cache (off vs on), candidate depth (30 vs 15), and reranker GPU forward batch size (2 vs 1). Cache reuse is exact for identical model revision, instruction, query and passage text; the LRU is capped at 8,192 pairs. Do not change these together when interpreting a pair. The combined v0.1+v0.2 corpus remains diagnostic only; a changed live source snapshot is not a competitive corpus freeze.
 
 Record `RESUMEN.json`, `batch_report.json`, `evaluation_official.json`, each run's `identity.json`, and the corpus manifest/hashes. Compare official score and format metrics alongside latency; do not select a faster setting that reduces answer quality without an explicit team decision.
 
 ## Paired run sequence
 
-First use a balanced pilot of 12 public questions (4 per format) to screen four profiles. Generate the pilot JSONL from the public question fields only; do not copy answer keys, expected answers, or legal bases into the model input. The pilot is for runtime, VRAM, valid output, citation/abstention diagnostics only; do not choose a quality winner from its small labeled subset. Run every profile on the same pilot IDs:
+First use a balanced pilot of 12 public questions (4 per format) to screen five profiles. Generate the pilot JSONL from the public question fields only; do not copy answer keys, expected answers, or legal bases into the model input. The pilot is for runtime, VRAM, valid output, citation/abstention diagnostics only; do not choose a quality winner from its small labeled subset. Run every profile on the same pilot IDs:
 
-1. Legacy fan-out, candidate depth 30, reranker batch 2.
-2. Native option fusion, candidate depth 30, reranker batch 2.
-3. Native option fusion, candidate depth 15, reranker batch 2.
-4. Native option fusion, candidate depth 30, reranker batch 1.
+1. Legacy fan-out, candidate depth 30, reranker batch 2, score cache off.
+2. Native option fusion, candidate depth 30, reranker batch 2, score cache off.
+3. Native option fusion, candidate depth 30, reranker batch 2, score cache on.
+4. Native option fusion, candidate depth 15, reranker batch 2, score cache off.
+5. Native option fusion, candidate depth 30, reranker batch 1, score cache off.
 
 Then run the full 50-question sample for the baseline and the chosen comparison profile(s), with the official evaluator and live replay. Run RAGAS only once, on one explicitly selected full-sample configuration, because it spends OpenRouter credits.
 
@@ -40,11 +41,17 @@ Set-Location $Repo
   -Work $Repo -CorpusSet "v01+v02" -AllowKnownLocalCorpusDrift `
   -Model "qwen3-8b" -RunName "hybrid_c30_native_option_fusion" `
   -RetrieverMode hybrid -Rerank -CandidateK 30 -RerankerBatchSize 2 -NativeOptionFusion -SkipSmoke
+
+& .\tools\kingscode_pc_nueva_diagnostico.ps1 `
+  -Work $Repo -CorpusSet "v01+v02" -AllowKnownLocalCorpusDrift `
+  -Model "qwen3-8b" -RunName "hybrid_c30_native_option_fusion_cache" `
+  -RetrieverMode hybrid -Rerank -CandidateK 30 -RerankerBatchSize 2 `
+  -NativeOptionFusion -RerankerScoreCache -SkipSmoke
 ```
 
 The output prints progress and estimated remaining time per question. For a long run, inspect `reports/decoder_diagnostic/<RunName>/batch/items/*.json` and `batch/batch_report.json`; don't start a second process against the same run directory. The live verifier replays three items and is included by default.
 
-For the other full-sample hyperparameter comparisons, keep native fusion enabled and change only one value: `-CandidateK 15` (from 30), or `-RerankerBatchSize 1` (from 2). After retrieval is selected, test prompt v4 and citation fill independently, keeping the chosen retrieval setting fixed. Do not combine prompt v4 and citation fill in the same comparison.
+For the other full-sample hyperparameter comparisons, keep native fusion enabled and change only one value: add `-RerankerScoreCache` (off to on), use `-CandidateK 15` (from 30), or use `-RerankerBatchSize 1` (from 2). The score cache's first graph-off pass may have no hits; graph-on reuse should report hits in `batch_report.json`. After retrieval is selected, test prompt v4 and citation fill independently, keeping the chosen retrieval setting fixed. Do not combine prompt v4 and citation fill in the same comparison.
 
 ## Citations, abstention, and corpus
 

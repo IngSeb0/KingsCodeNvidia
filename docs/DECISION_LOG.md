@@ -911,3 +911,9 @@ Detalle en `docs/ANALISIS_CORRIDAS_2026-10-01.md`.
 - Añadida prueba de regresión para una cita ya presente en `analisis` y una referencia atribuida que faltaba.
 - Verificación local: pruebas enfocadas de generación greedy y deduplicación aprobadas. No se ejecutó GPU/RAGAS; cualquier efecto en `answer_correctness` o puntaje queda pendiente de medición en la corrida del equipo.
 - También se retiraron parámetros de muestreo ignorados por Transformers en el decoder greedy; permanecen `do_sample=False`, un beam y temperatura de política 0. El cambio elimina un warning sin cambiar el método determinista.
+
+## 2026-10-02 — Optimización medible del híbrido sin cambiar sus scores
+
+- El código ya tenía `--native-option-fusion`, que evita el fan-out de una recuperación/reranking por opción en cerradas, y una caché LRU exacta para puntajes idénticos del reranker. `tools/kingscode_pc_nueva_diagnostico.ps1` ahora expone `-RerankerScoreCache` y registra su uso en el nombre/resumen de la corrida; permanece apagada salvo solicitud explícita.
+- El plan `docs/experiments/KC_SAMPLE50_HYBRID_FUSION_V1.md` incorpora una ablación separada de caché OFF/ON. El score cache debe dar resultados de ranking idénticos; la aceleración se debe medir en la pasada graph ON, que puede reutilizar pares del fast path graph OFF.
+- No se ejecutó GPU en esta sesión. La mejora de latencia end-to-end y cualquier efecto en calidad quedan sin medir; usar perfiles, pares calculados/cache hits, latencia de reranker, score oficial y VRAM en la RTX 4090 antes de adoptarla.
