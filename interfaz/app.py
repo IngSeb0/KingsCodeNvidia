@@ -125,8 +125,7 @@ Hackathon 2026 · AI Week · Universidad de los Andes · patrocina Software Colo
 
 # Mismo perfil que la corrida entregada: BM25 + router, consultas por opción, prompt v6,
 # citas completadas y hasta 5 menciones verificadas.
-RECOMMENDED = ["--retrieval-mode", "option", "--retriever-mode", "bm25", "--prompt-version", "v6",
-               "--citation-fill", "--cite-mentions", "5"]
+RECOMMENDED = ["--retrieval-mode", "option", "--retriever-mode", "bm25", "--citation-fill", "--cite-mentions", "5"]
 
 
 def default_corpus() -> Path:
@@ -137,10 +136,11 @@ def default_corpus() -> Path:
 
 
 @st.cache_resource(show_spinner="Cargando corpus, índice y modelo (una sola vez)…")
-def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str):
+def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str, prompt: str = "v6", fit: bool = False):
     """Builds the pipeline with tools/member_b.py::_pipeline, the exact code of the batch runs."""
     from member_b import _pipeline, build_parser
-    argv = ["batch", "--corpus", corpus_dir, "--k", str(k), "--graph-policy", graph_policy, *RECOMMENDED]
+    argv = ["batch", "--corpus", corpus_dir, "--k", str(k), "--graph-policy", graph_policy, *RECOMMENDED,
+            "--prompt-version", prompt] + (["--fit-passages"] if fit else [])
     if alias != "dummy_abstain":
         argv += ["--model", alias, "--precision", precision]
     pipeline, identity = _pipeline(build_parser().parse_args(argv))
@@ -153,17 +153,25 @@ def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_pol
 
 
 @st.cache_data(show_spinner=False)
-def sample_questions() -> list[dict]:
-    """Public fields only of the 50 development questions, for the demo selector."""
-    path = ROOT / "data" / "sample_50.jsonl"
-    if not path.exists():
-        return []
-    out = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            r = json.loads(line)
-            out.append({"id": r["id"], "pregunta": r["pregunta"], "formato": r["formato"], "opciones": r.get("opciones") or {}})
+def question_bank() -> dict[int, dict]:
+    """Public fields only (id, pregunta, formato, opciones, area, sub_tarea) of the sample and the
+    blind set, so the jury's id loads the exact text, format and options without retyping."""
+    out = {}
+    for name in ("sample_50.jsonl", "test_992.jsonl"):
+        path = ROOT / "data" / name
+        if not path.exists():
+            continue
+        for line in path.read_text(encoding="utf-8-sig").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                out[int(r["id"])] = {"id": r["id"], "pregunta": r["pregunta"], "formato": r["formato"],
+                                     "opciones": r.get("opciones") or {}, "area": r.get("area"),
+                                     "sub_tarea": r.get("sub_tarea"), "origen": name.split("_")[0]}
     return out
+
+
+def sample_questions() -> list[dict]:
+    return [q for q in question_bank().values() if q["origen"] == "sample"]
 
 
 with st.sidebar:
@@ -187,6 +195,9 @@ with st.sidebar:
     decoder_options.append("dummy_abstain")
     decoder_alias = st.selectbox("Modelo", decoder_options)
     precision = st.selectbox("Precisión", ["bf16", "int8", "int4"], disabled=decoder_alias == "dummy_abstain")
+    prompt_version = st.selectbox("Prompt (igual al de la entrega)", ["v6", "v9"], index=0,
+                                  help="v6: razonamiento jurídico. v9: v6 + área y sub-tarea de cada pregunta.")
+    fit_passages = st.checkbox("Ver los 8 pasajes completos en el prompt (fit)", value=False)
     k = st.slider("Pasajes recuperados (k)", 1, 10, 8)
     graph_policy = st.selectbox("Grafo normativo", ["router", "off", "auto", "on"], index=0)
     debug_mode = st.checkbox("Mostrar traza técnica", value=False)
@@ -197,7 +208,7 @@ if not (Path(corpus_dir) / "manifest.json").exists():
     st.stop()
 
 try:
-    pipeline, decoder_note, identity = load_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy)
+    pipeline, decoder_note, identity = load_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy, prompt_version, fit_passages)
 except Exception as exc:
     st.error(f"No se pudo cargar el modelo «{decoder_alias}». Revise que la GPU esté libre (nvidia-smi) y que los pesos estén descargados.")
     with st.expander("Detalle técnico"):
@@ -216,16 +227,32 @@ st.markdown('<div class="kc-spec">' + "".join(f"<div><span>{html.escape(a)}</spa
             + "</div>", unsafe_allow_html=True)
 
 # --- Consulta ---------------------------------------------------------------------------------
+def load_into_form(q: dict) -> None:
+    st.session_state["kc_q"] = q["pregunta"]
+    st.session_state["kc_f"] = q["formato"]
+    st.session_state["kc_meta"] = {"area": q.get("area"), "sub_tarea": q.get("sub_tarea"), "id": q["id"]}
+    for letra in "ABCD":
+        st.session_state[f"kc_o_{letra}"] = q["opciones"].get(letra, "")
+
+
+bank = question_bank()
+id_col, btn_col = st.columns([3, 1], vertical_alignment="bottom")
+qid = id_col.text_input("Id de la pregunta (muestra o set de 992)", key="kc_id", placeholder="p. ej. 24")
+if btn_col.button("Cargar por id", disabled=not qid.strip()):
+    q = bank.get(int(qid)) if qid.strip().isdigit() else None
+    if q:
+        load_into_form(q)
+        st.session_state["kc_pick"] = None
+    else:
+        st.error(f"No existe la pregunta con id {qid} en data/sample_50.jsonl ni en data/test_992.jsonl.")
+
 samples = sample_questions()
 if samples:
     pick = st.selectbox("Cargar una pregunta de la muestra (opcional)", ["—"] + [f"{s['id']} · {FORMAT_LABELS[s['formato']]} · {s['pregunta'][:90]}" for s in samples])
     if pick != "—" and st.session_state.get("kc_pick") != pick:
         chosen = samples[[f"{s['id']} · {FORMAT_LABELS[s['formato']]} · {s['pregunta'][:90]}" for s in samples].index(pick)]
         st.session_state["kc_pick"] = pick
-        st.session_state["kc_q"] = chosen["pregunta"]
-        st.session_state["kc_f"] = chosen["formato"]
-        for letra in "ABCD":
-            st.session_state[f"kc_o_{letra}"] = chosen["opciones"].get(letra, "")
+        load_into_form(chosen)
 
 formato = st.radio("Formato", list(FORMATS), horizontal=True, format_func=FORMAT_LABELS.get, key="kc_f")
 pregunta = st.text_area("Pregunta jurídica", height=110, key="kc_q",
@@ -239,7 +266,7 @@ if formato == "multiple_choice":
 
 ready = bool(pregunta.strip()) and (formato != "multiple_choice" or len(opciones) >= 2)
 cache = st.session_state.setdefault("kc_cache", {})
-config_key = (corpus_dir, decoder_alias, precision, k, graph_policy)
+config_key = (corpus_dir, decoder_alias, precision, k, graph_policy, prompt_version, fit_passages)
 if st.button("Responder con evidencia", type="primary", disabled=not ready):
     key = (pregunta.strip(), formato, tuple(sorted(opciones.items())), config_key)
     if key in cache:
@@ -248,7 +275,13 @@ if st.button("Responder con evidencia", type="primary", disabled=not ready):
         started = perf_counter()
         with st.spinner("Recuperando evidencia y redactando la respuesta…"):
             try:
-                row, trace = pipeline.run(Question(0, pregunta.strip(), formato, opciones))
+                meta = st.session_state.get("kc_meta") or {}
+                original = bank.get(int(meta["id"])) if meta.get("id") is not None else None
+                same = bool(original) and original["pregunta"] == pregunta.strip() and original["formato"] == formato
+                qid_run = int(meta["id"]) if same else 0
+                row, trace = pipeline.run(Question(qid_run, pregunta.strip(), formato, opciones,
+                                                   area=meta.get("area") if same else None,
+                                                   sub_tarea=meta.get("sub_tarea") if same else None))
                 result = {"question": pregunta.strip(), "format": formato, "row": row, "trace": trace,
                           "seconds": perf_counter() - started}
                 cache[key] = result
