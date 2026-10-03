@@ -1,85 +1,130 @@
 # KingsCode — Hackathon 2026
 
 **Integrantes:** Esteban Alejandro Hernández · Luis Sebastián Contreras Díaz
-**Universidad de los Andes** · AI Week 2026
+**Universidad de los Andes** · AI Week 2026 · Patrocina Software Colombia
 
-Sistema de respuesta a preguntas de derecho colombiano con un modelo abierto de 8B (Qwen3-8B), un corpus jurídico propio de fuentes oficiales y verificación determinista de cada cita contra la evidencia recuperada.
+Sistema de respuesta a preguntas de derecho colombiano con un modelo abierto de 8B (Qwen3-8B), un corpus jurídico propio construido desde fuentes oficiales y verificación determinista de cada cita contra la evidencia recuperada.
 
 ## Corpus e índice
 
-| Recurso | Enlace | Tamaño | Licencia |
-|---|---|---|---|
-| Corpus procesado e índice vectorial (`corpus_KingsCode.zip`) | **PENDIENTE_ENLACE** | ver `sha256` en `dist/` | CC BY 4.0 (procesamiento); textos oficiales públicos |
+| Recurso | Enlace | Licencia |
+|---|---|---|
+| Corpus procesado e índice vectorial (`corpus_KingsCode.zip`) | **PENDIENTE_ENLACE** | CC BY 4.0 (procesamiento); textos oficiales públicos |
 
-El comprimido contiene `LICENSE`, `corpus_manifest.json`, `corpus/` (un `.txt` por norma o sentencia) e `indice/` (`chunks.jsonl` con los fragmentos y sus metadatos, `bm25.json`, `dense.npy` + `dense.meta.json` del índice vectorial Qwen3-Embedding-0.6B y el grafo normativo). Se genera con `python tools/package_corpus_entrega.py`. El enlace permanece activo hasta el 2 de noviembre de 2026. El corpus también se reconstruye desde las URL declaradas: `python tools/member_a.py acquire` + `reproduce`.
+El comprimido contiene:
+
+- `LICENSE`
+- `corpus_manifest.json`: un registro por documento con `doc_id`, título, fuente, URL, fecha de consulta y áreas.
+- `corpus/`: un `.txt` limpio por norma o sentencia.
+- `indice/`, con estos archivos:
+  - `chunks.jsonl`: un fragmento por artículo o unidad de sentencia, con `passage_id`, `doc_id`, artículo, *offsets*, jerarquía, URL y texto.
+  - `dense.npy` + `dense.meta.json`: el índice vectorial Qwen3-Embedding-0.6B.
+  - `bm25.json`: el índice léxico.
+  - `graph/`: el grafo normativo, con sus relaciones *modifica*, *deroga*, *remite a* y *reglamenta*.
+
+Se genera con `python tools/package_corpus_entrega.py`. El enlace permanece activo hasta el 2 de noviembre de 2026.
+
+El corpus también se reconstruye desde las URL declaradas con `python tools/member_a.py acquire` seguido de `reproduce`. Detalle en [`CORPUS.md`](CORPUS.md).
 
 ## Arquitectura
 
+```
+pregunta ─► normalización (alias de normas, señales de vigencia/remisión)
+         ─► recuperación ─► BM25 por artículo
+                          + búsqueda semántica (Qwen3-Embedding-0.6B, fusión RRF) en preguntas de texto libre
+                          + una consulta por opción en selección múltiple (RRF)
+                          + grafo normativo (router: solo si la pregunta habla de modificaciones, derogatorias, remisiones…)
+         ─► 8 pasajes ─► Qwen3-8B (BF16, temperatura 0, greedy) con prompt v6 ─► JSON del esquema oficial
+         ─► reparación y guarda de citas (cada norma citada debe estar en los pasajes) ─► submissions.jsonl
+```
+
 | Componente | Elección | Motivo |
 |---|---|---|
-| Encoder | Qwen/Qwen3-Embedding-0.6B (abierto, revisión fijada), índice vectorial exacto | Multilingüe, reconstruible por script (`tools/member_a.py dense`) |
-| Decoder | Qwen/Qwen3-8B, BF16, temperatura 0, *greedy*, sin *thinking*, prompt v6 | Mejor puntaje medido dentro del límite de 8B |
-| Segmentación | Un fragmento por artículo (o unidad de sentencia) con norma, artículo, jerarquía y URL | El artículo es la unidad de sentido y permite verificar cada cita |
-| Recuperación | BM25 + grafo normativo con router + una consulta por opción (RRF), 8 pasajes | Mejor puntaje por tiempo que el híbrido con reranker (36,93 frente a 36,59; 15,9 frente a 19,1 s/pregunta) |
-| Reordenamiento | Qwen3-Reranker-0.6B implementado, no adoptado | No mejoró el puntaje y cuesta ~3 s/pregunta |
-| Abstención | Evidencia vacía, en conflicto o no vigente (texto libre); nunca en cerradas; fallas de una pregunta → abstención de esa pregunta | Con la regla oficial, abstenerse casi nunca conviene |
+| Corpus | 170 normas y sentencias de fuentes oficiales; 26.665 fragmentos | Trazabilidad: cada fragmento conserva URL, hash de la fuente y posición en el texto |
+| Segmentación | Un fragmento por artículo (o unidad de sentencia) | En derecho el artículo es la unidad de cita: cada pasaje ya trae la norma exacta |
+| Encoder | Qwen/Qwen3-Embedding-0.6B, revisión fijada, búsqueda exacta por coseno | Abierto y multilingüe; encuentra la norma por su significado cuando no comparte palabras con la pregunta |
+| Recuperación léxica | BM25 + grafo + consultas por opción | Fue la mejor medida en la muestra para selección múltiple |
+| Decoder | Qwen/Qwen3-8B, BF16, temperatura 0, `do_sample=False`, prompt v6 | Mejor puntaje medido dentro del límite de 8B |
+| Reordenamiento | Qwen3-Reranker-0.6B implementado; no adoptado | No mejoró el puntaje y añade ~3 s por pregunta |
+| Citas | Reparación y guarda deterministas con la regla del evaluador (10 primeros pasajes) | **0 % de citas sin respaldo** |
+| Abstención | Solo con evidencia vacía, en conflicto o no vigente (texto libre); nunca en selección múltiple | Con la regla oficial, abstenerse casi nunca conviene |
 
-Las citas pasan por una reparación y una guarda deterministas con la misma regla de respaldo del evaluador (10 primeros pasajes): **0 % de citas sin respaldo**. Detalle en [`informe/INFORME_TECNICO.pdf`](informe/INFORME_TECNICO.pdf).
+### Resultados en la muestra de 50 (evaluador oficial, sin RAGAS)
+
+| Configuración | Puntaje |
+|---|---:|
+| BM25, prompt v4 | 37,46 |
+| BM25, prompt v6 | 38,08 |
+| BM25, prompt v6, corpus final | **39,02** |
+| Búsqueda semántica + BM25 en todos los formatos | 34,83 (baja en selección múltiple) |
+
+**Hallazgo de la verificación con el jurado.**
+- En casos largos de texto libre, BM25 suma palabras sueltas (por ejemplo "VIH", "medicamento", "pacientes") y recupera sentencias de salud.
+- Así no encuentra la Ley 1581 de 2012 (datos sensibles), que habla de "Titular", "Tratamiento" y "autorización".
+- Por eso la configuración final activa la búsqueda semántica **solo en preguntas de respuesta breve y casos abiertos** (`--hybrid-formats semi_open,open_ended`). Selección múltiple conserva el camino BM25 medido.
 
 ## Reproducción
 
-Con GPU (configuración entregada; Windows, un comando que instala el entorno, descarga el corpus y los modelos fijados por revisión, corre y evalúa la muestra):
+Requisitos: Windows o Linux, GPU NVIDIA de 24 GB (probado en RTX 4090), Python 3.12. Dependencias en `requirements.txt` (incluye `requirements-gpu.txt` y `requirements-ui.txt`).
+
+**Comando único (Windows):** prepara el entorno, descarga el corpus y los modelos fijados por revisión, corre y evalúa:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\kingscode_final.ps1 -Flags "-Recomendada -PromptVersion v6"
-# set ciego: ... -InputFile data	est_992.jsonl -RunName final_992   (reanudable con -Resume)
+# set ciego:  ... -InputFile data\test_992.jsonl -RunName final_992      (reanudable con -Resume)
 ```
 
-Sin GPU, en contenedor limpio (piso determinista sobre las preguntas de muestra):
+**Entrega repartida en varias GPU:**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\kingscode_mitad.ps1 -Parte 1      # y -Parte 2 en otra GPU
+powershell -ExecutionPolicy Bypass -File tools\kingscode_mejora.ps1 -Parte 1     # búsqueda semántica en texto libre, partes 1..3
+python tools\unir_entrega.py unir --base final_p1.jsonl final_p2.jsonl [--mejora mejora_p1.jsonl mejora_p2.jsonl mejora_p3.jsonl]
+```
+
+**Sin GPU, en contenedor limpio** (piso determinista sobre las preguntas de muestra):
 
 ```bash
 pip install -r requirements.txt
 ./run.sh                       # o: docker build -t kingscode . && docker run --rm kingscode
 ```
 
+**Determinismo:** temperatura 0, *greedy*, semilla fija y `torch.use_deterministic_algorithms(True)`. La verificación en vivo regenera un id con el mismo commit, corpus y configuración y compara las normas citadas y los pasajes (`tools/member_b.py verify`).
+
 ## Entrega
 
-- `submissions.jsonl`: 992 respuestas, validadas con `python tools/validate_test_submission.py --test data/test_992.jsonl submissions.jsonl` (usa `scripts/evaluate.py::validate` y `schema/submission.schema.json`).
-- `CORPUS.md` y `corpus_manifest.json`: bitácora e inventario (doc_id, título, fuente, URL, fecha de consulta y áreas).
-- `informe/INFORME_TECNICO.pdf`, interfaz en `interfaz/app.py` y video (enlace abajo).
+- `submissions.jsonl`: las 992 respuestas.
+  - Generadas con Qwen3-8B, prompt v6 y el corpus de `passages.jsonl` con SHA-256 `58135a0c…`.
+  - Validadas con `python tools/validate_test_submission.py --test data/test_992.jsonl submissions.jsonl`, que usa `scripts/evaluate.py::validate` y `schema/submission.schema.json`.
+  - 0 problemas.
+- `CORPUS.md` y `corpus_manifest.json`: la bitácora y el inventario de fuentes.
+- `informe/INFORME_TECNICO.pdf`: el informe técnico (máximo 3 páginas).
+- `interfaz/`: la interfaz gráfica.
 - Video: **PENDIENTE_ENLACE_VIDEO**
 
 ## Interfaz gráfica
 
-`interfaz/app.py` (Streamlit, identidad visual de Software Colombia) consulta el mismo pipeline de las corridas (`tools/member_b.py::_pipeline`, configuración v6) y muestra la respuesta, las normas citadas y los pasajes recuperados con su fuente:
+`interfaz/app.py` está hecha en Streamlit, con la identidad visual y el logo de Software Colombia.
+
+- Usa el mismo pipeline de las corridas (`tools/member_b.py::_pipeline`).
+- Permite cargar una pregunta por id o escribir una nueva.
+- Muestra la respuesta, las normas citadas y los pasajes recuperados con su fuente.
+- La casilla **Búsqueda semántica** se activa sola cuando existe el índice vectorial del corpus.
 
 ```powershell
 .venv\Scripts\python.exe -m pip install -r requirements-ui.txt
 .venv\Scripts\python.exe -m streamlit run interfaz/app.py
 ```
 
-## Después de clonar
+## Estructura
 
-El repositorio incluye código, configuración, inventario de fuentes, manifest y reportes. `corpus/`, `models/`, `.venv/` y `tmp/` permanecen fuera de Git.
+| Ruta | Contenido |
+|---|---|
+| `kingscode/` | Pipeline: adquisición, corpus, BM25/denso/grafo (`retrieval.py`, `neural.py`), razonamiento, guardas y citas (`reasoning/`), decoder (`generation/`) |
+| `tools/` | CLI de corrida (`member_b.py`), corpus (`member_a.py`), empaquetado, validación y scripts de GPU |
+| `interfaz/` | Interfaz gráfica |
+| `config/` | Fuentes, revisiones fijadas de los modelos, perfiles |
+| `tests/` | Pruebas unitarias (`python -m unittest discover -s tests`) |
+| `docs/` | Bitácora de decisiones (`DECISION_LOG.md`), arquitectura y runbooks |
 
-En Windows, desde la raíz del proyecto:
-
-```powershell
-python -m venv .venv
-.venv/Scripts/python.exe -m pip install -r requirements-knowledge.txt
-.venv/Scripts/python.exe tools/member_a.py acquire
-.venv/Scripts/python.exe tools/member_a.py reproduce
-.venv/Scripts/python.exe -m unittest discover -s tests -v
-```
-
-La adquisición requiere red y `curl` con verificación TLS. Una descarga nueva puede reflejar cambios en las fuentes; para reproducir exactamente los hashes publicados debe usarse el snapshot raw conservado por el equipo. El runbook explica cómo preparar los pesos y ejecutar el benchmark neuronal completo en la GPU objetivo.
-
-Los archivos oficiales se conservan byte a byte. Gate 1B está implementado con dummy y se ejecuta con `.venv/Scripts/python.exe tools/member_b.py smoke` después de disponer del corpus. Decoder real, benchmark neuronal completo, resolución de fuentes pendientes y freeze competitivo siguen pendientes.
-
-Gate 2-Prep añade la infraestructura de ejecución real y comparación de modelos, **sin ejecutar pruebas ni smokes por instrucción del usuario**. No hay resultados nuevos de GPU. Para llegar a la 4090 con el mismo corpus, seguir el runbook GPU y transferir el snapshot conservado, en lugar de volver a adquirir fuentes.
-
-## Estado de A tras RTX 4090 — siguiente fase v0.2
-
-Los resultados GPU están preservados en la rama `feat/member-a-gpu-results-4090-20260928` (60ebf7e). Search V2 saturó las referencias explícitas del benchmark v1 con locator injection; esto no acredita 99–100% en preguntas jurídicas generales. Validation v1 está cerrada y el holdout de arquitectura queda sin usar aquí.
-
-Trabajo actual: `feat/member-a-corpus-v02-locator`. Leer `docs/A_TO_B_V02_CONTRACT.md`, `docs/BENCHMARK_V2_METHODOLOGY.md` y `reports/MEMBER_A_V02_PROGRESS.md`. Corpus-v0.1 inmutable; nuevas fuentes en v0.2. No volver a ejecutar GPU para esta fase CPU.
+Los archivos oficiales (`scripts/`, `schema/`, `data/`, `entregables/`) se conservan byte a byte. `corpus/`, `models/` y `.venv/` no se versionan.
