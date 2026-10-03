@@ -57,12 +57,21 @@ def unir(args):
                 better[r["id"]] = r
         want = [i for i in order if fmt[i] in formats]
         lacking = [i for i in want if i not in better]
-        if lacking:
+        if lacking and args.parcial:
+            # Cada fila sigue siendo completa y de una sola configuracion reproducible; se registra
+            # que ids vienen de la mejora para regenerarlos con su configuracion en la verificacion.
+            print(f"AVISO: mejora parcial; {len(lacking)} ids de {sorted(formats)} se quedan con la base")
+            want = [i for i in want if i in better]
+        elif lacking:
             sys.exit(f"STOP: la mejora no cubre {len(lacking)} ids de {sorted(formats)} (p.ej. {lacking[:5]}); "
                      "esperar a que terminen las 3 partes o unir sin --mejora")
         for i in want:
             rows[i] = better[i]
             replaced += 1
+    if args.mejora and args.ids_mejora:
+        Path(args.ids_mejora).write_text("
+".join(str(i) for i in want) + "
+", encoding="utf-8")
     out = Path(args.out)
     out.write_text("".join(json.dumps(rows[i], ensure_ascii=False) + "\n" for i in order), encoding="utf-8")
     from scripts.evaluate import validate  # validador oficial (solo lectura)
@@ -85,6 +94,9 @@ def main():
     b.add_argument("--base", nargs="+", required=True)
     b.add_argument("--mejora", nargs="*", default=[])
     b.add_argument("--formatos", default="semi_open,open_ended")
+    b.add_argument("--parcial", action="store_true",
+                   help="reemplazar solo los ids que la mejora ya cubre (el resto se queda con la base)")
+    b.add_argument("--ids-mejora", default="", help="archivo donde listar los ids tomados de la mejora")
     b.add_argument("--out", default=str(ROOT / "submissions.jsonl"))
     args = p.parse_args()
     partir(args) if args.cmd == "partir" else unir(args)
