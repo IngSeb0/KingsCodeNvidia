@@ -1,0 +1,38 @@
+{
+  "candidate_k": 30,
+  "citation_fill": true,
+  "cite_mentions": 5,
+  "constrained_json": false,
+  "decoder": [
+    "transformers:qwen3-8b",
+    "b968826d9c46dd6066d109eabc6255188de91218"
+  ],
+  "dense_index_dir": null,
+  "doc_cap": 0,
+  "embedding_instruction": "Given a question about Colombian law, retrieve official legal passages that provide the evidence needed to answer it.",
+  "embedding_instruction_profile": "baseline",
+  "fit_passages": false,
+  "graph_policy": "router",
+  "k": 8,
+  "max_context": null,
+  "native_option_fusion": false,
+  "option_support": false,
+  "plan_roles": null,
+  "plans": null,
+  "prompt_version": "grounded-formats-v6",
+  "questions_sha256": "b139be7a65821d3e627f7adc56e071aa94d0cdd6d133c0abc6dfedff05bf1479",
+  "reranker_batch_size": 2,
+  "reranker_instruction": "Given a question about Colombian law, retrieve official legal passages that provide the evidence needed to answer it.",
+  "reranker_instruction_profile": "baseline",
+  "reranker_score_cache": false,
+  "retrieval_mode": "option",
+  "retrieval_text_mode": "literal",
+  "retriever": {
+    "corpus_sha256": "c619be49878c408cc145f3238bb197fe9bb613e39da914baeeaa51835bbaa889",
+    "exact_locator": false,
+    "fixture_evidence": false,
+    "graph_budget": 10,
+    "mode": "bm25",
+    "rerank": false
+  }
+}

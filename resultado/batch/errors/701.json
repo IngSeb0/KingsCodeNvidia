@@ -1,0 +1,55 @@
+{
+  "id": 701,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 4885,
+          "output_tokens": 512,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v6",
+          "prompt_sha256": "af8381c1827ebaa6e5d3cae87b86b1d21bf12eeadfd0bf2903d3234c197c4170",
+          "max_new_tokens": 512,
+          "sampling_policy": {
+            "strategy": "greedy",
+            "do_sample": false,
+            "temperature": 0.0,
+            "seed": 0
+          },
+          "constrained_json": false,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_trimmed_to_chars": null,
+          "evidence_passages_trimmed": 0,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "num_beams": 1,
+            "max_new_tokens": 512,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\"abstencion\":false,\"respuesta\":\"No se establecen diferencias directas entre los criterios de internacionalidad de la Ley Modelo UNCITRAL y la Ley 1563 de 2012 en los pasajes proporcionados. La Ley 1563 de 2012 derogó varios artículos de la Ley 80 de 1993, incluyendo los relacionados con el arbitramento, pero no se menciona explícitamente su relación con la Ley Modelo UNCITRAL. La internacionalidad en el arbitramento se refiere a la aplicación de normas internacionales en los procesos arbitrales, lo cual no se aborda directamente en los pasajes.\",\"palabras_clave\":[\"Ley 1563 de 2012\",\"Ley 80 de 1993\",\"arbitramento\",\"internacionalidad\"],\"referencia_legal\":\"ley_80_de_1993:00088:1437bd9c6e7d, ley_80_de_1993:00086:031df0a5819c, ley_80_de_1993:00092:e4aab28954c5, ley_80_de_1993:00085:65ce6da6824e, ley_80_de_1993:00084:c2a88a0bdb2f, ley_80_de_1993:00089:f93acf6b1b9d, sentencia_c_276_de_2025:00065:01b293c18ff2\",\"pasajes_usados\":[\"ley_80_de_1993:00088:1437bd9c6e7d\",\"ley_80_de_1993:00086:031df0a5819c\",\"ley_80_de_1993:00092:e4aab28954c5\",\"ley_80_de_1993:00085:65ce6da6824e\",\"",
+          "generation_ms": 21186.466999992263,
+          "peak_vram_bytes": 18870809600,
+          "peak_reserved_vram_bytes": 19146997760
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 360, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 299, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 229, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used,\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                                  extract_embedded=self.prompt_version not in {PROMPT_VERSION})\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 364, in parse_response_v3\n    normalized, action = (extract_single_object(raw, tuple(ANSWER_FIELDS[question.format])),\n                          ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 348, in extract_single_object\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 164, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 377, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill,\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                         cite_mentions=getattr(self, \"cite_mentions\", 0))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 137, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\ea.hernandezs1\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 233, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

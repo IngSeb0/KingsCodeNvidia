@@ -1,0 +1,13 @@
+﻿{
+  "checked": 1,
+  "all_match": true,
+  "results": [
+    {
+      "id": 217,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    }
+  ]
+}
