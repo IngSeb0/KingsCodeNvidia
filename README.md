@@ -55,7 +55,7 @@ pregunta ─► normalización (alias de normas, señales de vigencia/remisión)
 |---|---:|
 | BM25, prompt v4 | 37,46 |
 | BM25, prompt v6 | 38,08 |
-| BM25, prompt v6, corpus final | **39,02** |
+| BM25, prompt v4, corpus final | **39,02** |
 | Búsqueda semántica + BM25 en todos los formatos | 34,83 (baja en selección múltiple) |
 
 **Hallazgo de la verificación con el jurado.**

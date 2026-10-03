@@ -10,7 +10,7 @@
 RAG jurídico en dos capas con verificación determinista de citas. Recorrido de una pregunta:
 
 1. **Normalización.** Limpieza del texto y detección de referencias normativas explícitas. En selección múltiple se genera además una consulta por opción, porque el término decisivo suele estar en la opción y no en el enunciado.
-2. **Recuperación (capa A).** BM25 sobre fragmentos por artículo y expansión por un grafo normativo (59 mil nodos y 75 mil aristas de citas, modificaciones y derogatorias) que un *router* activa solo cuando la pregunta lo requiere. Las consultas por opción se fusionan con RRF. Se entregan 8 pasajes.
+2. **Recuperación (capa A).** BM25 sobre fragmentos por artículo y expansión por un grafo normativo (59 mil nodos y 75 mil aristas de citas, modificaciones y derogatorias) que un *router* activa solo cuando la pregunta lo requiere. Las consultas por opción se fusionan con RRF. En preguntas de texto libre (respuesta breve y caso abierto) se suma la búsqueda semántica con Qwen3-Embedding-0.6B, fusionada con BM25 por RRF. Se entregan 8 pasajes.
 3. **Generación (capa B).** Qwen3-8B recibe la pregunta y los pasajes como datos JSON (nunca como instrucciones) con un prompt por formato (cerrada, semiabierta, abierta) y devuelve un objeto JSON estricto con los pasajes que usó.
 4. **Verificación de citas.** Una reparación determinista reescribe o suprime toda cita que no esté en la evidencia; luego se completan citas verificadas en `referencia_legal`/`justificacion`, y una guarda final comprueba cada cita contra los 10 primeros pasajes con las mismas reglas del evaluador oficial.
 5. **Ejecución.** Un punto de control por pregunta (escritura atómica, reanudación sin repetir); si una pregunta falla, solo esa pasa a abstención.
@@ -19,7 +19,7 @@ RAG jurídico en dos capas con verificación determinista de citas. Recorrido de
 
 | Componente | Modelo | Motivo de la elección | Alternativas descartadas |
 |---|---|---|---|
-| Encoder | Qwen/Qwen3-Embedding-0.6B (abierto, revisión fijada) | Multilingüe, 1.024 dimensiones, instrucción de consulta jurídica; índice vectorial exacto reconstruible con `tools/member_a.py dense` | Recuperación final solo densa o híbrida: el híbrido con reranker dio 36,59/50 a 19,1 s/pregunta frente a 36,93 a 15,9 s de BM25 |
+| Encoder | Qwen/Qwen3-Embedding-0.6B (abierto, revisión fijada) | Multilingüe, 1.024 dimensiones, instrucción de consulta jurídica; índice vectorial exacto reconstruible con `tools/member_a.py dense` | Híbrido en todos los formatos: 34,83/50 (baja en selección múltiple); híbrido con reranker: 36,59 a 19,1 s/pregunta. Se adopta solo en texto libre |
 | Decoder | Qwen/Qwen3-8B, BF16, sin *thinking* | El de mejor puntaje medido dentro del límite de 8B; JSON estable | ALIA Legal 7B: 5,00/50 (formato inválido en 50/50) |
 | Reranker | Qwen/Qwen3-Reranker-0.6B (implementado) | Opcional | No adoptado: no mejoró el puntaje y cuesta ~3 s/pregunta |
 
@@ -28,7 +28,8 @@ Inferencia: BF16 sin cuantización en una RTX 4090 (24 GB, pico 17,8 GB), contex
 ## 3. Estrategia de recuperación
 
 - **Segmentación estructural jurídica:** un fragmento por artículo (o unidad equivalente en sentencias), con norma, número, año, artículo, jerarquía y URL de origen en los metadatos.
-- **Índices:** BM25 (léxico, decisivo para identificadores como "artículo 42") y vectorial exacto (Qwen3-Embedding, producto interno sobre vectores normalizados), más el grafo normativo.
+- **Índices:** BM25 (léxico, decisivo para identificadores como "artículo 42") y vectorial exacto (Qwen3-Embedding, producto interno sobre vectores normalizados, 26.167 vectores de 1.024 dimensiones), más el grafo normativo.
+- **Por formato:** selección múltiple usa BM25 + una consulta por opción (el término decisivo está en las opciones); respuesta breve y caso abierto usan BM25 + búsqueda semántica, porque en casos largos BM25 suma palabras sueltas del relato ("VIH", "medicamento") y no encuentra la norma aplicable cuando esta usa otro vocabulario (Ley 1581 de 2012: "datos sensibles", "Titular", "Tratamiento").
 - **Top-k = 8**, con 30 candidatos por vista; 10 pasajes no mejoró (37,46 en ambos casos).
 - **Corpus:** 172+ documentos oficiales (Función Pública, relatoría de la Corte Constitucional, Corte Suprema, normograma del SENA, Comunidad Andina), ~26.500 fragmentos, URL, fecha y SHA-256 por documento; ampliado por análisis de fallas en la muestra (Ley 472 de 1998, sentencias de unificación).
 
@@ -49,14 +50,14 @@ Configuración final: Qwen3-8B + BM25 + grafo + consultas por opción, prompt v6
 | Abstención calibrada | 8,02 | 10 |
 | **Total automático sin RAGAS** | **38,08** | **50** |
 
-Una variable por corrida: 26,63 → 30,41 → 35,18 → 36,93 → 37,46 (v4) → **38,08 (v6)**; con el corpus ampliado del integrante A, v4 llegó a 39,02. RAGAS (juez oficial, una medición): correctness 0,4275 (referencia 0,451).
+Una variable por corrida: 26,63 → 30,41 → 35,18 → 36,93 → 37,46 (v4) → **38,08 (v6)**; con el corpus ampliado del integrante A, v4 llegó a 39,02. La entrega de 992 se generó en dos RTX 4090 con v6 y ese corpus (`passages.jsonl` 58135a0c…); las preguntas de texto libre se regeneraron con búsqueda semántica en tres GPU cuando la corrida completa estuvo a tiempo. RAGAS (juez oficial, una medición): correctness 0,4275 (referencia 0,451).
 
 Errores más frecuentes (taxonomía por área y sub-tarea, `tools/analyze_taxonomy.py`): (1) normas del fundamento que la pregunta no nombra y la recuperación léxica no encuentra (3 de 41); (2) cerradas que exigen un dato no contenido en la evidencia (por ejemplo, el salario mínimo para la cuantía); (3) respuestas que discutían la evidencia en vez de responder (8 de 50 con v4; v6 lo corrige).
 
 ## 6. Limitaciones
 
-1. **Recuperación léxica.** BM25 depende de que la pregunta comparta vocabulario con la norma; cuando la norma aplicable no se nombra, puede no recuperarse. El índice vectorial existe, pero el híbrido medido no compensó su costo en tiempo.
-2. **Cobertura del corpus.** Sin decisiones del Consejo de Estado y con procesal como el área más delgada (10 documentos); la vigencia no está certificada artículo por artículo (las fuentes oficiales cambian entre descargas: 67 de 163 documentos cambiaron).
+1. **Recuperación.** BM25 depende de que la pregunta comparta vocabulario con la norma; la búsqueda semántica lo compensa en texto libre, pero en selección múltiple bajó el puntaje y no se usa. La combinación por formato no tiene aún una medición completa en la muestra.
+2. **Cobertura del corpus.** Pocas decisiones del Consejo de Estado (un candidato con tres sentencias de unificación no pasó la prueba pareada de recuperación) y procesal como el área más delgada; la vigencia no está certificada artículo por artículo (las fuentes oficiales cambian entre descargas: 67 de 163 documentos cambiaron).
 3. **Contexto de 8.192 tokens.** Con evidencia larga, el prompt descarta pasajes de menor rango (implementamos `--fit-passages` para recortar textos en vez de descartar pasajes).
 4. **Texto libre.** El RAGAS medido (0,43) está cerca del modelo de referencia, pero la longitud óptima depende de la pregunta: respuestas de más del doble o de menos de la mitad de la referencia pierden corrección.
 5. **Muestra pequeña.** Las decisiones se tomaron sobre 50 preguntas; las diferencias menores a ~1 punto pueden no generalizar.
