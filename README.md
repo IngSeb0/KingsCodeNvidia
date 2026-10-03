@@ -49,7 +49,9 @@ pregunta ─► normalización (alias de normas, señales de vigencia/remisión)
 | Citas | Reparación y guarda deterministas con la regla del evaluador (10 primeros pasajes) | **0 % de citas sin respaldo** |
 | Abstención | Solo con evidencia vacía, en conflicto o no vigente (texto libre); nunca en selección múltiple | Con la regla oficial, abstenerse casi nunca conviene |
 
-### Resultados en la muestra de 50 (evaluador oficial, sin RAGAS)
+## Resultados sobre las preguntas de muestra
+
+Evaluador oficial (`scripts/evaluate.py --split sample`), sin RAGAS, una variable por corrida:
 
 | Configuración | Puntaje |
 |---|---:|
@@ -57,6 +59,7 @@ pregunta ─► normalización (alias de normas, señales de vigencia/remisión)
 | BM25, prompt v6 | 38,08 |
 | BM25, prompt v4, corpus final | **39,02** |
 | Búsqueda semántica + BM25 en todos los formatos | 34,83 (baja en selección múltiple) |
+| **Prompt v6 + búsqueda semántica solo en texto libre (entregada)** | **38,84** (cerradas 13,33 · citas 17,14 · abstención 8,37 · 0 citas sin respaldo) |
 
 **Hallazgo de la verificación con el jurado.**
 - En casos largos de texto libre, BM25 suma palabras sueltas (por ejemplo "VIH", "medicamento", "pacientes") y recupera sentencias de salud.
@@ -116,6 +119,17 @@ pip install -r requirements.txt
 .venv\Scripts\python.exe -m pip install -r requirements-ui.txt
 .venv\Scripts\python.exe -m streamlit run interfaz/app.py
 ```
+
+## Limitaciones conocidas
+
+- **Recuperación:**
+  - BM25 depende de que la pregunta comparta vocabulario con la norma.
+  - La búsqueda semántica lo compensa en texto libre, pero en selección múltiple bajó el puntaje y allí no se usa.
+  - Por tiempo, solo 298 de las 702 preguntas de texto libre de la entrega usan búsqueda semántica.
+- **Cobertura:** hay poca jurisprudencia del Consejo de Estado y no hay derecho internacional. Procesal es el área más delgada.
+- **Vigencia:** no está certificada artículo por artículo. Las fuentes oficiales cambian entre descargas: 67 de 163 documentos cambiaron entre dos descargas.
+- **Contexto de 8.192 tokens:** con evidencia larga se descartan pasajes de menor rango.
+- **Muestra pequeña:** las decisiones se tomaron sobre 50 preguntas, y las diferencias menores a un punto pueden no generalizar.
 
 ## Estructura
 

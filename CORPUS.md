@@ -1,4 +1,261 @@
-# CORPUS — KingsCode / Integrante A
+# Bitácora del corpus — KingsCode
+
+Bitácora exigida en el paso 5 del enunciado. Debajo de esta bitácora sigue el registro técnico detallado del integrante A (capas, hashes, benchmark).
+
+## 1. Inventario
+
+Un registro por documento; coincide con `corpus_manifest.json` (171 documentos). Enlace al corpus procesado e índice: <https://github.com/IngSeb0/KingsCodeNvidia/releases/download/corpus-final/corpus_KingsCode.zip>.
+
+| doc_id | Título | Fuente | URL | Fecha de consulta | Artículos | Áreas |
+|---|---|---|---|---|---:|---|
+| `codigo_civil` | Código Civil (Ley 84 de 1873; Ley 57 de 1887) | SENA | https://normograma.sena.edu.co/compilacion/docs/codigo_civil.htm | 2026-10-02 | 2683 | Derecho civil, Derecho de familia |
+| `codigo_comercio` | Código de Comercio (Decreto 410 de 1971) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=41102 | 2026-10-02 | 2032 |  |
+| `codigo_disciplinario` | Código General Disciplinario (Ley 1952 de 2019) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=90324 | 2026-10-02 | 278 | Derecho administrativo |
+| `codigo_general_proceso` | Código General del Proceso (Ley 1564 de 2012) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=48425 | 2026-10-02 | 628 | Derecho civil, Derecho comercial y sociedades, Derecho de familia, Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual], Derecho penal, Derecho procesal, Derecho tributario |
+| `codigo_infancia` | Código de la Infancia y la Adolescencia (Ley 1098 de 2006) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=22106 | 2026-10-02 | 216 | Derecho de familia |
+| `codigo_nacional_policia` | Código Nacional de Seguridad y Convivencia Ciudadana (Ley 1801 de 2016) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=80538 | 2026-10-02 | 249 | Derecho procesal |
+| `codigo_penal` | Código Penal (Ley 599 de 2000) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=6388 | 2026-10-02 | 601 |  |
+| `codigo_procedimiento_penal` | Código de Procedimiento Penal (Ley 906 de 2004) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=14787 | 2026-10-02 | 584 | Derecho penal, Derecho procesal |
+| `codigo_sustantivo_trabajo` | Código Sustantivo del Trabajo (Decreto 2663 de 1950) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=199983 | 2026-10-02 | 491 | Derecho laboral |
+| `constitucion` | Constitución Política de Colombia de 1991 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=4125 | 2026-10-02 | 446 | Derecho administrativo, Derecho comercial y sociedades, Derecho constitucional, Derecho de familia, Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual], Derecho laboral, Derecho penal, Derecho procesal, Derecho tributario |
+| `cpaca` | Código de Procedimiento Administrativo y de lo Contencioso Administrativo (Ley 1437 de 2011) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=41249 | 2026-10-02 | 321 | Derecho administrativo |
+| `decreto_046_de_2024` | Decreto 046 de 2024 | Función Pública – Gestor Normativo | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=228530 | 2026-09-29 | 0 | Derecho administrativo |
+| `decreto_1082_de_2015` | Decreto 1082 de 2015 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77653 | 2026-10-02 | 1049 | Derecho administrativo |
+| `decreto_1742_de_2020` | Decreto 1742 de 2020 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=153986 | 2026-10-02 | 84 | Derecho tributario |
+| `decreto_175_de_2025` | Decreto 175 de 2025 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=259629 | 2026-10-02 | 10 | Derecho tributario |
+| `decreto_2067_de_1991` | Decreto 2067 de 1991 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=30150 | 2026-10-02 | 54 | Derecho constitucional |
+| `decreto_2153_de_1992` | Decreto 2153 de 1992 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=38168 | 2026-10-02 | 59 | Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `decreto_24_de_2016` | Decreto 24 de 2016 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=67536 | 2026-10-02 | 3 | Derecho comercial y sociedades |
+| `decreto_405_de_2025` | Decreto 405 de 2025 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=259517 | 2026-10-02 | 2 | Derecho laboral |
+| `decreto_4334_de_2008` | Decreto 4334 de 2008 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=33747 | 2026-10-02 | 16 | Derecho comercial y sociedades |
+| `decreto_4436_de_2005` | Decreto 4436 de 2005 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=18346 | 2026-10-02 | 8 | Derecho de familia |
+| `decreto_4886_de_2011` | Decreto 4886 de 2011 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=66371 | 2026-10-02 | 29 | Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `decreto_663_de_1993` | Decreto 663 de 1993 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=1348 | 2026-10-02 | 342 | Derecho comercial y sociedades |
+| `decreto_780_de_2016` | Decreto 780 de 2016 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=77813 | 2026-10-02 | 2263 | Derecho penal |
+| `decreto_960_de_1970` | Decreto 960 de 1970 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=149249 | 2026-10-02 | 233 | Derecho civil |
+| `estatuto_consumidor` | Estatuto del Consumidor (Ley 1480 de 2011) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=44306 | 2026-10-02 | 84 | Derecho civil, Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `estatuto_tributario` | Estatuto Tributario (Decreto 624 de 1989) | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=6533 | 2026-10-02 | 1313 | Derecho civil, Derecho constitucional, Derecho tributario |
+| `ley_1010_de_2006` | Ley 1010 de 2006 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=18843 | 2026-10-02 | 19 | Derecho laboral |
+| `ley_1095_de_2006` | Ley 1095 de 2006 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=22087 | 2026-10-02 | 10 | Derecho constitucional, Derecho penal |
+| `ley_1116_de_2006` | Ley 1116 de 2006 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=22657 | 2026-10-02 | 126 | Derecho comercial y sociedades, Derecho procesal |
+| `ley_1150_de_2007` | Ley 1150 de 2007 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=184686 | 2026-10-02 | 33 | Derecho administrativo |
+| `ley_1151_de_2007` | Ley 1151 de 2007 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=25932 | 2026-10-02 | 160 | Derecho administrativo |
+| `ley_1258_de_2008` | Ley 1258 de 2008 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=34130 | 2026-10-02 | 46 | Derecho comercial y sociedades |
+| `ley_1340_de_2009` | Ley 1340 de 2009 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=36912 | 2026-10-02 | 34 | Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `ley_137_de_1994` | Ley 137 de 1994 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=13966 | 2026-10-02 | 8 | Derecho tributario |
+| `ley_1473_de_2011` | Ley 1473 de 2011 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=43236 | 2026-10-02 | 5 | Derecho tributario |
+| `ley_153_de_1887` | Ley 153 de 1887 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=15805 | 2026-10-02 | 327 | Derecho civil, Derecho tributario |
+| `ley_155_de_1959` | Ley 155 de 1959 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=38169 | 2026-10-02 | 20 | Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `ley_1562_de_2012` | Ley 1562 de 2012 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=48365 | 2026-10-02 | 33 | Derecho laboral |
+| `ley_1581_de_2012` | Ley 1581 de 2012 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981 | 2026-10-02 | 30 | Derecho administrativo, Derecho constitucional, Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `ley_1607_de_2012` | Ley 1607 de 2012 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=51040 | 2026-10-02 | 248 | Derecho tributario |
+| `ley_160_de_1994` | Ley 160 de 1994 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=66789 | 2026-10-02 | 114 | Derecho civil |
+| `ley_1700_de_2013` | Ley 1700 de 2013 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=56283 | 2026-10-02 | 13 | Derecho comercial y sociedades |
+| `ley_1755_de_2015` | Ley 1755 de 2015 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=65334 | 2026-10-02 | 23 | Derecho administrativo |
+| `ley_1819_de_2016` | Ley 1819 de 2016 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=79140 | 2026-10-02 | 390 | Derecho tributario |
+| `ley_1909_de_2018` | Ley 1909 de 2018 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87302 | 2026-10-02 | 32 | Derecho constitucional |
+| `ley_2114_de_2021` | Ley 2114 de 2021 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=167967 | 2026-10-02 | 6 | Derecho laboral |
+| `ley_2141_de_2021` | Ley 2141 de 2021 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=168351 | 2026-10-02 | 3 | Derecho constitucional, Derecho laboral |
+| `ley_2157_de_2021` | Ley 2157 de 2021 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=173246 | 2026-10-02 | 3 | Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `ley_2160_de_2021` | Ley 2160 de 2021 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=173787 | 2026-10-02 | 5 | Derecho administrativo |
+| `ley_2220_de_2022` | Ley 2220 de 2022 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=188766 | 2026-10-02 | 147 | Derecho civil, Derecho procesal |
+| `ley_2251_de_2022` | Ley 2251 de 2022 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=189806 | 2026-10-02 | 24 | Derecho civil |
+| `ley_2437_de_2024` | Ley 2437 de 2024 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=256656 | 2026-10-02 | 21 | Derecho civil, Derecho procesal |
+| `ley_2452_de_2025` | Ley 2452 de 2025 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=259639 | 2026-10-02 | 331 | Derecho laboral |
+| `ley_2466_de_2025` | Ley 2466 de 2025 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=260676 | 2026-10-02 | 70 | Derecho laboral |
+| `ley_256_de_1996` | Ley 256 de 1996 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=38871 | 2026-10-02 | 33 | Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `ley_29_de_1982` | Ley 29 de 1982 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=256 | 2026-10-02 | 11 | Derecho de familia |
+| `ley_472_de_1998` | Ley 472 de 1998 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=188 | 2026-10-02 | 87 | Derecho constitucional, Derecho administrativo |
+| `ley_50_de_1990` | Ley 50 de 1990 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=281 | 2026-10-02 | 116 | Derecho laboral |
+| `ley_527_de_1999` | Ley 527 de 1999 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=4276 | 2026-10-02 | 47 | Derecho comercial y sociedades |
+| `ley_54_de_1990` | Ley 54 de 1990 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=30896 | 2026-10-02 | 8 | Derecho de familia |
+| `ley_600_de_2000` | Ley 600 de 2000 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=6389 | 2026-10-02 | 475 | Derecho penal |
+| `ley_640_de_2001` | Ley 640 de 2001 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=6059 | 2026-10-02 | 50 | Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `ley_678_de_2001` | Ley 678 de 2001 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=4164 | 2026-10-02 | 32 | Derecho procesal |
+| `ley_721_de_2001` | Ley 721 de 2001 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=9565 | 2026-10-02 | 8 | Derecho de familia |
+| `ley_75_de_1968` | Ley 75 de 1968 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=4828 | 2026-10-02 | 67 | Derecho de familia |
+| `ley_769_de_2002` | Ley 769 de 2002 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=5557 | 2026-10-02 | 177 | Derecho civil |
+| `ley_80_de_1993` | Ley 80 de 1993 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=304 | 2026-10-02 | 88 | Derecho administrativo, Derecho laboral |
+| `ley_820_de_2003` | Ley 820 de 2003 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=8738 | 2026-10-02 | 43 | Derecho comercial y sociedades |
+| `ley_979_de_2005` | Ley 979 de 2005 | Función Pública | https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=30898 | 2026-10-02 | 5 | Derecho de familia |
+| `sentencia_c_1033_de_2002` | Sentencia C-1033 de 2002 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2002/C-1033-02.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_106_de_2018` | Sentencia C-106 de 2018 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2018/C-106-18.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_117_de_2018` | Sentencia C-117 de 2018 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2018/C-117-18.htm | 2026-10-02 | 0 | Derecho tributario |
+| `sentencia_c_1189_de_2000` | Sentencia C-1189 de 2000 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2000/C-1189-00.htm | 2026-10-02 | 0 | Derecho penal |
+| `sentencia_c_127_de_2011` | Sentencia C-127 de 2011 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2011/C-127-11.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_131_de_2018` | Sentencia C-131 de 2018 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2018/C-131-18.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_134_de_2019` | Sentencia C-134 de 2019 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2019/C-134-19.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho de familia |
+| `sentencia_c_145_de_2018` | Sentencia C-145 de 2018 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2018/C-145-18.htm | 2026-10-02 | 0 | Derecho comercial y sociedades |
+| `sentencia_c_145_de_2020` | Sentencia C-145 de 2020 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2020/C-145-20.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_149_de_1993` | Sentencia C-149 de 1993 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1993/C-149-93.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_15_de_2018` | Sentencia C-15 de 2018 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2018/C-015-18.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho penal |
+| `sentencia_c_164_de_2022` | Sentencia C-164 de 2022 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2022/C-164-22.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho penal |
+| `sentencia_c_170_de_2004` | Sentencia C-170 de 2004 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2004/C-170-04.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_c_183_de_2025` | Sentencia C-183 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/C-183-25.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_c_201_de_2002` | Sentencia C-201 de 2002 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2002/C-201-02.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_c_207_de_2019` | Sentencia C-207 de 2019 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2019/C-207-19.htm | 2026-10-02 | 0 | Derecho administrativo |
+| `sentencia_c_225_de_1995` | Sentencia C-225 de 1995 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1995/C-225-95.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_22_de_1996` | Sentencia C-22 de 1996 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1996/C-022-96.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_233_de_2021` | Sentencia C-233 de 2021 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2021/C-233-21.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_239_de_1997` | Sentencia C-239 de 1997 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1997/C-239-97.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_259_de_2015` | Sentencia C-259 de 2015 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2015/C-259-15.htm | 2026-10-02 | 0 | Derecho administrativo, Derecho procesal |
+| `sentencia_c_276_de_2025` | Sentencia C-276 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/C-276-25.htm | 2026-10-02 | 0 | Derecho comercial y sociedades |
+| `sentencia_c_332_de_2025` | Sentencia C-332 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/C-332-25.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_335_de_2008` | Sentencia C-335 de 2008 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2008/C-335-08.htm | 2026-10-02 | 0 | Derecho penal |
+| `sentencia_c_345_de_2017` | Sentencia C-345 de 2017 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2017/C-345-17.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_c_355_de_2006` | Sentencia C-355 de 2006 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2006/C-355-06.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho penal |
+| `sentencia_c_35_de_2009` | Sentencia C-35 de 2009 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2009/C-035-09.htm | 2026-10-02 | 0 | Derecho tributario |
+| `sentencia_c_389_de_2023` | Sentencia C-389 de 2023 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2023/C-389-23.htm | 2026-10-02 | 0 | Derecho tributario |
+| `sentencia_c_394_de_2017` | Sentencia C-394 de 2017 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2017/C-394-17.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho de familia |
+| `sentencia_c_39_de_2025` | Sentencia C-39 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/C-039-25.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_413_de_1996` | Sentencia C-413 de 1996 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1996/C-413-96.htm | 2026-10-02 | 0 | Derecho tributario |
+| `sentencia_c_431_de_2001` | Sentencia C-431 de 2001 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2001/C-431-01.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho penal |
+| `sentencia_c_459_de_2023` | Sentencia C-459 de 2023 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2023/C-459-23.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_468_de_2024` | Sentencia C-468 de 2024 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2024/C-468-24.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_486_de_1993` | Sentencia C-486 de 1993 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1993/C-486-93.htm | 2026-10-02 | 0 | Derecho comercial y sociedades |
+| `sentencia_c_4_de_1998` | Sentencia C-4 de 1998 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1998/C-004-98.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_500_de_2024` | Sentencia C-500 de 2024 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2024/C-500-24.htm | 2026-10-02 | 0 | Derecho procesal, Derecho tributario |
+| `sentencia_c_507_de_2004` | Sentencia C-507 de 2004 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2004/C-507-04.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_533_de_2000` | Sentencia C-533 de 2000 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2000/C-533-00.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_535_de_2002` | Sentencia C-535 de 2002 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2002/C-535-02.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_c_537_de_1995` | Sentencia C-537 de 1995 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1995/C-537-95.htm | 2026-10-02 | 0 | Derecho tributario |
+| `sentencia_c_540_de_2023` | Sentencia C-540 de 2023 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2023/C-540-23.htm | 2026-10-02 | 0 | Derecho tributario |
+| `sentencia_c_55_de_2022` | Sentencia C-55 de 2022 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2022/C-055-22.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho penal |
+| `sentencia_c_582_de_1999` | Sentencia C-582 de 1999 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1999/C-582-99.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_683_de_2015` | Sentencia C-683 de 2015 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2015/C-683-15.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_700_de_1999` | Sentencia C-700 de 1999 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/1999/C-700-99.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_746_de_2011` | Sentencia C-746 de 2011 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2011/C-746-11.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho de familia |
+| `sentencia_c_748_de_2011` | Sentencia C-748 de 2011 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2011/C-748-11.htm | 2026-10-02 | 0 | Derecho civil, Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `sentencia_c_80_de_2025` | Sentencia C-80 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/C-080-25.htm | 2026-10-02 | 0 | Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] |
+| `sentencia_c_891_de_2012` | Sentencia C-891 de 2012 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2012/C-891-12.htm | 2026-10-02 | 0 | Derecho tributario |
+| `sentencia_c_94_de_2021` | Sentencia C-94 de 2021 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2021/C-094-21.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_c_964_de_2003` | Sentencia C-964 de 2003 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2003/C-964-03.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_96_de_2024` | Sentencia C-96 de 2024 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2024/C-096-24.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_c_985_de_2010` | Sentencia C-985 de 2010 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2010/C-985-10.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_sl_3385_de_2022` | Sentencia SL-3385 de 2022 | Corte Suprema de Justicia | https://cortesuprema.gov.co/corte/wp-content/uploads/relatorias/la/bnov2022/SL3385-2022.pdf | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_sl_648_de_2018` | Sentencia SL-648 de 2018 | Corte Suprema de Justicia | https://www.cortesuprema.gov.co/corte/wp-content/uploads/relatorias/la/bmar2018/SL648-2018.pdf | 2026-09-29 | 0 | Derecho laboral |
+| `sentencia_sp_1167_de_2022` | Sentencia SP-1167 de 2022 | Corte Suprema de Justicia | https://cortesuprema.gov.co/corte/wp-content/uploads/relatorias/pe/b1may2022/SP1167-2022%2857957%29.pdf | 2026-09-29 | 0 | Derecho penal |
+| `sentencia_sp_1680_de_2022` | Sentencia SP-1680 de 2022 | Corte Suprema de Justicia | https://cortesuprema.gov.co/corte/wp-content/uploads/relatorias/pe/b1may2022/SP1680-2022%2860875%29.pdf | 2026-09-29 | 0 | Derecho penal |
+| `sentencia_sp_1945_de_2019` | Sentencia SP-1945 de 2019 | Corte Suprema de Justicia | https://www.cortesuprema.gov.co/corte/wp-content/uploads/relatorias/pe/b1ago2019/SP1945-2019%2850523%29.PDF | 2026-09-29 | 0 |  |
+| `sentencia_su_111_de_2025` | Sentencia SU-111 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/SU111-25.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_su_11_de_2020` | Sentencia SU-11 de 2020 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2020/SU011-20.htm | 2026-10-02 | 0 | Derecho administrativo |
+| `sentencia_su_138_de_2024` | Sentencia SU-138 de 2024 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2024/SU138-24.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_su_149_de_2021` | Sentencia SU-149 de 2021 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2021/SU149-21.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_su_16_de_2020` | Sentencia SU-16 de 2020 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2020/SU016-20.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_su_207_de_2022` | Sentencia SU-207 de 2022 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2022/SU207-22.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_su_214_de_2016` | Sentencia SU-214 de 2016 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2016/SU214-16.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_su_240_de_2015` | Sentencia SU-240 de 2015 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2015/SU240-15.htm | 2026-10-02 | 0 | Derecho administrativo |
+| `sentencia_su_277_de_2025` | Sentencia SU-277 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/SU277-25.htm | 2026-10-02 | 0 | Derecho administrativo |
+| `sentencia_su_27_de_2021` | Sentencia SU-27 de 2021 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2021/SU027-21.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_su_296_de_2023` | Sentencia SU-296 de 2023 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2023/SU296-23.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_su_315_de_2025` | Sentencia SU-315 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/SU315-25.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_su_380_de_2021` | Sentencia SU-380 de 2021 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2021/SU380-21.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_su_396_de_2024` | Sentencia SU-396 de 2024 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2024/SU396-24.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_su_425_de_2025` | Sentencia SU-425 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/SU425-25.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_su_429_de_2024` | Sentencia SU-429 de 2024 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2024/SU429-24.htm | 2026-10-02 | 0 | Derecho penal |
+| `sentencia_su_431_de_2015` | Sentencia SU-431 de 2015 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2015/SU431-15.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_su_455_de_2020` | Sentencia SU-455 de 2020 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2020/SU455-20.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_su_500_de_2015` | Sentencia SU-500 de 2015 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2015/SU500-15.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_su_566_de_2015` | Sentencia SU-566 de 2015 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2015/SU566-15.htm | 2026-10-02 | 0 | Derecho administrativo |
+| `sentencia_t_1001_de_2001` | Sentencia T-1001 de 2001 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2001/T-1001-01.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_1059_de_2001` | Sentencia T-1059 de 2001 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2001/T-1059-01.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_t_1096_de_2008` | Sentencia T-1096 de 2008 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2008/T-1096-08.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_t_145_de_2016` | Sentencia T-145 de 2016 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2016/T-145-16.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_t_230_de_2023` | Sentencia T-230 de 2023 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2023/T-230-23.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_232_de_2025` | Sentencia T-232 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/T-232-25.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_t_243_de_2018` | Sentencia T-243 de 2018 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2018/T-243-18.htm | 2026-10-02 | 0 | Derecho laboral |
+| `sentencia_t_262_de_2025` | Sentencia T-262 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/T-262-25.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_26_de_2025` | Sentencia T-26 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/T-026-25.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_t_323_de_2024` | Sentencia T-323 de 2024 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2024/T-323-24.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_325_de_2025` | Sentencia T-325 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/T-325-25.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_350_de_2025` | Sentencia T-350 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/T-350-25.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_t_429_de_2011` | Sentencia T-429 de 2011 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2011/T-429-11.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_445_de_2024` | Sentencia T-445 de 2024 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2024/T-445-24.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_4_de_2026` | Sentencia T-4 de 2026 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2026/T-004-26.htm | 2026-10-02 | 0 | Derecho civil |
+| `sentencia_t_547_de_2017` | Sentencia T-547 de 2017 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2017/T-547-17.htm | 2026-10-02 | 0 | Derecho constitucional, Derecho laboral |
+| `sentencia_t_67_de_2025` | Sentencia T-67 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/T-067-25.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_71_de_2016` | Sentencia T-71 de 2016 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2016/T-071-16.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_t_760_de_2008` | Sentencia T-760 de 2008 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2008/T-760-08.htm | 2026-10-02 | 0 | Derecho administrativo, Derecho constitucional |
+| `sentencia_t_77_de_2025` | Sentencia T-77 de 2025 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2025/T-077-25.htm | 2026-10-02 | 0 | Derecho de familia |
+| `sentencia_t_925_de_2014` | Sentencia T-925 de 2014 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2014/T-925-14.htm | 2026-10-02 | 0 | Derecho constitucional |
+| `sentencia_t_970_de_2014` | Sentencia T-970 de 2014 | Corte Constitucional | https://www.corteconstitucional.gov.co/relatoria/2014/T-970-14.htm | 2026-10-02 | 0 | Derecho constitucional |
+
+**Totales**
+
+| Métrica | Valor |
+|---|---:|
+| Documentos incorporados | 171 |
+| Artículos (o unidades de sentencia) | 17.606 |
+| Fragmentos en el índice | 26.665 (26.167 recuperables; 498 encabezados o duplicados excluidos) |
+| Tamaño del corpus procesado | 40,8 MB de texto limpio; `corpus_KingsCode.zip` 105,7 MB con índices |
+
+## 2. Criterio de selección
+
+El banco cubre diez áreas del derecho colombiano. Priorizamos, en este orden:
+
+1. La Constitución y los códigos que concentran la mayoría de las preguntas: Civil, Comercio, General del Proceso, Penal, Procedimiento Penal, Sustantivo del Trabajo, CPACA, Infancia, Policía y Disciplinario.
+2. Las leyes y decretos reglamentarios más citados en esas áreas: contratación estatal, tributario, consumidor, protección de datos, acoso laboral, insolvencia y competencia, entre otros.
+3. Sentencias de constitucionalidad, tutela y unificación de la Corte Constitucional y de la Corte Suprema.
+
+Cada ampliación se decidió por análisis de fallas en la muestra oficial y en un benchmark interno sin respuestas del banco. Por ejemplo, se añadieron la Ley 472 de 1998 y sentencias de unificación. Nunca se indexaron las preguntas ni las respuestas esperadas.
+
+| Área | Documentos |
+|---|---:|
+| Derecho constitucional | 43 |
+| Derecho de familia | 29 |
+| Derecho laboral | 25 |
+| Derecho civil | 24 |
+| Derecho administrativo | 19 |
+| Derecho tributario | 18 |
+| Derecho penal | 16 |
+| Derecho comercial y sociedades | 13 |
+| Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual] | 13 |
+| Derecho procesal | 10 |
+
+| Fuente | Documentos |
+|---|---:|
+| Corte Constitucional | 96 |
+| Función Pública | 68 |
+| Corte Suprema de Justicia | 5 |
+| SENA | 1 |
+| Función Pública – Gestor Normativo | 1 |
+
+**Vacíos conocidos.** Hay poca jurisprudencia del Consejo de Estado: un candidato con tres sentencias de unificación no pasó la prueba pareada de recuperación. No hay derecho internacional. La vigencia no está certificada artículo por artículo.
+
+## 3. Método de ingesta y limpieza
+
+1. **Descarga** desde la URL oficial con TLS verificado (`tools/member_a.py acquire`, fuentes en `config/sources.json`). Se registran el estado HTTP, el tipo de contenido, la fecha y el SHA-256 del archivo crudo.
+2. **Limpieza** del HTML o PDF a texto plano. Se conservan las notas de vigencia de la fuente y se eliminan la navegación y los elementos repetidos.
+3. **Segmentación estructural** (`legal-blocks-1.2`): un fragmento por artículo, o por unidad de sentencia. Cada fragmento lleva norma, número, año, jerarquía (libro, título, capítulo), *offsets* en el texto limpio, áreas y URL.
+4. **Índices:**
+   - BM25 por artículo (`bm25.json`).
+   - Índice vectorial exacto Qwen3-Embedding-0.6B (`dense.npy`, 1.024 dimensiones).
+   - Grafo normativo (59 mil nodos y 75 mil aristas *modifica / deroga / remite / reglamenta*).
+5. **Reconstrucción:** `python tools/member_a.py acquire` + `reproduce`, o restauración del snapshot verificado. Los hashes están en las secciones de abajo.
+
+## 4. Evolución del puntaje
+
+Medido con `scripts/evaluate.py` sobre la muestra de 50 preguntas, sin RAGAS. Una variable por corrida.
+
+| Corrida | Cambio | Puntaje /50 |
+|---|---|---:|
+| 1 | Primera versión (BM25, Qwen3-8B) | 26,63 |
+| 2 | Una consulta por opción en selección múltiple | 30,41 |
+| 3 | Guarda y reparación de citas | 35,18 |
+| 4 | Citas completadas y verificadas | 36,93 |
+| 5 | Prompt v4 | 37,46 |
+| 6 | Prompt v6 (método jurídico) | 38,08 |
+| 7 | Corpus ampliado (v0.1 + v0.2 + adiciones), v4 | 39,02 |
+| 8 | v6 + búsqueda semántica en texto libre | 38,84 |
+
+## 5. Licencia
+
+- El procesamiento propio (limpieza, segmentación, metadatos, índices y grafo) se publica bajo **CC BY 4.0**.
+- Los textos normativos y jurisprudenciales son documentos oficiales públicos de Colombia. Su URL y su fecha de consulta están en el inventario.
+
+---
+
+# Registro técnico del corpus (integrante A)
 
 Snapshot `corpus-v0.1`, parser `legal-blocks-1.2`. Estado: baseline local previo a integración GPU y freeze competitivo.
 
