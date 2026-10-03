@@ -74,7 +74,7 @@ st.caption("Hackathon 2026 · AI Week · Universidad de los Andes · patrocina S
 
 # Configuración recomendada (la misma de `kingscode_pc_nueva_diagnostico.ps1 -Recomendada`):
 # BM25 + router, retrieval por opción, prompt v4, citas completadas y 5 menciones verificadas.
-RECOMMENDED = ["--retrieval-mode", "option", "--retriever-mode", "bm25", "--prompt-version", "v4",
+RECOMMENDED = ["--retrieval-mode", "option", "--retriever-mode", "bm25", "--prompt-version", "v6",
                "--citation-fill", "--cite-mentions", "5"]
 
 
@@ -97,7 +97,7 @@ def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_pol
         note = "DummyDecoder: se abstiene siempre (Gate 1B). No hay razonamiento legal real."
     else:
         pipeline.decoder.load()
-        note = f"HFDecoder real: {alias} ({precision}, temperatura 0, prompt v4, citas verificadas)."
+        note = f"HFDecoder real: {alias} ({precision}, temperatura 0, prompt v6 de razonamiento juridico, citas verificadas)."
     return pipeline, note
 
 

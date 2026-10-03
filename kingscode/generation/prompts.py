@@ -279,14 +279,16 @@ def validate_attribution(value, passages: list[dict], max_used: int) -> dict:
     return {"status": "explicit", "ids": ids, "duplicates_removed": len(value) - len(ids)}
 
 
-def extract_single_object(raw: str) -> str:
+def extract_single_object(raw: str, required: tuple[str, ...] | None = None) -> str:
     """v4+ only. Qwen sometimes writes a sentence before/after the JSON (1-7 of 50 items on the
     4090, every one a pipeline_error abstention). Returns the only top-level JSON object in the
     text; refuses <think>, Markdown fences, zero or several objects. Prose is discarded, never read."""
     if not isinstance(raw, str):
         raise ValueError("Model output is not text")
-    if "<think>" in raw or "```" in raw:
+    if "<think>" in raw:
         raise ValueError("Output must be exactly one JSON object, without prose around it")
+    # Markdown fence markers are envelope, never content: drop them and look for the object.
+    raw = re.sub(r"```(?:json)?", " ", raw)
     decoder, objects, i = json.JSONDecoder(), [], 0
     while (i := raw.find("{", i)) != -1:
         try:
@@ -297,6 +299,12 @@ def extract_single_object(raw: str) -> str:
         if isinstance(value, dict):
             objects.append(raw[i:end])
         i = end
+    if len(objects) > 1 and required:
+        # Several objects (e.g. a draft and the final answer): keep the ONLY one that carries
+        # every answer field of the format. Zero or several complete ones still fail.
+        complete = [o for o in objects if set(required) <= set(json.loads(o))]
+        if len(complete) == 1:
+            return complete[0]
     if len(objects) != 1:
         raise ValueError("Output must be exactly one JSON object, without prose around it")
     return objects[0]
@@ -314,7 +322,8 @@ def parse_response_v3(raw: str, question: Question, passages: list[dict], *, max
     except ValueError:
         if not extract_embedded:
             raise
-        normalized, action = extract_single_object(raw), "extracted_single_object_from_prose"
+        normalized, action = (extract_single_object(raw, tuple(ANSWER_FIELDS[question.format])),
+                              "extracted_single_object_from_prose")
     value, inferred = _load_object_v3(normalized, question)
     meta = {"raw_response": raw, "normalized_response": normalized, "normalization_action": action}
     if value["abstencion"]:

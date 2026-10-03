@@ -55,7 +55,7 @@ def _passages(row: dict) -> list[dict]:
 
 
 def replay(batch: Path, questions_path: Path, prompt_version: str | None, citation_fill: bool | None,
-           cite_mentions: int | None) -> tuple[list[dict], dict]:
+           cite_mentions: int | None, max_refs: int | None = None) -> tuple[list[dict], dict]:
     identity = json.loads((batch / "identity.json").read_text(encoding="utf-8"))
     pv = prompt_version or identity.get("prompt_version") or "grounded-formats-v3"
     pv = PROMPT_V4 if pv in {"v4", PROMPT_V4} else pv if pv.startswith("grounded") else f"grounded-formats-{pv}"
@@ -80,7 +80,7 @@ def replay(batch: Path, questions_path: Path, prompt_version: str | None, citati
             continue
         decoder = ReplayDecoder(raw, pv, {k: d.get(k) for k in ("model", "revision", "input_tokens", "output_tokens")})
         try:
-            row, _ = _answer(questions[stored["id"]], passages, decoder, max_refs=5 if fill else 3,
+            row, _ = _answer(questions[stored["id"]], passages, decoder, max_refs=max_refs or (5 if fill else 3),
                              citation_fill=fill, cite_mentions=mentions)
         except Exception as exc:  # parser/guard failure -> same fallback the batch would write
             stats["errors"] += 1
@@ -101,10 +101,11 @@ def main(argv=None) -> int:
     parser.add_argument("--citation-fill", dest="citation_fill", action="store_true", default=None)
     parser.add_argument("--no-citation-fill", dest="citation_fill", action="store_false")
     parser.add_argument("--cite-mentions", type=int)
+    parser.add_argument("--max-refs", type=int, help="citations kept per row (default: 5 with fill, else 3)")
     parser.add_argument("--name", default="replay")
     parser.add_argument("--split", default="sample")
     args = parser.parse_args(argv)
-    rows, stats = replay(args.batch, args.questions, args.prompt_version, args.citation_fill, args.cite_mentions)
+    rows, stats = replay(args.batch, args.questions, args.prompt_version, args.citation_fill, args.cite_mentions, args.max_refs)
     out = args.batch.parent / args.name
     out.mkdir(parents=True, exist_ok=True)
     sub = out / "submissions.jsonl"
