@@ -2,12 +2,12 @@
 
 Status: preregistered diagnostic plan; no GPU result is implied by this document.
 
-## Follow-up candidate on the current recommended B profile (2026-10-03)
+## Follow-up candidate on the current selected v6 profile (2026-10-03)
 
-`-Recomendada` currently uses B's `option` orchestration and A's BM25 backend; it does not load A's dense encoder. The following two catalog entries keep the recommended prompt/citation settings, hybrid retrieval, reranker, graph router, candidate depth and exact reranker-score cache constant. They differ only in how the trusted multiple-choice options reach A:
+`-Recomendada -PromptVersion v6` uses B's `option` orchestration and A's BM25 backend; it does not load A's dense encoder. The following two catalog entries keep v6 and the recommended citation settings, hybrid retrieval, reranker, graph router, candidate depth and exact reranker-score cache constant. They differ only in how the trusted multiple-choice options reach A:
 
-- `hybrid_recommended_fanout_cache`: legacy B fan-out, one call to A per option.
-- `hybrid_recommended_native_cache`: A's `query_views` fusion, one call per graph pass.
+- `hybrid_recommended_fanout_cache`: final v6 prompt, legacy B fan-out, one call to A per option.
+- `hybrid_recommended_native_cache`: final v6 prompt, A's `query_views` fusion, one call per graph pass.
 
 The exact locator stays off in this pair because the legacy path would apply it to each option while A's native path intentionally applies it only to Q0. Compare both candidates with a separate `-Recomendada` run on the same corpus snapshot. This is a runtime/quality experiment, not a change to the default or proof that native fusion improves score. Native fusion changes ranking semantics.
 
@@ -23,19 +23,19 @@ $BaselineRun = "hybrid_ref_$Stamp"
 # Fresh BM25 reference with the same commit and local corpus snapshot.
 & .\tools\kingscode_pc_nueva_diagnostico.ps1 `
   -Work $Repo -CorpusSet "v01+v02" -AllowKnownLocalCorpusDrift `
-  -Recomendada -RunName $BaselineRun -SkipSmoke -SkipVerify
+  -Recomendada -PromptVersion v6 -RunName $BaselineRun -SkipSmoke -SkipVerify
 $Ref = Get-Content ".\reports\decoder_diagnostic\$BaselineRun\RESUMEN.json" -Raw | ConvertFrom-Json
 $BaseText = ($Ref.automatico_sin_ragas -split "/")[0].Trim()
 $Base = [double]::Parse($BaseText, [Globalization.CultureInfo]::InvariantCulture)
 
-# Same commit and corpus as the reference; both variants reuse the same B profile.
+# Same commit and corpus as the v6 reference; both variants reuse that B profile.
 powershell -ExecutionPolicy Bypass -File .\tools\kingscode_variantes.ps1 `
   -Work $Repo -CorpusSet "v01+v02" -AllowKnownLocalCorpusDrift `
   -Variantes hybrid_recommended_fanout_cache,hybrid_recommended_native_cache `
   -Base $Base
 ```
 
-For each run compare `evaluation_official.json`, `batch_report.json` and `RESUMEN.json`: official total and per-format points; `reranker_computed_pairs`, cache hits, `reranker_ms`, `dense_ms`, graph-pass count, generation and retrieval percentiles, peak VRAM and seconds/question. Then run the official baseline and candidate comparison to completion before choosing a winner. Run RAGAS only once on a selected complete run; this pair does not invoke it.
+For each run compare `evaluation_official.json`, `batch_report.json` and `RESUMEN.json`: official total and per-format points; `reranker_computed_pairs`, cache hits, `reranker_ms`, `dense_ms`, graph-pass count, generation and retrieval percentiles, peak VRAM and seconds/question. Compare to the fresh BM25 v6 reference before choosing a winner. Run RAGAS only once on a selected complete run; this pair does not invoke it.
 
 ## What this tests
 

@@ -57,11 +57,11 @@ $Catalogo = [ordered]@{
     "rerank_locator" = @("-Rerank", "-ExactLocator")
     "rerank"         = @("-Rerank")
     "hybrid"         = @("-RetrieverMode", "hybrid")
-    # Pareja controlada sobre la salida recomendada: solo cambia el fan-out vs.
+    # Pareja controlada sobre la configuración final v6: solo cambia el fan-out vs.
     # la fusión query_views de A. La cache exacta está activa en ambas; locator
     # se deja apagado porque el camino legacy lo aplicaría también a cada opción.
-    "hybrid_recommended_fanout_cache" = @("-Recomendada", "-RetrieverMode", "hybrid", "-Rerank", "-RerankerScoreCache")
-    "hybrid_recommended_native_cache" = @("-Recomendada", "-RetrieverMode", "hybrid", "-Rerank", "-RerankerScoreCache", "-NativeOptionFusion")
+    "hybrid_recommended_fanout_cache" = @("-Recomendada", "-PromptVersion", "v6", "-RetrieverMode", "hybrid", "-Rerank", "-RerankerScoreCache")
+    "hybrid_recommended_native_cache" = @("-Recomendada", "-PromptVersion", "v6", "-RetrieverMode", "hybrid", "-Rerank", "-RerankerScoreCache", "-NativeOptionFusion")
     "alia"           = @("-Model", "alia-legal-7b")
     "v6"             = @("-Recomendada", "-PromptVersion", "v6")
     "v7_concise"     = @("-Recomendada", "-PromptVersion", "v7")
