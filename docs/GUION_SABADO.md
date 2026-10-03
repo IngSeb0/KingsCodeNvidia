@@ -4,6 +4,14 @@ Para el equipo: qué decir cuando pregunten y qué comandos correr. Configuraci�
 
 ## 1. Antes de las 09:00 (en el PC que va a correr)
 
+> **Commit congelado: `bc480e7`** (v6 medido: 38,08/50 sin RAGAS con el corpus de `turing`; el respaldo `C:\Users\turing\kc_snapshot` se hizo con ese commit). Los commits posteriores (v8, citas en abiertas, telemetría) no están medidos en GPU con v6: no usarlos hoy salvo que una corrida de la muestra con el mismo corpus los confirme.
+>
+> ```powershell
+> cd "$HOME\KingsCodeGPU\KingsCodeNvidia"; git fetch origin; git checkout bc480e7
+> powershell -ExecutionPolicy Bypass -File .\tools\kingscode_snapshot.ps1 -Accion verificar -Origen "$HOME\kc_snapshot"
+> powershell -ExecutionPolicy Bypass -File .\tools\kingscode_final.ps1 -Flags "-Recomendada -PromptVersion v6" -InputFile <set ciego> -RunName final_992
+> ```
+
 1. Cerrar las sesiones de otros usuarios (`query user` → `logoff <ID>`); `nvidia-smi` debe mostrar < 1.000 MiB usados.
 2. Código fijo: `git pull --ff-only origin main` una sola vez y anotar `git rev-parse --short HEAD`. Desde ahí, todo con `-NoPull`.
 3. Corpus e índice idénticos a los de hoy (respaldo hecho el viernes por `tools\kingscode_corre_todo.ps1` en `$HOME\kc_snapshot`):
