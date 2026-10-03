@@ -30,17 +30,22 @@ if ($Gate.status -ne "PASS") {
 
 $CorpusDir = Join-Path $Repo "corpus_v03_candidate"
 $ManifestPath = Join-Path $CorpusDir "manifest.json"
-if (-not (Test-Path -LiteralPath $ManifestPath)) { throw "STOP: build corpus_v03_candidate first." }
-$CorpusManifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 $ExpectedCorpus = $Gate.candidate_run.corpus
-foreach ($Property in $ExpectedCorpus.hashes.PSObject.Properties) {
-    $File = Join-Path $CorpusDir ($Property.Name.Replace("/", "\"))
-    $Actual = (Get-FileHash -LiteralPath $File -Algorithm SHA256).Hash.ToLower()
-    if ($Actual -ne $Property.Value) { throw "STOP: candidate artifact hash differs for $($Property.Name)." }
-}
-$ActualBm25 = (Get-FileHash -LiteralPath (Join-Path $CorpusDir "index\bm25.json") -Algorithm SHA256).Hash.ToLower()
-if ($ActualBm25 -ne $ExpectedCorpus.bm25_sha256 -or $CorpusManifest.status -ne "diagnostic_not_competitive_freeze") {
-    throw "STOP: candidate BM25/status does not match the independently evaluated corpus."
+function Assert-CandidateCorpus {
+    param([string]$Directory, [object]$Expected)
+    $ManifestFile = Join-Path $Directory "manifest.json"
+    if (-not (Test-Path -LiteralPath $ManifestFile)) { throw "STOP: corpus candidate manifest missing: $ManifestFile" }
+    $Manifest = Get-Content -LiteralPath $ManifestFile -Raw | ConvertFrom-Json
+    foreach ($Property in $Expected.hashes.PSObject.Properties) {
+        $Artifact = Join-Path $Directory ($Property.Name.Replace("/", "\"))
+        if (-not (Test-Path -LiteralPath $Artifact)) { throw "STOP: candidate artifact missing: $Artifact" }
+        $Actual = (Get-FileHash -LiteralPath $Artifact -Algorithm SHA256).Hash.ToLower()
+        if ($Actual -ne $Property.Value) { throw "STOP: candidate artifact hash differs for $($Property.Name)." }
+    }
+    $Bm25 = (Get-FileHash -LiteralPath (Join-Path $Directory "index\bm25.json") -Algorithm SHA256).Hash.ToLower()
+    if ($Bm25 -ne $Expected.bm25_sha256 -or $Manifest.status -ne "diagnostic_not_competitive_freeze") {
+        throw "STOP: candidate BM25/status does not match the independently evaluated corpus."
+    }
 }
 
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
@@ -59,19 +64,20 @@ $Python = Join-Path $Repo ".venv\Scripts\python.exe"
 if (-not (Test-Path -LiteralPath $Python)) { throw "STOP: crea/verifica .venv antes de la corrida." }
 $Results = @()
 foreach ($Profile in $Runs) {
+    if (Test-Path -LiteralPath $ManifestPath) {
+        Assert-CandidateCorpus -Directory $CorpusDir -Expected $ExpectedCorpus
+    } elseif (Test-Path -LiteralPath $CorpusDir) {
+        throw "STOP: incomplete generated candidate directory exists at $CorpusDir; inspect it before removing or rebuilding."
+    } elseif ($Profile.Retriever -ne "bm25") {
+        throw "STOP: the first BM25 control must build the candidate before hybrid can run."
+    }
     $Args = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".\tools\kingscode_pc_nueva_diagnostico.ps1") + $CommonArgs + @("-RetrieverMode", $Profile.Retriever, "-RunName", $Profile.Name)
     if ($Profile.Rerank) { $Args += "-Rerank" }
     if ($Profile.ExactLocator) { $Args += "-ExactLocator" }
     if ($Profile.NativeOptionFusion) { $Args += "-NativeOptionFusion" }
     & powershell @Args
     if ($LASTEXITCODE -ne 0) { throw "STOP: falló $($Profile.Name); los artefactos de la corrida se conservaron." }
-    foreach ($Property in $ExpectedCorpus.hashes.PSObject.Properties) {
-        $File = Join-Path $CorpusDir ($Property.Name.Replace("/", "\"))
-        $Actual = (Get-FileHash -LiteralPath $File -Algorithm SHA256).Hash.ToLower()
-        if ($Actual -ne $Property.Value) { throw "STOP: corrida $($Profile.Name) cambió $($Property.Name) respecto al gate C1." }
-    }
-    $ActualBm25 = (Get-FileHash -LiteralPath (Join-Path $CorpusDir "index\bm25.json") -Algorithm SHA256).Hash.ToLower()
-    if ($ActualBm25 -ne $ExpectedCorpus.bm25_sha256) { throw "STOP: corrida $($Profile.Name) cambió el índice BM25 del gate C1." }
+    Assert-CandidateCorpus -Directory $CorpusDir -Expected $ExpectedCorpus
 
     $Out = Join-Path $Repo "reports\decoder_diagnostic\$($Profile.Name)"
     $Summary = Get-Content -LiteralPath (Join-Path $Out "RESUMEN.json") -Raw | ConvertFrom-Json
