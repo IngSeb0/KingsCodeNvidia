@@ -5,7 +5,7 @@
 #   powershell -ExecutionPolicy Bypass -File tools\compartir_corpus.ps1 -Accion subir
 # En los PCs que lo NECESITAN (GPU-2, GPU-3):
 #   powershell -ExecutionPolicy Bypass -File tools\compartir_corpus.ps1 -Accion bajar
-#   -> deja el respaldo en C:\kc_snapshot_luis (lo usa tools\kingscode_mitad.ps1 automaticamente)
+#   -> deja el respaldo en $HOME\kc_snapshot_luis (lo usa tools\kingscode_mitad.ps1 automaticamente)
 #
 # subir: crea el respaldo (o reutiliza uno ya creado en %TEMP%\kc_snapshot_subir), lo parte en
 # trozos de 45 MB (limite de GitHub: 100 MB por archivo) y los sube a la rama corpus-39 desde un
@@ -15,7 +15,7 @@
 param(
     [Parameter(Mandatory = $true)] [ValidateSet("subir", "bajar")] [string]$Accion,
     [string]$Rama = "corpus-39",
-    [string]$Destino = "C:\kc_snapshot_luis",
+    [string]$Destino = "$HOME\kc_snapshot_luis",   # carpeta del usuario: no requiere permisos de administrador
     [string]$Work = "$HOME\KingsCodeGPU\KingsCodeNvidia"
 )
 # Continue: git writes harmless notices to stderr and PS 5.1 would turn them into terminating
@@ -87,12 +87,14 @@ $Wt = Join-Path $env:TEMP "kc_corpus_bajar"
 Remove-Worktree $Wt
 git worktree add --detach $Wt FETCH_HEAD 2>&1 | Out-Host
 if (-not (Test-Path (Join-Path $Wt "SHA256SUMS.txt"))) { throw "no se pudo abrir la rama $Rama en $Wt" }
-New-Item -ItemType Directory -Force $Destino | Out-Null
+New-Item -ItemType Directory -Force $Destino -ErrorAction SilentlyContinue | Out-Null
+if (-not (Test-Path $Destino)) { throw "STOP: no se pudo crear $Destino (permisos). Usa -Destino en una carpeta tuya." }
 Get-ChildItem (Join-Path $Destino "kingscode_corpus_*.tar.gz") -ErrorAction SilentlyContinue | Remove-Item -Force
 $Join | & $Py - $Wt $Destino
 Copy-Item (Join-Path $Wt "SHA256SUMS.txt"), (Join-Path $Wt "SNAPSHOT_HASHES.json") $Destino -Force
 Remove-Worktree $Wt
-$Tar = Get-ChildItem (Join-Path $Destino "kingscode_corpus_*.tar.gz") | Select-Object -First 1
+$Tar = Get-ChildItem (Join-Path $Destino "kingscode_corpus_*.tar.gz") -ErrorAction SilentlyContinue | Select-Object -First 1
+if (-not $Tar -or -not (Test-Path (Join-Path $Destino "SHA256SUMS.txt"))) { throw "STOP: no quedo el paquete en $Destino; el corpus NO esta listo." }
 $Esperado = (Get-Content (Join-Path $Destino "SHA256SUMS.txt") | Where-Object { $_ -like "*$($Tar.Name)" }) -split "\s+" | Select-Object -First 1
 if ((Get-FileHash $Tar.FullName -Algorithm SHA256).Hash.ToLower() -ne $Esperado) { throw "STOP: el paquete unido no coincide con SHA256SUMS.txt" }
 Write-Host "Corpus del 39 listo en $Destino (verificado). Ahora: tools\kingscode_mitad.ps1 -Parte <1|2>" -ForegroundColor Green
