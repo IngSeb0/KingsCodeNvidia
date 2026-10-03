@@ -19,6 +19,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "scripts"))  # evaluate.py importa citations como modulo suelto
 TEST = ROOT / "data/test_992.jsonl"
 
 
