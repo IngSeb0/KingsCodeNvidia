@@ -76,6 +76,8 @@ def build_parser() -> argparse.ArgumentParser:
                         help="batch/verify: complete up to 5 verified citations with top-ranked evidence (semi_open/multiple_choice only)")
     parser.add_argument("--cite-mentions", type=int, default=0, metavar="N",
                         help="batch/verify: up to N body-level citations of norms NAMED in retrieved passages (official support rule); semi_open/MC only")
+    parser.add_argument("--fit-passages", action="store_true",
+                        help="decoder: shorten the longest passages in the prompt (head kept) before dropping any")
     parser.add_argument("--max-context", type=int, default=None, metavar="N",
                         help="decoder context window in tokens (default 8192 from the bakeoff config; up to 32768)")
     parser.add_argument("--doc-cap", type=int, default=0, metavar="N",
@@ -258,7 +260,7 @@ def _pipeline(args):
                            else f"grounded-formats-{args.prompt_version}")
         decoder = HFDecoder(args.model, precision=args.precision, allow_optional=args.allow_optional,
                             prompt_version=selected_prompt, constrained_json=args.constrained_json,
-                            max_context_tokens=args.max_context)
+                            max_context_tokens=args.max_context, fit_passages=args.fit_passages)
     plans = PlanStore(args.plans) if args.plans else None
     plan_roles = tuple(part.strip() for part in getattr(args, "plan_roles", None).split(",") if part.strip()) if getattr(args, "plan_roles", None) else None
     option_supporter = (base_retriever.dense.option_support
@@ -275,7 +277,7 @@ def _pipeline(args):
                 "reranker_score_cache": args.reranker_score_cache,
                 "option_support": args.option_support, "constrained_json": args.constrained_json,
                 "plan_roles": list(plan_roles) if plan_roles else None,
-                "prompt_version": getattr(decoder, "prompt_version", None), "citation_fill": args.citation_fill, "cite_mentions": args.cite_mentions, "doc_cap": args.doc_cap, "max_context": args.max_context,
+                "prompt_version": getattr(decoder, "prompt_version", None), "citation_fill": args.citation_fill, "cite_mentions": args.cite_mentions, "doc_cap": args.doc_cap, "max_context": args.max_context, "fit_passages": args.fit_passages,
                 "retriever": {"mode": args.retriever_mode, "rerank": args.rerank,
                               "graph_budget": args.graph_budget,
                               "exact_locator": args.exact_locator, "fixture_evidence": args.fixture_evidence,

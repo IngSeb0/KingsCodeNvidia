@@ -26,13 +26,24 @@ class DecoderFailure(RuntimeError):
         super().__init__(code)
 
 
+FIT_MIN_CHARS = 700  # never shorten a passage below this (article header + its rule)
+
+
+def _head(text: str, cap: int) -> str:
+    """Deterministic head of a passage for the PROMPT only (the official row keeps the full text)."""
+    if len(text) <= cap:
+        return text
+    cut = text.rfind(" ", 0, cap)
+    return text[:cut if cut > cap // 2 else cap].rstrip() + " [...]"
+
+
 class HFDecoder:
     prompt_version = PROMPT_VERSION
 
     def __init__(self, alias: str, *, config: dict | None = None, precision: str = "bf16",
                  allow_optional: bool = False, torch_module=None, transformers_module=None,
                  prompt_version: str | None = None, constrained_json: bool = False,
-                 max_context_tokens: int | None = None):
+                 max_context_tokens: int | None = None, fit_passages: bool = False):
         self.config = deepcopy(config) if config is not None else load_bakeoff()
         if prompt_version is not None:
             if prompt_version not in ACTIVE_PROMPT_VERSIONS:
@@ -53,6 +64,9 @@ class HFDecoder:
             raise ValueError("Unsupported precision; no automatic fallback")
         self.alias, self.precision = alias, precision
         self.constrained_json = bool(constrained_json)
+        # Opt-in (--fit-passages): when the evidence does not fit, shorten the longest passages
+        # (head kept, marked) before dropping any, so the model sees all retrieved sources.
+        self.fit_passages = bool(fit_passages)
         self.name, self.version = "transformers:" + alias, self.entry["revision"]
         self.torch, self.transformers = torch_module, transformers_module
         self.model = self.tokenizer = None
@@ -150,17 +164,27 @@ class HFDecoder:
             # prompt only (never truncate text, never reorder). The official row still
             # carries every retrieved passage in pasajes_recuperados.
             shown = list(passages)
+            cap, trimmed = None, 0
             while True:
-                messages = build_messages(question, shown, prompt, max_used=max_used, version=self._system_version())
+                view = shown if cap is None else [dict(p, text=_head(p.get("text") or "", cap)) for p in shown]
+                messages = build_messages(question, view, prompt, max_used=max_used, version=self._system_version())
                 text = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True,
                                                           **self.candidate["chat_template_kwargs"])
                 inputs = self.tokenizer([text], return_tensors="pt", truncation=False, add_special_tokens=False)
                 count = int(inputs["input_ids"].shape[-1])
                 if count + budget <= self.candidate["max_context_tokens"] or len(shown) <= 1:
                     break
+                longest = max(len(p.get("text") or "") for p in shown)
+                if self.fit_passages and (cap or longest) > FIT_MIN_CHARS:
+                    # Shrink the longest texts first: one cap for all passages, lowered 15% per step.
+                    cap = max(FIT_MIN_CHARS, int((cap or longest) * 0.85))
+                    trimmed = sum(len(p.get("text") or "") > cap for p in shown)
+                    continue
+                cap, trimmed = None, 0
                 shown = shown[:-1]
             self.last_usage.update(input_tokens=count, attn_implementation=ATTN_IMPLEMENTATION,
-                                   evidence_in_prompt=len(shown),
+                                   evidence_in_prompt=len(shown), evidence_trimmed_to_chars=cap,
+                                   evidence_passages_trimmed=trimmed,
                                    evidence_dropped_for_context=[p.get("passage_id") for p in passages[len(shown):]])
             if count + budget > self.candidate["max_context_tokens"]:
                 raise DecoderFailure("CONTEXT_LIMIT_EXCEEDED", {"usage": dict(self.last_usage),

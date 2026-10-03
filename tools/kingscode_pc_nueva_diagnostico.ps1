@@ -53,7 +53,8 @@ param(
     [string]$RunName = "",
     [ValidateSet("v01+v02", "v01")] [string]$CorpusSet = "v01+v02",
     [switch]$AllowKnownLocalCorpusDrift,
-    [switch]$AllowBusyGpu,   # no detenerse si otra sesion/proceso ya ocupa la VRAM
+    [switch]$AllowBusyGpu,
+    [switch]$FitPassages,   # recorta los pasajes largos en el prompt para que el modelo vea los 8   # no detenerse si otra sesion/proceso ya ocupa la VRAM
     [ValidateSet("bm25", "dense", "hybrid")] [string]$RetrieverMode = "bm25",
     [ValidateRange(1, 500)] [int]$CandidateK = 30,
     [ValidateRange(1, 10)] [int]$K = 8,
@@ -89,7 +90,7 @@ function Check($w) { if ($LASTEXITCODE -ne 0) { throw "STOP: $w (exit $LASTEXITC
 function RefreshPath { $env:Path = [Environment]::GetEnvironmentVariable("Path", "User") + ";" + [Environment]::GetEnvironmentVariable("Path", "Machine") }
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
 if ($Recomendada) { if ($PromptVersion -eq "v3") { $PromptVersion = "v4" }; $CitationFill = [switch]::new($true); if ($CiteMentions -eq 0) { $CiteMentions = 5 } }
-if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })$(if ($DocCap -gt 0) { "_cap$DocCap" })$(if ($MaxContext -gt 0) { "_ctx$MaxContext" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($RerankerScoreCache) { '_rcache' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
+if (-not $RunName) { $RunName = "${Model}_${RetrieverMode}$(if ($K -ne 8) { "_k$K" })$(if ($RetrievalMode -eq "option_plan") { "_oplan" })$(if ($DocCap -gt 0) { "_cap$DocCap" })$(if ($FitPassages) { "_fit" })$(if ($MaxContext -gt 0) { "_ctx$MaxContext" })_c${CandidateK}_rb${RerankerBatchSize}_gb${GraphBudget}$(if ($Rerank) { '_rerank' })$(if ($NativeOptionFusion) { '_nativeopt' })$(if ($RerankerScoreCache) { '_rcache' })$(if ($ExactLocator) { '_locator' })_p$PromptVersion$(if ($CitationFill) { '_fill' })$(if ($CiteMentions -gt 0) { "_men$CiteMentions" })_$Stamp" }
 
 # ---------------------------------------------------------------------
 Step "[0] Herramientas: Git, Python 3.12, GPU"
@@ -325,6 +326,7 @@ if ($ExactLocator) { $CommonArgs += "--exact-locator" }
 if ($CitationFill) { $CommonArgs += "--citation-fill" }
 if ($CiteMentions -gt 0) { $CommonArgs += @("--cite-mentions", [string]$CiteMentions) }
 if ($DocCap -gt 0) { $CommonArgs += @("--doc-cap", [string]$DocCap) }
+if ($FitPassages) { $CommonArgs += "--fit-passages" }
 if ($MaxContext -gt 0) {
     Warn "-MaxContext $MaxContext es EXPERIMENTAL: prompts de hasta ~12k tokens pueden desbordar la VRAM de 24 GB (la atencion determinista no cabe) y la corrida se vuelve casi congelada. Si [batch] muestra sigue generando > 120 s por pregunta, cortar con Ctrl+C."
     $CommonArgs += @("--max-context", [string]$MaxContext)

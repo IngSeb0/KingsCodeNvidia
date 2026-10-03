@@ -70,6 +70,7 @@ $Catalogo = [ordered]@{
     "doccap3"        = @("-Recomendada", "-DocCap", "3")
     "v6_hybrid"      = @("-Recomendada", "-PromptVersion", "v6", "-RetrieverMode", "hybrid")   # encoder denso + BM25 (RRF), sin reranker
     "v6_doccap3"     = @("-Recomendada", "-PromptVersion", "v6", "-DocCap", "3")
+    "v6_fit"         = @("-Recomendada", "-PromptVersion", "v6", "-FitPassages")   # el modelo ve los 8 pasajes (texto largo recortado)
     "v6_option_plan" = @("-Recomendada", "-PromptVersion", "v6", "-RetrievalMode", "option_plan")
     "ctx16k"         = @("-Recomendada", "-MaxContext", "16384")
     "v6_ctx16k"      = @("-Recomendada", "-PromptVersion", "v6", "-MaxContext", "16384")

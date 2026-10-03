@@ -108,6 +108,31 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         self.assertEqual(ATTN_IMPLEMENTATION, "sdpa")
         model.generate.assert_called_once()
 
+    def test_fit_passages_keeps_all_sources_by_shortening_text_in_prompt_only(self):
+        from unittest.mock import patch
+        from kingscode.generation.hf_decoder import HFDecoder, _head
+        from kingscode.reasoning.decoder import GENERATION_CONFIG, PromptSpec
+        from test_gpu_preparation import FakeInputs, FakeTokenizer, fake_torch, fake_transformers
+
+        class CharTokenizer(FakeTokenizer):
+            """1 token per 4 characters of evidence text + 500 of overhead."""
+            def __call__(self, text, **kwargs):
+                user = json.loads(json.loads(text[0])[1]["content"])
+                return FakeInputs(500 + sum(len(e["text"]) for e in user["evidencia"]) // 4)
+
+        evidence = [dict(deepcopy(FIXTURES[i % 5]), passage_id=f"p{i}", text="palabra " * 2500) for i in range(8)]
+        for fit, shown in ((False, 1), (True, 8)):
+            transformers, model = fake_transformers(CharTokenizer())
+            decoder = HFDecoder("qwen3-8b", torch_module=fake_torch(), transformers_module=transformers, fit_passages=fit)
+            with patch("kingscode.generation.hf_decoder.verify_snapshot", return_value={}):
+                row = decoder.generate(Q, evidence, PromptSpec("semi_open"), dict(GENERATION_CONFIG))
+            self.assertEqual(decoder.last_usage["evidence_in_prompt"], shown)
+            self.assertEqual(len(row["pasajes_recuperados"]), 8)            # official row: all passages, full text
+            self.assertTrue(all(len(p["texto"]) >= 20000 for p in row["pasajes_recuperados"]))
+        self.assertEqual(decoder.last_usage["evidence_passages_trimmed"], 8)
+        self.assertEqual(_head("uno dos tres", 100), "uno dos tres")
+        self.assertTrue(_head("a" * 50 + " " + "b" * 50, 60).endswith(" [...]"))
+
     def test_max_context_override_shows_more_evidence_and_respects_native_limit(self):
         from unittest.mock import patch
         from kingscode.generation.hf_decoder import HFDecoder
