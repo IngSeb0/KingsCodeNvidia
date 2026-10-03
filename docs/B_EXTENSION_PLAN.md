@@ -48,7 +48,7 @@ Cada tarea es una sesión de Claude Code: primero leer y proponer, luego impleme
 
 ## T7 — Entregables — hecho en lo que no depende de GPU (2026-09-28, tarde)
 
-- **Interfaz:** ✅ `interfaz/app.py` (Streamlit), identidad de Software Colombia (turquesa/negro/azul), conectado al pipeline real. Pendiente: probarlo con `corpus/` real y con un decoder real.
+- **Interfaz:** ✅ `interfaz/app.py` (Streamlit), con consulta individual, lote JSONL y verificación por ID del jurado. El modo jurado reproduce el perfil Qwen3-8B BF16, BM25, recuperación por opciones, router, prompt v4, citation-fill y cinco menciones verificadas del candidato m5 que obtuvo **37,46/50**. Compara los campos de respuesta exactamente y reporta aparte si coinciden las citas oficiales y los pasajes; comprueba también el hash de las preguntas y la identidad del pipeline. El lote valida ids/formatos, muestra avance y fallos, permite revisar cada respuesta con citas/evidencia/fuentes y descarga `submissions.jsonl` validado. Las entradas se proyectan al contrato público de `Question`; los checkpoints usan una carpeta temporal. Pendiente: probarlo de extremo a extremo con `corpus/` real, decoder real y el ID que entregue el jurado.
 - **Reproducibilidad:** ✅ `run.sh` (instala deps, exige o construye `corpus/`, corre tests, Gate 1B smoke y `scripts/evaluate.py --split sample`) y `Dockerfile`/`​.dockerignore` para el contenedor limpio. No requiere GPU. Sin `corpus/` local no se pudo ejecutar de punta a punta en esta máquina — solo se verificó la sintaxis de bash y del snippet Python embebido.
 - **Pendiente:** publicar el corpus + índice en un enlace de descarga y declararlo en la sección `## Corpus e índice` del README (ya creada, con la URL por completar cuando A congele el índice).
 

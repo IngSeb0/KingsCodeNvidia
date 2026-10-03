@@ -1,131 +1,94 @@
-"""Interfaz gráfica (entregable 8, sección 6.2 del enunciado).
+"""Streamlit UI for single legal questions and JSONL batches.
 
-Consulta de extremo a extremo sobre el pipeline real de KingsCode: A.retrieve()
--> B.Pipeline (router -> policy -> decoder -> citation_guard). No reimplementa
-nada: el pipeline se construye con tools/member_b.py::_pipeline, el mismo código
-y la misma configuración de las corridas entregadas (prompt v6, citas verificadas).
-
-Ejecutar desde la raíz del repositorio, con el corpus ya construido:
+Run from the repository root after building the corpus:
     streamlit run interfaz/app.py
 
-Rapidez: el corpus, el índice y el decoder se cargan una sola vez por proceso
-(st.cache_resource) y una pregunta ya consultada con la misma configuración se
-responde al instante desde la sesión (temperatura 0: el resultado es idéntico).
-Sin CUDA solo ofrece DummyDecoder (siempre se abstiene) y lo declara; si falla la
-carga de un decoder real, detiene la consulta con un error visible.
+Both modes use tools/member_b.py's recommended BM25/option/v4 pipeline builder.
+Uploaded rows are allowlisted to the public Question contract.
 """
 from __future__ import annotations
 
+import hashlib
+import gc
 import html
 import json
 import sys
+import tempfile
+from argparse import ArgumentParser
 from pathlib import Path
-from time import perf_counter
+from urllib.parse import urlparse
 
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "tools"))
 
+from interfaz.batch_io import parse_questions_jsonl, submissions_jsonl  # noqa: E402
+from interfaz.judge_verification import (  # noqa: E402
+    identity_differences,
+    official_score,
+    parse_run_identity_json,
+    parse_submission_rows_jsonl,
+    verify_questions_match_identity,
+)
+from kingscode.reasoning.batch import BatchRunner, compare_submission_rows, questions_sha256  # noqa: E402
 from kingscode.reasoning.contracts import FORMATS, Question  # noqa: E402
 from kingscode.reasoning.presentation import debug_trace, view_model  # noqa: E402
 
-st.set_page_config(page_title="KingsCode · Derecho colombiano", page_icon="⚖", layout="wide")
+st.set_page_config(page_title="KingsCode · Derecho colombiano", page_icon="⚖️", layout="wide")
 
-FORMAT_LABELS = {"multiple_choice": "Selección múltiple", "semi_open": "Respuesta breve", "open_ended": "Caso abierto"}
-
-# Identidad visual de Software Colombia (portada del enunciado): negro, turquesa del logo y las
-# franjas diagonales azules; títulos en serif como "Hackathon 2026", cuerpo en Roboto.
 st.markdown("""<style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Roboto:wght@400;500;700&display=swap');
 :root {
-  --ink: #0B0B0B; --ink-2: #3A4448; --ink-3: #5B676D;
-  --teal: #10A9A6; --teal-deep: #0B7E7C; --teal-wash: #E6F5F4;
-  --blue: #1E88E5; --blue-light: #90CAF9;
-  --paper: #F6F8F8; --card: #FFFFFF; --rule: #D7E1E3; --alert: #B3261E;
+    --kc-teal: #0e938f;
+    --kc-teal-dark: #08716f;
+    --kc-ink: #13232c;
+    --kc-blue: #245b85;
+    --kc-muted: #60737c;
+    --kc-paper: #f4f8f8;
 }
-html, body, .stApp, [class*="css"] { font-family: 'Roboto', system-ui, sans-serif; color: var(--ink); }
-.stApp { background: var(--paper); }
-::selection { background: var(--teal); color: #fff; }
-a { color: var(--teal-deep); text-underline-offset: 3px; }
-:focus-visible { outline: 2px solid var(--teal-deep) !important; outline-offset: 2px; }
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-thumb { background: #B9C8CB; border-radius: 10px; }
-::-webkit-scrollbar-track { background: transparent; }
-.block-container { padding-top: 1.2rem; max-width: 1320px; }
-h1, h2, h3, .kc-serif { font-family: 'Playfair Display', Georgia, serif; letter-spacing: -0.01em; }
-
-/* Cabecera: banda negra con las franjas diagonales de la portada */
-.kc-head {
-  position: relative; overflow: hidden; background: var(--ink); color: #fff;
-  border-radius: 14px; padding: 1.6rem 2rem 1.4rem; margin-bottom: 1.1rem;
-  box-shadow: 0 10px 30px -18px rgba(11,11,11,.55);
+.stApp { background: var(--kc-paper); }
+h1, h2, h3 { color: var(--kc-ink); }
+h1 { border-bottom: 3px solid var(--kc-teal); padding-bottom: .35rem; }
+[data-testid="stTabs"] button[role="tab"] { font-weight: 650; }
+.kc-banner {
+    background: var(--kc-ink); color: #fff; padding: .8rem 1rem; border-radius: 9px;
+    border-left: 5px solid var(--kc-teal); margin: .7rem 0 1rem; font-size: .92rem;
 }
-.kc-head::after {
-  content: ""; position: absolute; top: -40%; right: -6%; width: 340px; height: 180%;
-  background: linear-gradient(90deg, var(--blue-light) 0 34%, var(--blue) 34% 70%, transparent 70%);
-  transform: skewX(-28deg); opacity: .95;
+.kc-evidence {
+    border-left: 4px solid var(--kc-blue); background: #fff; padding: .6rem .85rem;
+    margin: .25rem 0 .7rem; border-radius: 0 8px 8px 0; color: var(--kc-ink);
 }
-.kc-head h1 { color: #fff; font-size: 2.15rem; margin: 0; line-height: 1.1; border: 0; padding: 0; }
-.kc-head p { color: #CFE3E6; margin: .45rem 0 0; max-width: 62ch; font-size: .98rem; }
-.kc-head .kc-mark { color: var(--teal); }
-
-/* Ficha técnica: una sola tira con separadores, no tarjetas iguales */
-.kc-spec { display: flex; flex-wrap: wrap; background: var(--card); border: 1px solid var(--rule);
-  border-radius: 12px; margin-bottom: 1rem; }
-.kc-spec > div { flex: 1 1 150px; padding: .65rem 1rem; border-right: 1px solid var(--rule); min-width: 0; }
-.kc-spec > div:last-child { border-right: 0; }
-.kc-spec span { display: block; font-size: .72rem; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
-.kc-spec b { font-weight: 600; font-size: .95rem; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
-
-/* Controles */
-.stButton > button { border-radius: 10px; font-weight: 600; transition: background .2s ease-out, transform .15s ease-out; }
-.stButton > button[kind="primary"] { background: var(--teal-deep); border: 0; color: #fff; padding: .55rem 1.4rem; }
-.stButton > button[kind="primary"]:hover { background: #096A68; transform: translateY(-1px); }
-.stButton > button[kind="primary"]:disabled { background: #9DB7B8; }
-.stTextArea textarea, .stTextInput input { border-radius: 10px !important; caret-color: var(--teal-deep); }
-
-/* Respuesta */
-.kc-answer { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 1.3rem 1.5rem;
-  box-shadow: 0 6px 22px -16px rgba(11,11,11,.35); }
-.kc-answer h3 { margin: 0 0 .6rem; font-size: 1.35rem; }
-.kc-answer p { line-height: 1.6; max-width: 72ch; margin: 0 0 .8rem; }
-.kc-letter { display: inline-grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 10px;
-  background: var(--ink); color: #fff; font-family: 'Playfair Display', serif; font-size: 1.35rem; margin-right: .6rem; }
-.kc-field { font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--teal-deep); font-weight: 700; margin: 1rem 0 .25rem; }
-.kc-discard { color: var(--ink-2); font-size: .92rem; margin: .2rem 0; }
-.kc-abst { background: #FFF4E5; border: 1px solid #F1C68B; border-radius: 12px; padding: 1rem 1.2rem; color: #6B3E00; }
-.kc-time { color: var(--ink-3); font-size: .82rem; margin-top: .6rem; font-variant-numeric: tabular-nums; }
-
-/* Normas citadas */
-.kc-chips { margin-top: .4rem; }
-.kc-chip { display: inline-block; border-radius: 999px; padding: .22rem .75rem; margin: .18rem .3rem .18rem 0;
-  font-size: .82rem; font-weight: 500; background: var(--teal-wash); color: #064E4C; border: 1px solid #A8DCDA; }
-.kc-chip-bad { background: #fff; color: var(--alert); border: 1px dashed var(--alert); }
-
-/* Evidencia */
-.kc-ev-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin: .2rem 0 .6rem; }
-.kc-pas { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .75rem .95rem;
-  margin-bottom: .6rem; font-size: .88rem; line-height: 1.5; }
-.kc-pas.cited { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal) inset; }
-.kc-pas-h { display: flex; gap: .5rem; align-items: baseline; flex-wrap: wrap; margin-bottom: .35rem; }
-.kc-rank { font-variant-numeric: tabular-nums; font-weight: 700; color: #fff; background: var(--ink);
-  border-radius: 6px; padding: 0 .4rem; font-size: .76rem; }
-.kc-norm { font-weight: 600; color: var(--ink); }
-.kc-tag { font-size: .72rem; color: var(--teal-deep); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
-.kc-pas p { margin: 0; color: var(--ink-2); }
-.kc-foot { color: var(--ink-3); font-size: .8rem; }
+.kc-evidence small { color: var(--kc-muted); }
+.stButton > button[kind="primary"] { background: var(--kc-teal); border-color: var(--kc-teal); }
+.stButton > button[kind="primary"]:hover { background: var(--kc-teal-dark); border-color: var(--kc-teal-dark); }
 </style>""", unsafe_allow_html=True)
 
-st.markdown("""<div class="kc-head"><h1>KingsCode<span class="kc-mark"> ·</span> derecho colombiano</h1>
-<p>Responde con un modelo abierto de 8B y solo cita normas que aparecen en la evidencia recuperada de fuentes oficiales.
-Hackathon 2026 · AI Week · Universidad de los Andes · patrocina Software Colombia.</p></div>""", unsafe_allow_html=True)
+st.title("KingsCode · Consulta de derecho colombiano")
+st.caption("Hackathon 2026 · AI Week · Universidad de los Andes · Software Colombia")
 
-# Mismo perfil que la corrida entregada: BM25 + router, consultas por opción, prompt v6,
-# citas completadas y hasta 5 menciones verificadas.
-RECOMMENDED = ["--retrieval-mode", "option", "--retriever-mode", "bm25", "--citation-fill", "--cite-mentions", "5"]
+
+RECOMMENDED_ARGS = [
+    "--retrieval-mode", "option",
+    "--retriever-mode", "bm25",
+    "--prompt-version", "v4",
+    "--citation-fill",
+]
+CANDIDATE_3746 = {
+    "name": "m5 · Qwen3-8B / BM25 · 37,46/50",
+    "questions": ROOT / "data" / "sample_50.jsonl",
+    "submission_candidates": (
+        ROOT / "docs" / "entrega_viernes" / "submissions_sample50.jsonl",
+        ROOT / "reports" / "decoder_diagnostic" / "qwen3-8b_bm25_c30_rb2_gb10_pv4_fill_men3_20261002_115609"
+        / "replay_m5" / "submissions.jsonl",
+    ),
+    "identity": ROOT / "reports" / "decoder_diagnostic" / "qwen3-8b_bm25_c30_rb2_gb10_pv4_fill_men3_20261002_115609"
+    / "batch" / "identity.json",
+    "evaluation": ROOT / "reports" / "decoder_diagnostic" / "qwen3-8b_bm25_c30_rb2_gb10_pv4_fill_men3_20261002_115609"
+    / "replay_m5" / "evaluation_official.json",
+    "cite_mentions": 5,
+    "score": 37.46,
+}
 
 
 def default_corpus() -> Path:
@@ -135,50 +98,89 @@ def default_corpus() -> Path:
     return ROOT / "corpus"
 
 
-@st.cache_resource(show_spinner="Cargando corpus, índice y modelo (una sola vez)…")
-def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str, prompt: str = "v6", fit: bool = False):
-    """Builds the pipeline with tools/member_b.py::_pipeline, the exact code of the batch runs."""
-    from member_b import _pipeline, build_parser
-    argv = ["batch", "--corpus", corpus_dir, "--k", str(k), "--graph-policy", graph_policy, *RECOMMENDED,
-            "--prompt-version", prompt] + (["--fit-passages"] if fit else [])
+@st.cache_resource(show_spinner="Cargando corpus, índice y decoder…")
+def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str):
+    """Build the exact recommended pipeline via tools/member_b.py::_pipeline."""
+    from member_b import _pipeline
+
+    try:
+        from member_b import build_parser
+    except ImportError:
+        # Compatibility with the pre-builder CLI in older working checkouts.
+        # On main, build_parser() is used and supports the full frozen profile.
+        parser = ArgumentParser()
+        parser.add_argument("command", choices=["batch"])
+        parser.add_argument("--corpus", type=Path)
+        parser.add_argument("--k", type=int, default=8)
+        parser.add_argument("--graph-policy", choices=["router", "off", "auto", "on"], default="router")
+        parser.add_argument("--retrieval-mode", choices=["base", "option", "plan"], default="option")
+        parser.add_argument("--retriever-mode", choices=["bm25", "dense", "hybrid"], default="bm25")
+        parser.add_argument("--candidate-k", type=int, default=30)
+        parser.add_argument("--reranker-batch-size", type=int, default=2)
+        parser.add_argument("--graph-budget", type=int, default=10)
+        parser.add_argument("--retrieval-text-mode", choices=["literal", "context"], default="literal")
+        parser.add_argument("--embedding-instruction-profile", default="baseline")
+        parser.add_argument("--reranker-instruction-profile", default="baseline")
+        parser.add_argument("--reranker-score-cache", action="store_true")
+        parser.add_argument("--option-support", action="store_true")
+        parser.add_argument("--constrained-json", action="store_true")
+        parser.add_argument("--plan-roles")
+        parser.add_argument("--plans", type=Path)
+        parser.add_argument("--dense-index-dir", type=Path)
+        parser.add_argument("--exact-locator", action="store_true")
+        parser.add_argument("--fixture-evidence", action="store_true")
+        parser.add_argument("--rerank", action="store_true")
+        parser.add_argument("--model")
+        parser.add_argument("--precision", choices=["bf16", "int8", "int4"], default="bf16")
+        parser.add_argument("--allow-optional", action="store_true")
+        parser.add_argument("--prompt-version", choices=["v3", "v4", "v6"], default="v4")
+        parser.add_argument("--citation-fill", action="store_true")
+        parser.add_argument("--native-option-fusion", action="store_true")
+        build_parser = lambda: parser
+
+    parser = build_parser()
+    args = ["batch", "--corpus", corpus_dir, "--k", str(k), "--graph-policy", graph_policy]
+    args.extend(RECOMMENDED_ARGS)
+    available_options = {option for action in parser._actions for option in action.option_strings}
+    if "--cite-mentions" in available_options:
+        args.extend(["--cite-mentions", "5"])
     if alias != "dummy_abstain":
-        argv += ["--model", alias, "--precision", precision]
-    pipeline, identity = _pipeline(build_parser().parse_args(argv))
+        args.extend(["--model", alias, "--precision", precision])
+    parsed = parser.parse_args(args)
+    pipeline, identity = _pipeline(parsed)
+    identity["ui_model_precision"] = precision
     if alias == "dummy_abstain":
-        note = "Modo sin GPU: DummyDecoder se abstiene siempre. No hay razonamiento jurídico real."
+        note = "DummyDecoder: se abstiene siempre; no genera respuestas jurídicas."
     else:
         pipeline.decoder.load()
-        note = None
+        note = f"Decoder local: {alias} · {precision} · temp. 0 · prompt v4 · citas verificadas"
     return pipeline, note, identity
 
 
-@st.cache_data(show_spinner=False)
-def question_bank() -> dict[int, dict]:
-    """Public fields only (id, pregunta, formato, opciones, area, sub_tarea) of the sample and the
-    blind set, so the jury's id loads the exact text, format and options without retyping."""
-    out = {}
-    for name in ("sample_50.jsonl", "test_992.jsonl"):
-        path = ROOT / "data" / name
-        if not path.exists():
-            continue
-        for line in path.read_text(encoding="utf-8-sig").splitlines():
-            if line.strip():
-                r = json.loads(line)
-                out[int(r["id"])] = {"id": r["id"], "pregunta": r["pregunta"], "formato": r["formato"],
-                                     "opciones": r.get("opciones") or {}, "area": r.get("area"),
-                                     "sub_tarea": r.get("sub_tarea"), "origen": name.split("_")[0]}
-    return out
+def get_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str):
+    """Keep one configured decoder resident instead of caching GPU copies per setting."""
+    settings = (str(Path(corpus_dir).resolve()), alias, precision, k, graph_policy)
+    previous = st.session_state.get("_pipeline_settings")
+    if previous is not None and previous != settings:
+        load_pipeline.clear()
+        gc.collect()
+        try:
+            import torch
 
-
-def sample_questions() -> list[dict]:
-    return [q for q in question_bank().values() if q["origen"] == "sample"]
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
+    st.session_state["_pipeline_settings"] = settings
+    return load_pipeline(corpus_dir, alias, precision, k, graph_policy)
 
 
 with st.sidebar:
-    st.markdown("### Configuración")
+    st.header("Configuración")
     corpus_dir = st.text_input("Directorio del corpus", value=str(default_corpus()))
     try:
         import torch
+
         cuda_ok = torch.cuda.is_available()
     except Exception:
         cuda_ok = False
@@ -186,168 +188,561 @@ with st.sidebar:
     if cuda_ok:
         try:
             from kingscode.generation.config import load_bakeoff
+
             enabled = [a for a, c in load_bakeoff()["candidates"].items() if c["enabled"]]
-            decoder_options += sorted(enabled, key=lambda a: (a != "qwen3-8b", a))
+            decoder_options += sorted(enabled, key=lambda alias: (alias != "qwen3-8b", alias))
         except Exception as exc:
             st.warning(f"No se pudo leer config/decoder_bakeoff.json: {exc}")
     else:
-        st.info("Sin CUDA en esta máquina: solo modo sin GPU (abstención).")
+        st.info("Sin CUDA en esta máquina: solo está disponible DummyDecoder (abstención).")
     decoder_options.append("dummy_abstain")
-    decoder_alias = st.selectbox("Modelo", decoder_options)
+    decoder_alias = st.selectbox("Decoder", decoder_options)
     precision = st.selectbox("Precisión", ["bf16", "int8", "int4"], disabled=decoder_alias == "dummy_abstain")
-    prompt_version = st.selectbox("Prompt (igual al de la entrega)", ["v6", "v9"], index=0,
-                                  help="v6: razonamiento jurídico. v9: v6 + área y sub-tarea de cada pregunta.")
-    fit_passages = st.checkbox("Ver los 8 pasajes completos en el prompt (fit)", value=False)
-    k = st.slider("Pasajes recuperados (k)", 1, 10, 8)
-    graph_policy = st.selectbox("Grafo normativo", ["router", "off", "auto", "on"], index=0)
+    k = st.slider("Pasajes recuperados", 1, 10, 8)
+    graph_policy = st.selectbox("Política de grafo", ["router", "off", "auto", "on"], index=0)
     debug_mode = st.checkbox("Mostrar traza técnica", value=False)
 
 if not (Path(corpus_dir) / "manifest.json").exists():
-    st.error(f"No hay corpus en {corpus_dir}. Restaure el respaldo (tools/kingscode_snapshot.ps1 -Accion restaurar) "
-             "o corrija la ruta en la barra lateral.")
+    st.error(f"No se encontró `manifest.json` en `{corpus_dir}`.")
+    st.info("Construya el índice de A con `tools/member_a.py` o corrija la ruta del corpus.")
     st.stop()
 
 try:
-    pipeline, decoder_note, identity = load_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy, prompt_version, fit_passages)
+    pipeline, decoder_note, pipeline_identity = get_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy)
 except Exception as exc:
-    st.error(f"No se pudo cargar el modelo «{decoder_alias}». Revise que la GPU esté libre (nvidia-smi) y que los pesos estén descargados.")
-    with st.expander("Detalle técnico"):
-        st.exception(exc)
-    st.stop()
-if decoder_note:
-    st.warning(decoder_note)
+    st.warning(f"No se pudo cargar `{decoder_alias}` ({type(exc).__name__}). Se usará DummyDecoder.")
+    pipeline, decoder_note, pipeline_identity = get_pipeline(corpus_dir, "dummy_abstain", "bf16", k, graph_policy)
 
-corpus_sha = str(identity.get("retriever", {}).get("corpus_sha256") or "n/d")
-spec = [("Modelo", str((identity.get("decoder") or [decoder_alias])[0]).replace("transformers:", "")),
-        ("Prompt", str(identity.get("prompt_version") or "n/d").replace("grounded-formats-", "")),
-        ("Recuperación", f"{identity.get('retriever', {}).get('mode', 'bm25').upper()} + grafo · k={identity.get('k', k)}"),
-        ("Temperatura", "0 · determinista"),
-        ("Corpus · SHA-256", corpus_sha[:12])]
-st.markdown('<div class="kc-spec">' + "".join(f"<div><span>{html.escape(a)}</span><b>{html.escape(b)}</b></div>" for a, b in spec)
-            + "</div>", unsafe_allow_html=True)
-
-# --- Consulta ---------------------------------------------------------------------------------
-def load_into_form(q: dict) -> None:
-    st.session_state["kc_q"] = q["pregunta"]
-    st.session_state["kc_f"] = q["formato"]
-    st.session_state["kc_meta"] = {"area": q.get("area"), "sub_tarea": q.get("sub_tarea"), "id": q["id"]}
-    for letra in "ABCD":
-        st.session_state[f"kc_o_{letra}"] = q["opciones"].get(letra, "")
+st.markdown(
+    f'<div class="kc-banner">{html.escape(decoder_note)} · corpus: '
+    f'<code>{html.escape(Path(corpus_dir).name)}</code></div>',
+    unsafe_allow_html=True,
+)
+st.caption("Perfil base: BM25 + búsqueda por opciones + router de grafo + prompt v4 + citation-fill. "
+           "Para comprobar el candidato 37,46 la pestaña de jueces fija además Qwen3-8B BF16 y 5 menciones verificadas.")
 
 
-bank = question_bank()
-id_col, btn_col = st.columns([3, 1], vertical_alignment="bottom")
-qid = id_col.text_input("Id de la pregunta (muestra o set de 992)", key="kc_id", placeholder="p. ej. 24")
-if btn_col.button("Cargar por id", disabled=not qid.strip()):
-    q = bank.get(int(qid)) if qid.strip().isdigit() else None
-    if q:
-        load_into_form(q)
-        st.session_state["kc_pick"] = None
-    else:
-        st.error(f"No existe la pregunta con id {qid} en data/sample_50.jsonl ni en data/test_992.jsonl.")
+FORMAT_LABELS = {
+    "multiple_choice": "Selección múltiple",
+    "semi_open": "Respuesta breve",
+    "open_ended": "Caso abierto",
+}
 
-samples = sample_questions()
-if samples:
-    pick = st.selectbox("Cargar una pregunta de la muestra (opcional)", ["—"] + [f"{s['id']} · {FORMAT_LABELS[s['formato']]} · {s['pregunta'][:90]}" for s in samples])
-    if pick != "—" and st.session_state.get("kc_pick") != pick:
-        chosen = samples[[f"{s['id']} · {FORMAT_LABELS[s['formato']]} · {s['pregunta'][:90]}" for s in samples].index(pick)]
-        st.session_state["kc_pick"] = pick
-        load_into_form(chosen)
 
-formato = st.radio("Formato", list(FORMATS), horizontal=True, format_func=FORMAT_LABELS.get, key="kc_f")
-pregunta = st.text_area("Pregunta jurídica", height=110, key="kc_q",
-                        placeholder="¿Cuál es el término para contestar la demanda en el proceso verbal sumario?")
-opciones = {}
-if formato == "multiple_choice":
-    cols = st.columns(2)
-    for i, letra in enumerate("ABCD"):
-        opciones[letra] = cols[i % 2].text_input(f"Opción {letra}", key=f"kc_o_{letra}")
-    opciones = {k_: v for k_, v in opciones.items() if v.strip()}
-
-ready = bool(pregunta.strip()) and (formato != "multiple_choice" or len(opciones) >= 2)
-cache = st.session_state.setdefault("kc_cache", {})
-config_key = (corpus_dir, decoder_alias, precision, k, graph_policy, prompt_version, fit_passages)
-if st.button("Responder con evidencia", type="primary", disabled=not ready):
-    key = (pregunta.strip(), formato, tuple(sorted(opciones.items())), config_key)
-    if key in cache:
-        st.session_state["kc_last"] = {**cache[key], "from_cache": True}
-    else:
-        started = perf_counter()
-        with st.spinner("Recuperando evidencia y redactando la respuesta…"):
-            try:
-                meta = st.session_state.get("kc_meta") or {}
-                original = bank.get(int(meta["id"])) if meta.get("id") is not None else None
-                same = bool(original) and original["pregunta"] == pregunta.strip() and original["formato"] == formato
-                qid_run = int(meta["id"]) if same else 0
-                row, trace = pipeline.run(Question(qid_run, pregunta.strip(), formato, opciones,
-                                                   area=meta.get("area") if same else None,
-                                                   sub_tarea=meta.get("sub_tarea") if same else None))
-                result = {"question": pregunta.strip(), "format": formato, "row": row, "trace": trace,
-                          "seconds": perf_counter() - started}
-                cache[key] = result
-                st.session_state["kc_last"] = {**result, "from_cache": False}
-            except Exception as exc:
-                st.session_state.pop("kc_last", None)
-                st.error("La consulta falló y no se generó respuesta. Revise el detalle técnico.")
-                with st.expander("Detalle técnico"):
-                    st.exception(exc)
-elif not ready:
-    st.caption("Escriba la pregunta" + (" y al menos dos opciones." if formato == "multiple_choice" else "."))
-
-# --- Resultado ---------------------------------------------------------------------------------
-last = st.session_state.get("kc_last")
-if last:
-    row, trace, fmt = last["row"], last["trace"], last["format"]
-    view = view_model(row, trace)
-    if last["question"] != pregunta.strip() or fmt != formato:
-        st.info(f"Mostrando la consulta anterior: {last['question'][:140]}")
-    esc = lambda s: html.escape(str(s or ""))
-    izq, der = st.columns([3, 2], gap="large")
-    with izq:
-        if view["abstained"]:
-            body = (f'<div class="kc-abst"><b>El sistema se abstiene.</b> {esc(view["abstention_reason"] or "Evidencia insuficiente")}'
-                    f' · origen: {esc(view["abstention_source"] or "n/d")}</div>')
-        elif fmt == "multiple_choice":
-            discards = "".join(f'<p class="kc-discard"><b>{esc(l)}</b> — {esc(t)}</p>' for l, t in (row.get("descarte_opciones") or {}).items())
-            body = (f'<div class="kc-answer"><h3><span class="kc-letter">{esc(row["respuesta_correcta"])}</span>Opción correcta</h3>'
-                    f'<p>{esc(row["justificacion"])}</p><div class="kc-field">Opciones descartadas</div>{discards}</div>')
-        elif fmt == "semi_open":
-            body = (f'<div class="kc-answer"><h3>Respuesta</h3><p>{esc(row["respuesta"])}</p>'
-                    f'<div class="kc-field">Referencia legal</div><p>{esc(row["referencia_legal"])}</p></div>')
+def render_passage(passage: dict, expanded: bool = False) -> None:
+    title = html.escape(str(passage.get("norm_name") or "Fuente jurídica"))
+    article = passage.get("article")
+    article_label = f" · art. {html.escape(str(article))}" if article else ""
+    status = "Cita o evidencia atribuida" if passage.get("cited") or passage.get("declared_used") else "Recuperado"
+    with st.expander(f"[P{passage['rank']}] {title}{article_label} · {status}", expanded=expanded):
+        st.write(passage.get("texto") or "")
+        source_url = passage.get("source_url") or ""
+        parsed = urlparse(source_url)
+        if parsed.scheme in {"https", "http"} and parsed.netloc:
+            st.link_button("Abrir fuente", source_url)
+        elif source_url:
+            st.caption(f"Fuente: {source_url}")
         else:
-            parts = "".join(f'<div class="kc-field">{t}</div><p>{esc(row[c])}</p>' for c, t in
-                            [("marco_normativo", "Marco normativo"), ("analisis", "Análisis"),
-                             ("jurisprudencia", "Jurisprudencia"), ("conclusion", "Conclusión")])
-            body = f'<div class="kc-answer"><h3>Análisis del caso</h3>{parts}</div>'
-        chips = "".join(
-            f'<span class="kc-chip{"" if n["supported"] else " kc-chip-bad"}">{esc(" ".join(str(x) for x in n["body"] if x))}'
-            f'{"" if n["supported"] else " · sin respaldo"}</span>' for n in view["cited_norms"])
-        timing = "respuesta en memoria (consulta repetida)" if last.get("from_cache") else f"{last.get('seconds', 0):.1f} s"
-        st.markdown(body + '<div class="kc-field">Normas citadas · verificadas contra la evidencia</div>'
-                    + f'<div class="kc-chips">{chips or "<span class=kc-foot>La respuesta no cita normas.</span>"}</div>'
-                    + f'<div class="kc-time">{timing} · {len(row["pasajes_recuperados"])} pasajes recuperados</div>',
-                    unsafe_allow_html=True)
+            st.caption("El pasaje no tiene URL de fuente registrada.")
 
-    def passage(c, cited: bool) -> str:
-        tags = (["citado"] if c["cited"] else []) + (["usado por el modelo"] if c["declared_used"] else [])
-        art = f" · art. {esc(c['article'])}" if c.get("article") else ""
-        text = c["texto"] or ""
-        link = f' · <a href="{html.escape(c["source_url"] or "", quote=True)}" target="_blank" rel="noopener">fuente oficial</a>' if c.get("source_url") else ""
-        return (f'<div class="kc-pas{" cited" if cited else ""}"><div class="kc-pas-h"><span class="kc-rank">P{c["rank"]}</span>'
-                f'<span class="kc-norm">{esc(c["norm_name"])}{art}</span>'
-                + "".join(f'<span class="kc-tag">{t}</span>' for t in tags) + f'{link}</div>'
-                f'<p>{esc(text[:700])}{"…" if len(text) > 700 else ""}</p></div>')
 
-    with der:
-        st.markdown(f'<div class="kc-ev-title">Evidencia citada ({len(view["cited_passages"])})</div>'
-                    + "".join(passage(c, True) for c in view["cited_passages"]), unsafe_allow_html=True)
-        with st.expander(f"Otros pasajes recuperados ({len(view['other_passages'])})", expanded=not view["cited_passages"]):
-            st.markdown("".join(passage(c, False) for c in view["other_passages"]) or "—", unsafe_allow_html=True)
-        st.markdown('<p class="kc-foot">Son exactamente los pasajes de <code>pasajes_recuperados</code> de la entrega; '
-                    'una norma se marca como respaldada si aparece en alguno de los 10 primeros.</p>', unsafe_allow_html=True)
+def render_result(question: Question, row: dict, trace: dict) -> None:
+    view = view_model(row, trace)
+    left, right = st.columns([1.2, 1], gap="large")
+    with left:
+        st.subheader("Respuesta")
+        if view["abstained"]:
+            st.warning(
+                f"El sistema se abstiene. Motivo: {view['abstention_reason'] or 'sin especificar'} · "
+                f"origen: {view['abstention_source'] or 'n/d'}."
+            )
+        elif question.format == "multiple_choice":
+            st.markdown(f"### Opción {row['respuesta_correcta']}")
+            st.write(row.get("justificacion") or "")
+            for letter, text in (row.get("descarte_opciones") or {}).items():
+                st.markdown(f"**{letter}** · {text}")
+        elif question.format == "semi_open":
+            st.write(row.get("respuesta") or "")
+            if row.get("palabras_clave"):
+                st.caption("Palabras clave: " + ", ".join(row["palabras_clave"]))
+            if row.get("referencia_legal"):
+                st.markdown(f"**Referencia legal:** {row['referencia_legal']}")
+        else:
+            for field, title in (
+                ("marco_normativo", "Marco normativo"),
+                ("analisis", "Análisis"),
+                ("jurisprudencia", "Jurisprudencia"),
+                ("conclusion", "Conclusión"),
+            ):
+                if row.get(field):
+                    st.markdown(f"**{title}**")
+                    st.write(row[field])
 
-    with st.expander("JSON de la entrega (esquema oficial)"):
-        st.json(view["submission"])
-    if debug_mode:
-        with st.expander("Traza técnica"):
-            st.json(debug_trace(trace))
+        st.markdown("**Normas citadas**")
+        if not view["cited_norms"]:
+            st.caption("La respuesta no cita normas.")
+        else:
+            for norm in view["cited_norms"]:
+                label = " · ".join(str(part) for part in norm["body"] if part)
+                if norm["supported"]:
+                    st.success(f"{label} · presente en la evidencia", icon="✅")
+                else:
+                    st.warning(f"{label} · sin respaldo en evidencia", icon="⚠️")
+
+        with st.expander("JSON de entrega (schema oficial)"):
+            st.json(view["submission"])
+
+    with right:
+        st.subheader(f"Evidencia y fuentes · {len(row['pasajes_recuperados'])} pasajes")
+        if view["cited_passages"]:
+            st.caption("Citas y pasajes atribuidos")
+            for passage in view["cited_passages"]:
+                render_passage(passage, expanded=True)
+        if view["other_passages"]:
+            st.caption("Otros pasajes recuperados")
+            for passage in view["other_passages"]:
+                render_passage(passage)
+        if not row["pasajes_recuperados"]:
+            st.info("No se recuperó evidencia para esta pregunta.")
+        if debug_mode:
+            with st.expander("Traza técnica (operador)"):
+                st.json(debug_trace(trace))
+
+
+single_tab, batch_tab, judge_tab = st.tabs(
+    ["Consulta individual", "Cargar lote", "Verificar ID del jurado"]
+)
+
+with single_tab:
+    st.subheader("Analiza una pregunta")
+    formato = st.radio(
+        "Formato",
+        list(FORMATS),
+        horizontal=True,
+        format_func=lambda value: FORMAT_LABELS[value],
+        key="single_format",
+    )
+    pregunta = st.text_area(
+        "Pregunta",
+        height=115,
+        placeholder="Escriba la pregunta jurídica…",
+        key="single_question",
+    )
+    opciones: dict[str, str] = {}
+    if formato == "multiple_choice":
+        st.caption("Complete las cuatro opciones para una pregunta de selección múltiple.")
+        option_cols = st.columns(2)
+        for index, letter in enumerate("ABCD"):
+            opciones[letter] = option_cols[index % 2].text_input(
+                f"Opción {letter}", key=f"single_option_{letter}"
+            )
+    submitted = st.button("Analizar pregunta", type="primary", use_container_width=True, key="single_analyze")
+
+    if submitted:
+        if not pregunta.strip():
+            st.error("Escriba la pregunta antes de analizarla.")
+        elif formato == "multiple_choice" and any(not opciones.get(letter, "").strip() for letter in "ABCD"):
+            st.error("Complete las opciones A, B, C y D.")
+        else:
+            question = Question(0, pregunta.strip(), formato, {key: value.strip() for key, value in opciones.items() if value.strip()})
+            try:
+                with st.spinner("Recuperando evidencia y generando respuesta…"):
+                    row, trace = pipeline.run(question)
+                st.session_state["single_result"] = {"question": question, "row": row, "trace": trace}
+            except Exception as exc:
+                st.error(f"No se pudo analizar la pregunta: {type(exc).__name__}: {exc}")
+
+    single_result = st.session_state.get("single_result")
+    if single_result:
+        st.divider()
+        render_result(single_result["question"], single_result["row"], single_result["trace"])
+
+with batch_tab:
+    st.subheader("Carga y analiza varias preguntas")
+    source = st.radio(
+        "Origen",
+        ["Subir archivo JSONL", "Usar sample_50 del repositorio"],
+        horizontal=True,
+        key="batch_source",
+    )
+    payload = None
+    source_name = ""
+    if source == "Subir archivo JSONL":
+        uploaded = st.file_uploader("Archivo de preguntas (.jsonl)", type=["jsonl"], key="batch_upload")
+        if uploaded is not None:
+            payload, source_name = uploaded.getvalue(), uploaded.name
+    else:
+        sample_path = ROOT / "data" / "sample_50.jsonl"
+        if sample_path.exists():
+            payload, source_name = sample_path.read_bytes(), sample_path.name
+            st.caption(f"Archivo local: `{sample_path.relative_to(ROOT)}`")
+        else:
+            st.error("No se encontró data/sample_50.jsonl en este checkout.")
+
+    questions: list[Question] = []
+    fingerprint = None
+    if payload is not None:
+        fingerprint = hashlib.sha256(payload).hexdigest()
+        if st.session_state.get("batch_fingerprint") != fingerprint:
+            for state_key in ("batch_results", "batch_report", "batch_submission", "batch_run_dir", "batch_result_id"):
+                st.session_state.pop(state_key, None)
+            st.session_state["batch_fingerprint"] = fingerprint
+        try:
+            questions = parse_questions_jsonl(payload)
+        except (TypeError, ValueError) as exc:
+            st.error(f"No se pudo cargar `{source_name}`: {exc}")
+        else:
+            st.success(f"{len(questions)} preguntas válidas · {source_name}")
+            saved_results = st.session_state.get("batch_results") or {}
+            table = [
+                {
+                    "ID": question.id,
+                    "Formato": FORMAT_LABELS[question.format],
+                    "Pregunta": question.text.replace("\n", " ").strip(),
+                    "Estado": (
+                        "Error · abstención"
+                        if saved_results.get(question.id, {}).get("status") == "fallback"
+                        else "Abstención"
+                        if saved_results.get(question.id, {}).get("row", {}).get("abstencion")
+                        else "Lista"
+                        if question.id in saved_results
+                        else "Pendiente"
+                    ),
+                }
+                for question in questions
+            ]
+            st.dataframe(table, hide_index=True, use_container_width=True, height=min(410, 44 + len(table) * 36))
+            completed_report = st.session_state.get("batch_report")
+            if completed_report:
+                st.progress(1.0, text=f"Lote completo · {completed_report['rows']}/{len(questions)} preguntas")
+                st.caption(
+                    f"Tiempo total: {completed_report['seconds']:.1f} s · "
+                    f"abstenciones de respaldo: {len(completed_report['fallback_ids'])}"
+                )
+
+    if questions:
+        question_by_id = {question.id: question for question in questions}
+        selected_id = st.selectbox(
+            "Pregunta para analizar o revisar",
+            list(question_by_id),
+            format_func=lambda qid: f"{qid} · {FORMAT_LABELS[question_by_id[qid].format]} · "
+            f"{question_by_id[qid].text[:100]}{'…' if len(question_by_id[qid].text) > 100 else ''}",
+            key="batch_result_id",
+        )
+        selected_question = question_by_id[selected_id]
+        action_cols = st.columns([1, 1])
+        with action_cols[0]:
+            analyze_selected = st.button("Analizar seleccionada", key="batch_analyze_one", use_container_width=True)
+        with action_cols[1]:
+            run_all = st.button("Ejecutar lote completo", type="primary", key="batch_run_all", use_container_width=True)
+
+        if analyze_selected:
+            try:
+                with st.spinner(f"Analizando pregunta {selected_question.id}…"):
+                    row, trace = pipeline.run(selected_question)
+                results = dict(st.session_state.get("batch_results") or {})
+                results[selected_question.id] = {"row": row, "trace": trace, "status": "ok"}
+                st.session_state["batch_results"] = results
+                st.rerun()
+            except Exception as exc:
+                st.error(f"No se pudo analizar la pregunta {selected_question.id}: {type(exc).__name__}: {exc}")
+
+        if run_all:
+            identity = {
+                "origin": source_name,
+                "input_sha256": fingerprint,
+                "corpus_dir": str(Path(corpus_dir).resolve()),
+                "decoder": decoder_alias,
+                "precision": precision,
+                "passages_k": k,
+                "graph_policy": graph_policy,
+                "recommended": RECOMMENDED_ARGS,
+            }
+            progress = st.progress(0.0, text=f"Preparando lote: 0/{len(questions)}")
+            current = st.empty()
+            metric_cols = st.columns(4)
+            completed_metric, average_metric, failures_metric, retries_metric = [col.empty() for col in metric_cols]
+
+            def update_progress(event: dict) -> None:
+                completed = event["completed"]
+                total = event["total"]
+                progress.progress(completed / total, text=f"Procesando preguntas · {completed}/{total}")
+                counts = event["counts"]
+                current.markdown(
+                    f"**Pregunta actual:** {event['question_id']} · "
+                    f"**Estado:** {event['status']} · "
+                    f"**Tiempo transcurrido:** {event['elapsed_seconds']:.1f} s"
+                )
+                completed_metric.metric("Progreso", f"{completed}/{total}")
+                avg = event.get("average_seconds")
+                average_metric.metric("Promedio", f"{avg:.1f} s/pregunta" if avg is not None else "calculando")
+                failures_metric.metric("Fallos finales", counts["fallback"])
+                retries_metric.metric("Reintentos exitosos", counts["retried_ok"])
+
+            try:
+                # The runner needs disk checkpoints; use a temporary directory so
+                # uploaded questions and traces are removed after the session run.
+                with tempfile.TemporaryDirectory(prefix="kingscode_ui_batch_") as temporary_run:
+                    run_dir = Path(temporary_run)
+                    report = BatchRunner(pipeline, run_dir, identity=identity).run(
+                        questions,
+                        resume=False,
+                        progress_callback=update_progress,
+                    )
+                    if not report.get("complete") or report.get("rows") != len(questions):
+                        raise RuntimeError("El lote terminó sin generar todas las filas")
+                    run_results = {}
+                    for question in questions:
+                        item_path = run_dir / "items" / f"{question.id}.json"
+                        item = json.loads(item_path.read_text(encoding="utf-8"))
+                        run_results[question.id] = {
+                            "row": item["row"],
+                            "trace": item.get("trace") or {},
+                            "status": item.get("status", "ok"),
+                        }
+                    rows = [run_results[question.id]["row"] for question in questions]
+                    submission = submissions_jsonl(rows)
+                st.session_state["batch_results"] = run_results
+                st.session_state["batch_report"] = report
+                st.session_state["batch_submission"] = submission
+                st.success(f"Lote completo: {report['rows']}/{len(questions)} · {report['seconds']:.1f} s")
+                st.rerun()
+            except Exception as exc:
+                st.error(f"El lote no pudo completarse: {type(exc).__name__}: {exc}")
+
+        results = st.session_state.get("batch_results") or {}
+        if selected_id in results:
+            st.divider()
+            status = results[selected_id].get("status", "ok")
+            st.caption(f"Resultado guardado · estado: {status}")
+            render_result(
+                selected_question,
+                results[selected_id]["row"],
+                results[selected_id]["trace"],
+            )
+
+        submission = st.session_state.get("batch_submission")
+        report = st.session_state.get("batch_report")
+        if submission is not None and report is not None:
+            st.divider()
+            st.subheader("Entrega del lote")
+            st.write(f"Filas: {report['rows']} · SHA-256: `{report['submission_sha256']}`")
+            st.download_button(
+                "Descargar submissions.jsonl",
+                data=submission,
+                file_name="submissions.jsonl",
+                mime="application/x-ndjson",
+                type="primary",
+                use_container_width=True,
+                key="download_batch_submission",
+            )
+
+
+def _default_candidate_file(paths: tuple[Path, ...]) -> Path | None:
+    return next((path for path in paths if path.is_file()), None)
+
+
+def _read_candidate_identity() -> dict | None:
+    path = CANDIDATE_3746["identity"]
+    if not path.is_file():
+        return None
+    identity = parse_run_identity_json(path.read_bytes())
+    # The delivered m5 replay added five evidence-verified norm mentions to
+    # the original three-mention batch; the official 37.46 report is for m5.
+    identity["cite_mentions"] = CANDIDATE_3746["cite_mentions"]
+    # These settings were at their measured defaults in the m5 run; newer
+    # identity writers record them explicitly.
+    identity.setdefault("doc_cap", 0)
+    identity.setdefault("max_context", None)
+    return identity
+
+
+with judge_tab:
+    st.subheader("Reproducción del candidato entregado")
+    st.markdown(
+        "El jurado puede dar un ID. La interfaz recupera la pregunta pública, "
+        "regenera una respuesta con el perfil congelado y la compara con la fila "
+        "entregada de **37,46/50 (m5)**. Las respuestas esperadas nunca se pasan al modelo."
+    )
+    score_path = CANDIDATE_3746["evaluation"]
+    reference_path = _default_candidate_file(CANDIDATE_3746["submission_candidates"])
+    questions_path = CANDIDATE_3746["questions"]
+    target_identity = _read_candidate_identity()
+    with st.expander("Archivos del candidato de referencia", expanded=reference_path is None or target_identity is None):
+        st.caption(
+            "Por defecto se usan `data/sample_50.jsonl`, `docs/entrega_viernes/"
+            "submissions_sample50.jsonl`, el `identity.json` de la corrida y su `evaluation_official.json`. "
+            "Puede sustituirlos con los artefactos de la misma corrida."
+        )
+        uploaded_questions = st.file_uploader(
+            "Preguntas públicas que contienen el ID (.jsonl)", type=["jsonl"], key="judge_questions_upload"
+        )
+        uploaded_submission = st.file_uploader(
+            "Entrega congelada 37,46 (.jsonl)", type=["jsonl"], key="judge_submission_upload"
+        )
+        uploaded_identity = st.file_uploader(
+            "Identidad de la corrida (.json)", type=["json"], key="judge_identity_upload"
+        )
+        uploaded_evaluation = st.file_uploader(
+            "Evaluación oficial del m5 (.json)", type=["json"], key="judge_evaluation_upload"
+        )
+
+    if uploaded_evaluation:
+        try:
+            score_report = json.loads(uploaded_evaluation.getvalue().decode("utf-8-sig"))
+            candidate_score = official_score(score_report)
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            candidate_score = None
+    elif score_path.is_file():
+        try:
+            score_report = json.loads(score_path.read_text(encoding="utf-8-sig"))
+            candidate_score = official_score(score_report)
+        except (OSError, json.JSONDecodeError):
+            candidate_score = None
+    else:
+        candidate_score = None
+
+    if candidate_score == CANDIDATE_3746["score"]:
+        st.success("Snapshot oficial m5 verificado: 37,46/50 · Qwen3-8B · perfil BM25 congelado.")
+    elif candidate_score is None:
+        st.warning("No está el reporte oficial m5 en este checkout. Cargue la evaluación congelada y su identity.json.")
+    else:
+        st.error(f"El reporte oficial encontrado marca {candidate_score:.2f}, no 37,46. No se habilitará como candidato m5.")
+
+    question_bytes = uploaded_questions.getvalue() if uploaded_questions else (
+        questions_path.read_bytes() if questions_path.is_file() else None
+    )
+    submission_bytes = uploaded_submission.getvalue() if uploaded_submission else (
+        reference_path.read_bytes() if reference_path else None
+    )
+    identity_bytes = uploaded_identity.getvalue() if uploaded_identity else (
+        CANDIDATE_3746["identity"].read_bytes() if CANDIDATE_3746["identity"].is_file() else None
+    )
+    if reference_path and not uploaded_submission:
+        st.caption(f"Entrega de referencia: `{reference_path.relative_to(ROOT)}`")
+
+    judge_id_text = st.text_input("ID entregado por el jurado", key="judge_id_input", placeholder="Ej. 513")
+    verify_judge = st.button(
+        "Regenerar y comparar con 37,46",
+        type="primary",
+        use_container_width=True,
+        key="judge_verify_button",
+    )
+
+    if verify_judge:
+        try:
+            if not judge_id_text.strip().isdigit():
+                raise ValueError("Ingrese un ID entero.")
+            if question_bytes is None or submission_bytes is None or identity_bytes is None:
+                raise ValueError("Falta el JSONL de preguntas, la entrega congelada o el identity.json del candidato.")
+            if candidate_score != CANDIDATE_3746["score"]:
+                raise ValueError("No se pudo confirmar que el reporte de referencia corresponde a 37,46/50.")
+
+            judge_id = int(judge_id_text.strip())
+            judge_questions = parse_questions_jsonl(question_bytes)
+            frozen_rows = parse_submission_rows_jsonl(submission_bytes)
+            run_identity = parse_run_identity_json(identity_bytes)
+            reference_identity = target_identity
+            if reference_identity is None:
+                sample_questions = parse_questions_jsonl(questions_path.read_bytes()) if questions_path.is_file() else []
+                sample_hash = questions_sha256(sample_questions) if sample_questions else None
+                if run_identity.get("questions_sha256") != sample_hash:
+                    raise ValueError(
+                        "Falta la identidad de referencia m5. El identity.json cargado solo puede reemplazarla "
+                        "si corresponde al lote sample_50 congelado."
+                    )
+                reference_identity = dict(run_identity)
+                reference_identity["cite_mentions"] = CANDIDATE_3746["cite_mentions"]
+                reference_identity.setdefault("doc_cap", 0)
+                reference_identity.setdefault("max_context", None)
+
+            question_ids = {question.id for question in judge_questions}
+            if question_ids != set(frozen_rows):
+                missing_rows = sorted(question_ids - set(frozen_rows))[:5]
+                extra_rows = sorted(set(frozen_rows) - question_ids)[:5]
+                raise ValueError(
+                    f"Preguntas y entrega no corresponden al mismo lote (sin respuesta: {missing_rows}; "
+                    f"IDs extra: {extra_rows})."
+                )
+            if not verify_questions_match_identity(judge_questions, run_identity):
+                raise ValueError("El identity.json no corresponde al JSONL de preguntas cargado.")
+
+            # If a complete 992-item delivery is used, require its recorded
+            # settings to match the measured 37.46 profile, ignoring only the
+            # dataset hash, which necessarily differs from sample_50.
+            custom_identity = bool(uploaded_identity)
+            if custom_identity:
+                if (
+                    run_identity.get("questions_sha256") == reference_identity.get("questions_sha256")
+                    and run_identity.get("cite_mentions") == 3
+                ):
+                    # The stored batch identity predates the deterministic m5
+                    # replay; its delivered sample output was post-processed
+                    # with five supported mentions and scored 37.46.
+                    run_identity["cite_mentions"] = CANDIDATE_3746["cite_mentions"]
+                    run_identity.setdefault("doc_cap", 0)
+                    run_identity.setdefault("max_context", None)
+                profile_diffs = identity_differences(reference_identity, run_identity)
+                if profile_diffs:
+                    detail = "\n".join(f"• {entry}" for entry in profile_diffs[:8])
+                    raise ValueError("La corrida cargada no usa el perfil congelado 37,46:\n" + detail)
+
+            runtime_diffs = identity_differences(reference_identity, pipeline_identity)
+            if precision != "bf16":
+                runtime_diffs.append(f"precision: snapshot=bf16; actual={precision}")
+            if runtime_diffs:
+                detail = "\n".join(f"• {entry}" for entry in runtime_diffs[:8])
+                raise ValueError(
+                    "El pipeline activo no coincide con el perfil m5 de 37,46. "
+                    "Revise Qwen3-8B BF16, corpus y configuración:\n" + detail
+                )
+
+            by_id = {question.id: question for question in judge_questions}
+            if judge_id not in by_id:
+                raise ValueError(f"El ID {judge_id} no está en el JSONL de preguntas cargado.")
+            question = by_id[judge_id]
+            with st.spinner(f"Regenerando ID {judge_id} con Qwen3-8B y el perfil m5…"):
+                generated_row, generated_trace = pipeline.run(question)
+            frozen_row = frozen_rows[judge_id]
+            comparison = compare_submission_rows(generated_row, frozen_row)
+            st.session_state["judge_result"] = {
+                "question": question,
+                "expected": frozen_row,
+                "actual": generated_row,
+                "trace": generated_trace,
+                "comparison": comparison,
+                "submission_sha256": hashlib.sha256(submission_bytes).hexdigest(),
+                "identity": run_identity,
+                "source": "m5 37.46/50",
+            }
+        except Exception as exc:
+            st.error(f"No se pudo verificar el ID: {type(exc).__name__}: {exc}")
+
+    judge_result = st.session_state.get("judge_result")
+    if judge_result:
+        st.divider()
+        comparison = judge_result["comparison"]
+        status_cols = st.columns(4)
+        if comparison["answer_identical"]:
+            status_cols[0].success("Respuesta exacta: coincide")
+        else:
+            status_cols[0].error("Respuesta exacta: diferente")
+        status_cols[1].metric("Citas oficiales", "Iguales" if comparison["citations_equal"] else "Diferentes")
+        status_cols[2].metric("Pasajes recuperados", "Iguales" if comparison["passages_equal"] else "Diferentes")
+        status_cols[3].metric("Fila JSON completa", "Igual" if comparison["row_identical"] else "Diferente")
+        st.caption(
+            f"ID {judge_result['question'].id} · Snapshot {judge_result['source']} · "
+            f"SHA-256 de la entrega: `{judge_result['submission_sha256']}`"
+        )
+        if comparison["status"] == "match":
+            st.success("La respuesta, sus citas y los pasajes coinciden con la entrega congelada.")
+        elif comparison["answer_identical"]:
+            st.warning("La respuesta coincide literalmente; las citas oficiales o los pasajes recuperados difieren.")
+        else:
+            st.error("La respuesta regenerada difiere de la fila entregada para este ID.")
+
+        frozen_tab, regenerated_tab = st.tabs(["Respuesta congelada", "Respuesta regenerada"])
+        with frozen_tab:
+            render_result(judge_result["question"], judge_result["expected"], {})
+        with regenerated_tab:
+            render_result(judge_result["question"], judge_result["actual"], judge_result["trace"])

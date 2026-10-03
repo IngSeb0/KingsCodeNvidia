@@ -1,2 +1,3 @@
 # Interfaz gráfica (interfaz/app.py). No entra al pipeline competitivo.
+-r requirements-knowledge.txt
 streamlit==1.51.0
