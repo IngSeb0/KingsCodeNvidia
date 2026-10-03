@@ -1,0 +1,16 @@
+# Tema de la interfaz (identidad visual de Software Colombia). Streamlit lo lee al correr
+# `streamlit run interfaz/app.py` desde la raíz del repositorio.
+[theme]
+base = "light"
+primaryColor = "#0B7E7C"
+backgroundColor = "#F6F8F8"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#0B0B0B"
+font = "sans serif"
+
+[server]
+headless = true
+runOnSave = false
+
+[browser]
+gatherUsageStats = false

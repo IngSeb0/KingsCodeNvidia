@@ -2,22 +2,25 @@
 
 Consulta de extremo a extremo sobre el pipeline real de KingsCode: A.retrieve()
 -> B.Pipeline (router -> policy -> decoder -> citation_guard). No reimplementa
-nada: usa exactamente kingscode.reasoning y kingscode.Retriever, el mismo
-código que corre el sábado (pipeline construido con tools/member_b.py::_pipeline,
-configuración -Recomendada).
+nada: el pipeline se construye con tools/member_b.py::_pipeline, el mismo código
+y la misma configuración de las corridas entregadas (prompt v6, citas verificadas).
 
 Ejecutar desde la raíz del repositorio, con el corpus ya construido:
     streamlit run interfaz/app.py
 
-Sin CUDA disponible, solo ofrece DummyDecoder (siempre se abstiene) y lo declara
-explícitamente. Si falla la carga de un decoder real, detiene la consulta con
-un error visible: no presenta una abstención de respaldo como respuesta real.
+Rapidez: el corpus, el índice y el decoder se cargan una sola vez por proceso
+(st.cache_resource) y una pregunta ya consultada con la misma configuración se
+responde al instante desde la sesión (temperatura 0: el resultado es idéntico).
+Sin CUDA solo ofrece DummyDecoder (siempre se abstiene) y lo declara; si falla la
+carga de un decoder real, detiene la consulta con un error visible.
 """
 from __future__ import annotations
 
 import html
+import json
 import sys
 from pathlib import Path
+from time import perf_counter
 
 import streamlit as st
 
@@ -29,57 +32,99 @@ sys.path.insert(0, str(ROOT / "tools"))
 from kingscode.reasoning.contracts import FORMATS, Question  # noqa: E402
 from kingscode.reasoning.presentation import debug_trace, view_model  # noqa: E402
 
-st.set_page_config(page_title="KingsCode · Derecho colombiano", page_icon="⚖️", layout="wide")
+st.set_page_config(page_title="KingsCode · Derecho colombiano", page_icon="⚖", layout="wide")
 
-# Identidad visual de Software Colombia: turquesa del logo, negro y azules de
-# la portada del enunciado (sección 6.2: 3 de los 10 puntos de interfaz).
+FORMAT_LABELS = {"multiple_choice": "Selección múltiple", "semi_open": "Respuesta breve", "open_ended": "Caso abierto"}
+
+# Identidad visual de Software Colombia (portada del enunciado): negro, turquesa del logo y las
+# franjas diagonales azules; títulos en serif como "Hackathon 2026", cuerpo en Roboto.
 st.markdown("""<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Roboto:wght@400;500;700&display=swap');
 :root {
-    --sc-turquesa: #10A9A6;
-    --sc-turquesa-oscuro: #0B7E7C;
-    --sc-negro: #0B0B0B;
-    --sc-azul: #1E4E8C;
-    --sc-azul-claro: #6FB6E8;
-    --sc-fondo: #F4FAFA;
+  --ink: #0B0B0B; --ink-2: #3A4448; --ink-3: #5B676D;
+  --teal: #10A9A6; --teal-deep: #0B7E7C; --teal-wash: #E6F5F4;
+  --blue: #1E88E5; --blue-light: #90CAF9;
+  --paper: #F6F8F8; --card: #FFFFFF; --rule: #D7E1E3; --alert: #B3261E;
 }
-.stApp { background: var(--sc-fondo); }
-h1, h2, h3 { color: var(--sc-negro); }
-h1 { border-bottom: 4px solid var(--sc-turquesa); padding-bottom: .3rem; }
-.stButton>button {
-    background: var(--sc-turquesa); color: white; border: 0; font-weight: 600;
+html, body, .stApp, [class*="css"] { font-family: 'Roboto', system-ui, sans-serif; color: var(--ink); }
+.stApp { background: var(--paper); }
+::selection { background: var(--teal); color: #fff; }
+a { color: var(--teal-deep); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--teal-deep) !important; outline-offset: 2px; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #B9C8CB; border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+.block-container { padding-top: 1.2rem; max-width: 1320px; }
+h1, h2, h3, .kc-serif { font-family: 'Playfair Display', Georgia, serif; letter-spacing: -0.01em; }
+
+/* Cabecera: banda negra con las franjas diagonales de la portada */
+.kc-head {
+  position: relative; overflow: hidden; background: var(--ink); color: #fff;
+  border-radius: 14px; padding: 1.6rem 2rem 1.4rem; margin-bottom: 1.1rem;
+  box-shadow: 0 10px 30px -18px rgba(11,11,11,.55);
 }
-.stButton>button:hover { background: var(--sc-turquesa-oscuro); color: white; }
-div[data-testid="stRadio"] label { color: var(--sc-negro); }
-.kc-banner {
-    background: var(--sc-negro); color: white; padding: .5rem 1rem; border-radius: 6px;
-    border-left: 6px solid var(--sc-turquesa); margin-bottom: 1rem; font-size: .9rem;
+.kc-head::after {
+  content: ""; position: absolute; top: -40%; right: -6%; width: 340px; height: 180%;
+  background: linear-gradient(90deg, var(--blue-light) 0 34%, var(--blue) 34% 70%, transparent 70%);
+  transform: skewX(-28deg); opacity: .95;
 }
-.kc-status {
-    background: white; border: 1px solid #D5E5E7; border-radius: 8px;
-    padding: .4rem .75rem; min-height: 4.1rem;
-}
-.kc-status-label { color: #52616B; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; }
-.kc-status-value { color: var(--sc-negro); font-size: .98rem; font-weight: 650; overflow-wrap: anywhere; }
-.kc-pasaje {
-    border-left: 4px solid var(--sc-azul); background: white; padding: .5rem .9rem;
-    margin-bottom: .6rem; border-radius: 0 6px 6px 0; font-size: .88rem;
-}
-.kc-pasaje b { color: var(--sc-azul); }
-.kc-norma {
-    display: inline-block; background: var(--sc-turquesa); color: white; border-radius: 999px;
-    padding: .15rem .7rem; margin: .15rem .3rem .15rem 0; font-size: .82rem; font-weight: 600;
-}
-.kc-norma-sin-respaldo {
-    background: white; color: var(--sc-negro); border: 1.5px dashed #C0392B;
-}
+.kc-head h1 { color: #fff; font-size: 2.15rem; margin: 0; line-height: 1.1; border: 0; padding: 0; }
+.kc-head p { color: #CFE3E6; margin: .45rem 0 0; max-width: 62ch; font-size: .98rem; }
+.kc-head .kc-mark { color: var(--teal); }
+
+/* Ficha técnica: una sola tira con separadores, no tarjetas iguales */
+.kc-spec { display: flex; flex-wrap: wrap; background: var(--card); border: 1px solid var(--rule);
+  border-radius: 12px; margin-bottom: 1rem; }
+.kc-spec > div { flex: 1 1 150px; padding: .65rem 1rem; border-right: 1px solid var(--rule); min-width: 0; }
+.kc-spec > div:last-child { border-right: 0; }
+.kc-spec span { display: block; font-size: .72rem; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+.kc-spec b { font-weight: 600; font-size: .95rem; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+
+/* Controles */
+.stButton > button { border-radius: 10px; font-weight: 600; transition: background .2s ease-out, transform .15s ease-out; }
+.stButton > button[kind="primary"] { background: var(--teal-deep); border: 0; color: #fff; padding: .55rem 1.4rem; }
+.stButton > button[kind="primary"]:hover { background: #096A68; transform: translateY(-1px); }
+.stButton > button[kind="primary"]:disabled { background: #9DB7B8; }
+.stTextArea textarea, .stTextInput input { border-radius: 10px !important; caret-color: var(--teal-deep); }
+
+/* Respuesta */
+.kc-answer { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 1.3rem 1.5rem;
+  box-shadow: 0 6px 22px -16px rgba(11,11,11,.35); }
+.kc-answer h3 { margin: 0 0 .6rem; font-size: 1.35rem; }
+.kc-answer p { line-height: 1.6; max-width: 72ch; margin: 0 0 .8rem; }
+.kc-letter { display: inline-grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 10px;
+  background: var(--ink); color: #fff; font-family: 'Playfair Display', serif; font-size: 1.35rem; margin-right: .6rem; }
+.kc-field { font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--teal-deep); font-weight: 700; margin: 1rem 0 .25rem; }
+.kc-discard { color: var(--ink-2); font-size: .92rem; margin: .2rem 0; }
+.kc-abst { background: #FFF4E5; border: 1px solid #F1C68B; border-radius: 12px; padding: 1rem 1.2rem; color: #6B3E00; }
+.kc-time { color: var(--ink-3); font-size: .82rem; margin-top: .6rem; font-variant-numeric: tabular-nums; }
+
+/* Normas citadas */
+.kc-chips { margin-top: .4rem; }
+.kc-chip { display: inline-block; border-radius: 999px; padding: .22rem .75rem; margin: .18rem .3rem .18rem 0;
+  font-size: .82rem; font-weight: 500; background: var(--teal-wash); color: #064E4C; border: 1px solid #A8DCDA; }
+.kc-chip-bad { background: #fff; color: var(--alert); border: 1px dashed var(--alert); }
+
+/* Evidencia */
+.kc-ev-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin: .2rem 0 .6rem; }
+.kc-pas { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: .75rem .95rem;
+  margin-bottom: .6rem; font-size: .88rem; line-height: 1.5; }
+.kc-pas.cited { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal) inset; }
+.kc-pas-h { display: flex; gap: .5rem; align-items: baseline; flex-wrap: wrap; margin-bottom: .35rem; }
+.kc-rank { font-variant-numeric: tabular-nums; font-weight: 700; color: #fff; background: var(--ink);
+  border-radius: 6px; padding: 0 .4rem; font-size: .76rem; }
+.kc-norm { font-weight: 600; color: var(--ink); }
+.kc-tag { font-size: .72rem; color: var(--teal-deep); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.kc-pas p { margin: 0; color: var(--ink-2); }
+.kc-foot { color: var(--ink-3); font-size: .8rem; }
 </style>""", unsafe_allow_html=True)
 
-st.title("KingsCode · Consulta de derecho colombiano")
-st.caption("Hackathon 2026 · AI Week · Universidad de los Andes · patrocina Software Colombia")
+st.markdown("""<div class="kc-head"><h1>KingsCode<span class="kc-mark"> ·</span> derecho colombiano</h1>
+<p>Responde con un modelo abierto de 8B y solo cita normas que aparecen en la evidencia recuperada de fuentes oficiales.
+Hackathon 2026 · AI Week · Universidad de los Andes · patrocina Software Colombia.</p></div>""", unsafe_allow_html=True)
 
-
-# Perfil de interfaz consistente con la corrida seleccionada: BM25 + router,
-# retrieval por opción, prompt v6, citas completadas y hasta 5 menciones verificadas.
+# Mismo perfil que la corrida entregada: BM25 + router, consultas por opción, prompt v6,
+# citas completadas y hasta 5 menciones verificadas.
 RECOMMENDED = ["--retrieval-mode", "option", "--retriever-mode", "bm25", "--prompt-version", "v6",
                "--citation-fill", "--cite-mentions", "5"]
 
@@ -91,7 +136,7 @@ def default_corpus() -> Path:
     return ROOT / "corpus"
 
 
-@st.cache_resource(show_spinner="Cargando corpus, índice y decoder (una sola vez)...")
+@st.cache_resource(show_spinner="Cargando corpus, índice y modelo (una sola vez)…")
 def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_policy: str):
     """Builds the pipeline with tools/member_b.py::_pipeline, the exact code of the batch runs."""
     from member_b import _pipeline, build_parser
@@ -100,15 +145,29 @@ def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_pol
         argv += ["--model", alias, "--precision", precision]
     pipeline, identity = _pipeline(build_parser().parse_args(argv))
     if alias == "dummy_abstain":
-        note = "DummyDecoder: se abstiene siempre (Gate 1B). No hay razonamiento legal real."
+        note = "Modo sin GPU: DummyDecoder se abstiene siempre. No hay razonamiento jurídico real."
     else:
         pipeline.decoder.load()
-        note = f"HFDecoder real: {alias} ({precision}, temperatura 0, prompt v6 de razonamiento jurídico, guardas de cita activas)."
+        note = None
     return pipeline, note, identity
 
 
+@st.cache_data(show_spinner=False)
+def sample_questions() -> list[dict]:
+    """Public fields only of the 50 development questions, for the demo selector."""
+    path = ROOT / "data" / "sample_50.jsonl"
+    if not path.exists():
+        return []
+    out = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            r = json.loads(line)
+            out.append({"id": r["id"], "pregunta": r["pregunta"], "formato": r["formato"], "opciones": r.get("opciones") or {}})
+    return out
+
+
 with st.sidebar:
-    st.header("Configuración")
+    st.markdown("### Configuración")
     corpus_dir = st.text_input("Directorio del corpus", value=str(default_corpus()))
     try:
         import torch
@@ -120,141 +179,142 @@ with st.sidebar:
         try:
             from kingscode.generation.config import load_bakeoff
             enabled = [a for a, c in load_bakeoff()["candidates"].items() if c["enabled"]]
-            # Qwen3-8B is the selected open decoder; keep it first in the demo selector.
             decoder_options += sorted(enabled, key=lambda a: (a != "qwen3-8b", a))
         except Exception as exc:
             st.warning(f"No se pudo leer config/decoder_bakeoff.json: {exc}")
     else:
-        st.info("Sin CUDA disponible en esta máquina: solo DummyDecoder (abstención).")
+        st.info("Sin CUDA en esta máquina: solo modo sin GPU (abstención).")
     decoder_options.append("dummy_abstain")
-    decoder_alias = st.selectbox("Decoder", decoder_options)
+    decoder_alias = st.selectbox("Modelo", decoder_options)
     precision = st.selectbox("Precisión", ["bf16", "int8", "int4"], disabled=decoder_alias == "dummy_abstain")
     k = st.slider("Pasajes recuperados (k)", 1, 10, 8)
-    graph_policy = st.selectbox("Política de grafo", ["router", "off", "auto", "on"], index=0)
-    debug_mode = st.checkbox("Modo depuración (traza técnica)", value=False)
+    graph_policy = st.selectbox("Grafo normativo", ["router", "off", "auto", "on"], index=0)
+    debug_mode = st.checkbox("Mostrar traza técnica", value=False)
 
 if not (Path(corpus_dir) / "manifest.json").exists():
-    st.markdown(f'<div class="kc-banner">No hay corpus en <code>{corpus_dir}</code>. Construya el índice de A '
-                f'(tools/member_a.py o kingscode_pc_nueva_diagnostico.ps1) o corrija la ruta.</div>',
-                unsafe_allow_html=True)
+    st.error(f"No hay corpus en {corpus_dir}. Restaure el respaldo (tools/kingscode_snapshot.ps1 -Accion restaurar) "
+             "o corrija la ruta en la barra lateral.")
     st.stop()
 
 try:
     pipeline, decoder_note, identity = load_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy)
 except Exception as exc:
-    st.error(f'No se pudo cargar el decoder "{decoder_alias}". No se generó respuesta; revise el modelo y la GPU.')
+    st.error(f"No se pudo cargar el modelo «{decoder_alias}». Revise que la GPU esté libre (nvidia-smi) y que los pesos estén descargados.")
     with st.expander("Detalle técnico"):
         st.exception(exc)
     st.stop()
-
-if decoder_alias == "dummy_abstain":
+if decoder_note:
     st.warning(decoder_note)
-else:
-    st.success(decoder_note)
 
-corpus_sha = str(identity.get("retriever", {}).get("corpus_sha256") or "no disponible")
-decoder_name = str((identity.get("decoder") or [decoder_alias])[0])
-prompt_name = str(identity.get("prompt_version") or "no disponible")
-status_cols = st.columns(5)
-status = [
-    ("Decoder", decoder_name),
-    ("Prompt", prompt_name),
-    ("Recuperación", f"{identity.get('retriever', {}).get('mode', 'bm25').upper()} · {identity.get('retrieval_mode', 'option')}"),
-    ("Evidencia", f"k={identity.get('k', k)} · grafo {identity.get('graph_policy', graph_policy)}"),
-    ("passages.jsonl · SHA-256", corpus_sha[:12]),
-]
-for col, (label, value) in zip(status_cols, status):
-    col.markdown(
-        f'<div class="kc-status"><div class="kc-status-label">{html.escape(label)}</div>'
-        f'<div class="kc-status-value">{html.escape(str(value))}</div></div>',
-        unsafe_allow_html=True,
-    )
-st.caption(f"Ruta del corpus: `{Path(corpus_dir)}` · Configuración B: option + BM25 + prompt v6 + citation-fill.")
+corpus_sha = str(identity.get("retriever", {}).get("corpus_sha256") or "n/d")
+spec = [("Modelo", str((identity.get("decoder") or [decoder_alias])[0]).replace("transformers:", "")),
+        ("Prompt", str(identity.get("prompt_version") or "n/d").replace("grounded-formats-", "")),
+        ("Recuperación", f"{identity.get('retriever', {}).get('mode', 'bm25').upper()} + grafo · k={identity.get('k', k)}"),
+        ("Temperatura", "0 · determinista"),
+        ("Corpus · SHA-256", corpus_sha[:12])]
+st.markdown('<div class="kc-spec">' + "".join(f"<div><span>{html.escape(a)}</span><b>{html.escape(b)}</b></div>" for a, b in spec)
+            + "</div>", unsafe_allow_html=True)
 
-formato = st.radio("Formato de la pregunta", list(FORMATS), horizontal=True,
-                    format_func={"multiple_choice": "Selección múltiple", "semi_open": "Respuesta breve",
-                                 "open_ended": "Caso abierto"}.get)
-pregunta = st.text_area("Pregunta", height=110, placeholder="¿Cuál es el término para contestar la demanda en el proceso verbal sumario?")
+# --- Consulta ---------------------------------------------------------------------------------
+samples = sample_questions()
+if samples:
+    pick = st.selectbox("Cargar una pregunta de la muestra (opcional)", ["—"] + [f"{s['id']} · {FORMAT_LABELS[s['formato']]} · {s['pregunta'][:90]}" for s in samples])
+    if pick != "—" and st.session_state.get("kc_pick") != pick:
+        chosen = samples[[f"{s['id']} · {FORMAT_LABELS[s['formato']]} · {s['pregunta'][:90]}" for s in samples].index(pick)]
+        st.session_state["kc_pick"] = pick
+        st.session_state["kc_q"] = chosen["pregunta"]
+        st.session_state["kc_f"] = chosen["formato"]
+        for letra in "ABCD":
+            st.session_state[f"kc_o_{letra}"] = chosen["opciones"].get(letra, "")
+
+formato = st.radio("Formato", list(FORMATS), horizontal=True, format_func=FORMAT_LABELS.get, key="kc_f")
+pregunta = st.text_area("Pregunta jurídica", height=110, key="kc_q",
+                        placeholder="¿Cuál es el término para contestar la demanda en el proceso verbal sumario?")
 opciones = {}
 if formato == "multiple_choice":
     cols = st.columns(2)
     for i, letra in enumerate("ABCD"):
-        opciones[letra] = cols[i % 2].text_input(f"Opción {letra}")
-    opciones = {k: v for k, v in opciones.items() if v.strip()}
+        opciones[letra] = cols[i % 2].text_input(f"Opción {letra}", key=f"kc_o_{letra}")
+    opciones = {k_: v for k_, v in opciones.items() if v.strip()}
 
-if st.button("Analizar pregunta", type="primary") and pregunta.strip():
-    question = Question(0, pregunta.strip(), formato, opciones)
-    with st.spinner("Recuperando evidencia y generando..."):
-        try:
-            row, trace = pipeline.run(question)
-            st.session_state["kc_last_result"] = {
-                "question": pregunta.strip(), "format": formato, "row": row, "trace": trace,
-            }
-        except Exception as exc:
-            st.session_state.pop("kc_last_result", None)
-            st.error("La consulta falló; no se generó una respuesta para mostrar.")
-            with st.expander("Detalle técnico"):
-                st.exception(exc)
+ready = bool(pregunta.strip()) and (formato != "multiple_choice" or len(opciones) >= 2)
+cache = st.session_state.setdefault("kc_cache", {})
+config_key = (corpus_dir, decoder_alias, precision, k, graph_policy)
+if st.button("Responder con evidencia", type="primary", disabled=not ready):
+    key = (pregunta.strip(), formato, tuple(sorted(opciones.items())), config_key)
+    if key in cache:
+        st.session_state["kc_last"] = {**cache[key], "from_cache": True}
+    else:
+        started = perf_counter()
+        with st.spinner("Recuperando evidencia y redactando la respuesta…"):
+            try:
+                row, trace = pipeline.run(Question(0, pregunta.strip(), formato, opciones))
+                result = {"question": pregunta.strip(), "format": formato, "row": row, "trace": trace,
+                          "seconds": perf_counter() - started}
+                cache[key] = result
+                st.session_state["kc_last"] = {**result, "from_cache": False}
+            except Exception as exc:
+                st.session_state.pop("kc_last", None)
+                st.error("La consulta falló y no se generó respuesta. Revise el detalle técnico.")
+                with st.expander("Detalle técnico"):
+                    st.exception(exc)
+elif not ready:
+    st.caption("Escriba la pregunta" + (" y al menos dos opciones." if formato == "multiple_choice" else "."))
 
-last_result = st.session_state.get("kc_last_result")
-if last_result:
-    row, trace = last_result["row"], last_result["trace"]
+# --- Resultado ---------------------------------------------------------------------------------
+last = st.session_state.get("kc_last")
+if last:
+    row, trace, fmt = last["row"], last["trace"], last["format"]
     view = view_model(row, trace)
-    if last_result["question"] != pregunta.strip() or last_result["format"] != formato:
-        st.info(f"Resultado de la consulta anterior: {last_result['question']}")
-
-    izq, der = st.columns([3, 2])
+    if last["question"] != pregunta.strip() or fmt != formato:
+        st.info(f"Mostrando la consulta anterior: {last['question'][:140]}")
+    esc = lambda s: html.escape(str(s or ""))
+    izq, der = st.columns([3, 2], gap="large")
     with izq:
         if view["abstained"]:
-            st.warning(f"El sistema se abstiene. Motivo: {view['abstention_reason'] or 'sin especificar'} "
-                       f"(origen: {view['abstention_source'] or 'n/d'}).")
-        elif formato == "multiple_choice":
-            st.subheader(f"Respuesta: {row['respuesta_correcta']}")
-            st.write(row["justificacion"])
-            for letra, texto in row["descarte_opciones"].items():
-                st.markdown(f"**{letra}** — {texto}")
-        elif formato == "semi_open":
-            st.write(row["respuesta"])
-            st.markdown(f"**Referencia legal:** {row['referencia_legal']}")
+            body = (f'<div class="kc-abst"><b>El sistema se abstiene.</b> {esc(view["abstention_reason"] or "Evidencia insuficiente")}'
+                    f' · origen: {esc(view["abstention_source"] or "n/d")}</div>')
+        elif fmt == "multiple_choice":
+            discards = "".join(f'<p class="kc-discard"><b>{esc(l)}</b> — {esc(t)}</p>' for l, t in (row.get("descarte_opciones") or {}).items())
+            body = (f'<div class="kc-answer"><h3><span class="kc-letter">{esc(row["respuesta_correcta"])}</span>Opción correcta</h3>'
+                    f'<p>{esc(row["justificacion"])}</p><div class="kc-field">Opciones descartadas</div>{discards}</div>')
+        elif fmt == "semi_open":
+            body = (f'<div class="kc-answer"><h3>Respuesta</h3><p>{esc(row["respuesta"])}</p>'
+                    f'<div class="kc-field">Referencia legal</div><p>{esc(row["referencia_legal"])}</p></div>')
         else:
-            for campo, titulo in [("marco_normativo", "Marco normativo"), ("analisis", "Análisis"),
-                                   ("jurisprudencia", "Jurisprudencia"), ("conclusion", "Conclusión")]:
-                st.markdown(f"**{titulo}**")
-                st.write(row[campo])
+            parts = "".join(f'<div class="kc-field">{t}</div><p>{esc(row[c])}</p>' for c, t in
+                            [("marco_normativo", "Marco normativo"), ("analisis", "Análisis"),
+                             ("jurisprudencia", "Jurisprudencia"), ("conclusion", "Conclusión")])
+            body = f'<div class="kc-answer"><h3>Análisis del caso</h3>{parts}</div>'
+        chips = "".join(
+            f'<span class="kc-chip{"" if n["supported"] else " kc-chip-bad"}">{esc(" ".join(str(x) for x in n["body"] if x))}'
+            f'{"" if n["supported"] else " · sin respaldo"}</span>' for n in view["cited_norms"])
+        timing = "respuesta en memoria (consulta repetida)" if last.get("from_cache") else f"{last.get('seconds', 0):.1f} s"
+        st.markdown(body + '<div class="kc-field">Normas citadas · verificadas contra la evidencia</div>'
+                    + f'<div class="kc-chips">{chips or "<span class=kc-foot>La respuesta no cita normas.</span>"}</div>'
+                    + f'<div class="kc-time">{timing} · {len(row["pasajes_recuperados"])} pasajes recuperados</div>',
+                    unsafe_allow_html=True)
 
-        st.markdown("**Normas citadas que aparecen en la evidencia**")
-        st.caption("La coincidencia comprueba presencia de la norma en los pasajes recuperados; no verifica por sí sola que el pasaje sustente semánticamente cada afirmación.")
-        if not view["cited_norms"]:
-            st.caption("La respuesta no cita ninguna norma.")
-        for norm in view["cited_norms"]:
-            css = "kc-norma" if norm["supported"] else "kc-norma kc-norma-sin-respaldo"
-            label = html.escape(" ".join(str(x) for x in norm["body"] if x))
-            suffix = " · presente en evidencia" if norm["supported"] else " · no aparece en evidencia"
-            st.markdown(f'<span class="{css}">{label}{suffix}</span>',
-                        unsafe_allow_html=True)
-
-    def card(c):
-        badge = " · <b>citado</b>" if c["cited"] else ""
-        badge += " · usado por el decoder" if c["declared_used"] else ""
-        art = f" · art. {html.escape(str(c['article']))}" if c.get("article") else ""
-        text = c["texto"]
-        st.markdown(f'<div class="kc-pasaje"><b>[P{c["rank"]}] {html.escape(c["norm_name"] or "")}</b>{art}{badge}'
-                    f' · <a href="{html.escape(c["source_url"] or "", quote=True)}" target="_blank">fuente</a><br>'
-                    f'{html.escape(text[:600])}{"…" if len(text) > 600 else ""}</div>', unsafe_allow_html=True)
+    def passage(c, cited: bool) -> str:
+        tags = (["citado"] if c["cited"] else []) + (["usado por el modelo"] if c["declared_used"] else [])
+        art = f" · art. {esc(c['article'])}" if c.get("article") else ""
+        text = c["texto"] or ""
+        link = f' · <a href="{html.escape(c["source_url"] or "", quote=True)}" target="_blank" rel="noopener">fuente oficial</a>' if c.get("source_url") else ""
+        return (f'<div class="kc-pas{" cited" if cited else ""}"><div class="kc-pas-h"><span class="kc-rank">P{c["rank"]}</span>'
+                f'<span class="kc-norm">{esc(c["norm_name"])}{art}</span>'
+                + "".join(f'<span class="kc-tag">{t}</span>' for t in tags) + f'{link}</div>'
+                f'<p>{esc(text[:700])}{"…" if len(text) > 700 else ""}</p></div>')
 
     with der:
-        st.subheader(f"Pasajes citados ({len(view['cited_passages'])})")
-        for c in view["cited_passages"]:
-            card(c)
-        st.subheader(f"Otros pasajes recuperados ({len(view['other_passages'])})")
-        for c in view["other_passages"]:
-            card(c)
-        st.caption(f"Estos {len(row['pasajes_recuperados'])} pasajes son exactamente los de pasajes_recuperados de la entrega.")
+        st.markdown(f'<div class="kc-ev-title">Evidencia citada ({len(view["cited_passages"])})</div>'
+                    + "".join(passage(c, True) for c in view["cited_passages"]), unsafe_allow_html=True)
+        with st.expander(f"Otros pasajes recuperados ({len(view['other_passages'])})", expanded=not view["cited_passages"]):
+            st.markdown("".join(passage(c, False) for c in view["other_passages"]) or "—", unsafe_allow_html=True)
+        st.markdown('<p class="kc-foot">Son exactamente los pasajes de <code>pasajes_recuperados</code> de la entrega; '
+                    'una norma se marca como respaldada si aparece en alguno de los 10 primeros.</p>', unsafe_allow_html=True)
 
-    with st.expander("JSON de la entrega (schema oficial)"):
+    with st.expander("JSON de la entrega (esquema oficial)"):
         st.json(view["submission"])
     if debug_mode:
-        with st.expander("Traza técnica (solo operador)"):
+        with st.expander("Traza técnica"):
             st.json(debug_trace(trace))
-elif pregunta.strip() == "":
-    st.caption("Escriba una pregunta y presione Analizar pregunta.")
