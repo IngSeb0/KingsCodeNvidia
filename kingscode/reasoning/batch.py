@@ -64,6 +64,35 @@ def answer_text(row: dict) -> str:
         "open_ended": ANSWER_FIELDS["open_ended"]}.get(row.get("formato"), ()))
 
 
+def compare_submission_rows(actual: dict, expected: dict) -> dict:
+    """Compare the exact answer and its citation/evidence trace with a frozen row.
+
+    Latency is deliberately excluded from answer equality because it changes on
+    every replay. Passage IDs and official citation bodies remain independent
+    checks so callers can explain what differed.
+    """
+    fmt = expected.get("formato")
+    fields = ANSWER_FIELDS.get(fmt, ())
+    answer_keys = ("id", "formato", "abstencion", *fields)
+    answer_identical = _dumps({key: actual.get(key) for key in answer_keys}) == _dumps(
+        {key: expected.get(key) for key in answer_keys}
+    )
+    actual_passages = actual.get("pasajes_recuperados") or []
+    expected_passages = expected.get("pasajes_recuperados") or []
+    passages_equal = [p.get("passage_id") for p in actual_passages] == [
+        p.get("passage_id") for p in expected_passages
+    ]
+    citations_equal = official_bodies(answer_text(actual)) == official_bodies(answer_text(expected))
+    row_identical = _dumps(actual) == _dumps(expected)
+    return {
+        "answer_identical": answer_identical,
+        "passages_equal": passages_equal,
+        "citations_equal": citations_equal,
+        "row_identical": row_identical,
+        "status": "match" if answer_identical and passages_equal and citations_equal else "MISMATCH",
+    }
+
+
 def _valid_checkpoint(path: Path, question: Question):
     try:
         item = json.loads(path.read_text(encoding="utf-8"))
@@ -172,13 +201,38 @@ class BatchRunner:
                     break  # temperature 0: the same input reproduces the same output
         return None, None, errors
 
-    def run(self, questions: list[Question], *, resume: bool = True) -> dict:
+    def run(self, questions: list[Question], *, resume: bool = True, progress_callback=None) -> dict:
+        """Run a complete batch, optionally reporting each completed item.
+
+        ``progress_callback`` receives a label-free event after each item is
+        either resumed or checkpointed. The callback is intended for UI
+        progress rendering; it does not affect checkpoint or submission data.
+        """
         started = perf_counter()
         ids = [q.id for q in questions]
         if len(set(ids)) != len(ids):
             raise ValueError("Duplicate question ids in the input")
         identity = self._check_identity(questions, resume)
         counts = {"resumed": 0, "answered": 0, "retried_ok": 0, "fallback": 0}
+
+        def emit_progress(question: Question, status: str) -> None:
+            if progress_callback is None:
+                return
+            completed = sum(counts.values())
+            generated = completed - counts["resumed"]
+            elapsed = perf_counter() - started
+            progress_callback({
+                "completed": completed,
+                "total": len(questions),
+                "question_id": question.id,
+                "format": question.format,
+                "status": status,
+                "counts": dict(counts),
+                "elapsed_seconds": elapsed,
+                "average_seconds": elapsed / generated if generated else None,
+                "remaining_seconds": ((len(questions) - completed) * elapsed / generated) if generated else None,
+            })
+
         for question in questions:
             item_path = self.run_dir / "items" / f"{question.id}.json"
             checkpoint = _valid_checkpoint(item_path, question) if item_path.exists() else None
@@ -186,6 +240,7 @@ class BatchRunner:
                 if self.show_answers:
                     _print_answer(question, checkpoint["row"], checkpoint.get("trace"))
                 counts["resumed"] += 1
+                emit_progress(question, "resumed")
                 continue
             # Start line: a slow or stuck item (VRAM spilling to shared memory, a very long prompt)
             # is visible immediately instead of a silent console until the item finishes.
@@ -221,6 +276,7 @@ class BatchRunner:
             print(f"[batch] {done}/{len(questions)} id={question.id} {question.format} {status}"
                   f"{' abstencion' if row.get('abstencion') else ''} | {elapsed:.0f} s, {per_item:.1f} s/pregunta"
                   f" | faltan ~{(len(questions) - done) * per_item / 60:.0f} min", file=sys.stderr, flush=True)
+            emit_progress(question, status)
         report = self.assemble(questions)
         report.update(counts=counts, identity=identity, diagnostics=self.diagnostics(questions),
                       seconds=perf_counter() - started,
@@ -328,7 +384,7 @@ class BatchRunner:
 
 def verify_items(pipeline, questions: list[Question], delivered: Path, only: list[int]) -> dict:
     """Live-verification mode: regenerate selected ids sequentially (concurrency 1)
-    and compare cited norms and retrieved passages with the delivered file."""
+    and compare exact answer fields, cited norms and retrieved passage IDs."""
     by_id = {q.id: q for q in questions}
     delivered_rows = {}
     for line in Path(delivered).read_text(encoding="utf-8").splitlines():
@@ -342,9 +398,5 @@ def verify_items(pipeline, questions: list[Question], delivered: Path, only: lis
             continue
         new, _ = pipeline.run(by_id[qid])
         old = delivered_rows[qid]
-        passages_equal = [p.get("passage_id") for p in new["pasajes_recuperados"]] == [p.get("passage_id") for p in old["pasajes_recuperados"]]
-        citations_equal = official_bodies(answer_text(new)) == official_bodies(answer_text(old))
-        results.append({"id": qid, "passages_equal": passages_equal, "citations_equal": citations_equal,
-                        "row_identical": _dumps(new) == _dumps(old),
-                        "status": "match" if passages_equal and citations_equal else "MISMATCH"})
+        results.append({"id": qid, **compare_submission_rows(new, old)})
     return {"checked": len(results), "all_match": all(r.get("status") == "match" for r in results), "results": results}

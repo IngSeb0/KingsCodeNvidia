@@ -28,7 +28,7 @@ $Run = "final_p$Parte"
 Write-Host "Parte $Parte | commit $((git rev-parse --short HEAD).Trim()) | corrida $Run"
 
 Paso "1/5 Corpus: buscar el respaldo de Luis (el mejor)"
-$Candidatos = @("$env:OneDrive\KingsCode\kc_snapshot_luis", "C:\kc_snapshot_luis", "$HOME\Downloads\kc_snapshot_luis",
+$Candidatos = @("$HOME\kc_snapshot_luis", "$env:OneDrive\KingsCode\kc_snapshot_luis", "C:\kc_snapshot_luis", "$HOME\Downloads\kc_snapshot_luis",
                 "$HOME\Downloads\kc_snapshot_luis\kc_snapshot_luis", "$HOME\kc_snapshot_luis")
 $Snap = $Candidatos | Where-Object { $_ -and (Test-Path "$_\SHA256SUMS.txt") } | Select-Object -First 1
 if ($Resume) {
@@ -55,7 +55,9 @@ Paso "3/5 Partir las 992 (deterministico, igual en ambos PCs)"
 if ($LASTEXITCODE -ne 0) { throw "fallo split_test" }
 
 Paso "4/5 Correr la parte $Parte con la configuracion final (~2,3 h)"
-$Args2 = @("-Flags", "-Recomendada -PromptVersion v6", "-InputFile", "data\test_992.parte$Parte.jsonl", "-RunName", $Run)
+# Start-Process joins arguments with spaces: the multi-word value must carry its own quotes,
+# otherwise -PromptVersion v6 is lost (2026-10-03: a half started as v4).
+$Args2 = @("-Flags", "`"-Recomendada -PromptVersion v6`"", "-InputFile", "data\test_992.parte$Parte.jsonl", "-RunName", $Run)
 if ($Resume) { $Args2 += "-Resume" }
 $p = Start-Process -FilePath "powershell.exe" -NoNewWindow -Wait -PassThru -ArgumentList (@("-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
      "`"$((Resolve-Path .\tools\kingscode_final.ps1).Path)`"") + $Args2)

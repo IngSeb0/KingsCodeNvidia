@@ -370,6 +370,17 @@ class BatchTests(unittest.TestCase):
         self.assertTrue(rows[ids[3]]["abstencion"])
         self.assertEqual(run_eval(self.run_dir("flaky") / "submissions.jsonl")["validacion"]["errores"], 0)
 
+    def test_progress_callback_reports_each_finished_question(self):
+        events = []
+        report = BatchRunner(self.inner, self.run_dir("progress")).run(
+            self.questions[:3], progress_callback=events.append
+        )
+        self.assertEqual([event["completed"] for event in events], [1, 2, 3])
+        self.assertEqual([event["total"] for event in events], [3, 3, 3])
+        self.assertEqual(events[-1]["question_id"], self.questions[2].id)
+        self.assertEqual(events[-1]["counts"]["answered"], 3)
+        self.assertTrue(report["complete"])
+
     def test_identity_duplicates_and_fresh_are_enforced(self):
         BatchRunner(self.inner, self.run_dir("id"), identity={"decoder": "a"}).run(self.questions)
         with self.assertRaises(ValueError):
@@ -393,6 +404,17 @@ class BatchTests(unittest.TestCase):
         self.assertTrue(verify_items(self.inner, self.questions, delivered, ids)["all_match"])
         other = Pipeline(lambda *a, **kw: [ev(2)], decoder=MixedCitationDecoder(), graph_policy="off")
         self.assertFalse(verify_items(other, self.questions, delivered, ids)["all_match"])
+
+        rows = [json.loads(line) for line in delivered.read_text(encoding="utf-8").splitlines()]
+        first_format = rows[0]["formato"]
+        field = {"multiple_choice": "justificacion", "semi_open": "respuesta", "open_ended": "conclusion"}[first_format]
+        rows[0][field] += " cambio en la respuesta"
+        changed_delivery = self.run_dir("verify_changed") / "submissions.jsonl"
+        changed_delivery.parent.mkdir(parents=True, exist_ok=True)
+        changed_delivery.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows), encoding="utf-8")
+        report = verify_items(self.inner, self.questions, changed_delivery, [rows[0]["id"]])
+        self.assertFalse(report["all_match"])
+        self.assertFalse(report["results"][0]["answer_identical"])
 
     def test_992_rehearsal_with_dummy_decoder(self):
         questions = synthetic_questions(self.questions, 992)
