@@ -1,51 +1,62 @@
-# KingsCode Nvidia
+# KingsCode — Hackathon 2026
 
-KingsCode v0.5: sistema de recuperación jurídica para el Hackathon AI Week 2026. La capa del Integrante A incluye adquisición de fuentes oficiales, parsing estructural, grafo, BM25 y adaptadores abiertos de embeddings/RRF/reranking.
+**Integrantes:** Esteban Alejandro Hernández · Luis Sebastián Contreras Díaz
+**Universidad de los Andes** · AI Week 2026
 
-## Estado del benchmark independiente
-
-`KC-COL-IR-v0.1` mantiene los 30 candidatos originales y añade una expansión determinista revisada de 10 ítems CUJ 2026. Hay 10 gold aceptados; todos faltan en corpus-v0.1 y están mapeados a páginas del perfil controlado materializado (190 pasajes). Los gates de gold y ranking están abiertos; `CUDA_READY=false` y no se ejecutó retrieval. Ver [estado y metodología](benchmarks/kc_col_ir_v0.1/README.md).
-
-## Empezar
-
-- [Guía del proyecto](START_HERE.md)
-- [Estado y arquitectura](docs/KINGSCODE_MASTER_KNOWLEDGE.md)
-- [Corpus y resultados medidos](CORPUS.md)
-- [Instalación, ejecución e integración con B](docs/MEMBER_A_RUNBOOK.md)
-- [Verificaciones realizadas](docs/VERIFICATION.md)
-- [Harness de B sin GPU](docs/MEMBER_B_RUNBOOK.md)
-- [Preparación y comandos para la 4090](docs/GPU_DAY_RUNBOOK.md)
-- [Revisiones, licencias y acceso de modelos](docs/MODEL_LOCKS_GATE2.md)
-- [Contexto para Claude Code](CLAUDE.md), [hallazgos de B](docs/B_FINDINGS_2026-09-28.md) y [plan de extensión](docs/B_EXTENSION_PLAN.md)
-
-## Interfaz gráfica
-
-`interfaz/app.py` (Streamlit) consulta el pipeline real de extremo a extremo (`kingscode.reasoning.Pipeline` + `kingscode.Retriever`), con la identidad visual de Software Colombia. Requiere `corpus/` construido:
-
-```powershell
-.venv/Scripts/python.exe -m pip install -r requirements-ui.txt
-.venv/Scripts/python.exe -m streamlit run interfaz/app.py
-```
-
-## Comando único de reproducción (sample_50)
-
-```bash
-./run.sh                 # requiere corpus/ ya presente (ver "Corpus e índice")
-./run.sh --acquire       # además intenta construir corpus/ desde las fuentes oficiales (red)
-```
-
-Instala dependencias, corre la suite de tests, ejecuta Gate 1B (BM25 + backend determinista, sin GPU) sobre `data/sample_50.jsonl` y publica el puntaje oficial con `scripts/evaluate.py`. En contenedor limpio:
-
-```bash
-docker build -t kingscode .
-docker run --rm -v "$(pwd)/corpus:/app/corpus:ro" kingscode
-```
-
-No requiere GPU ni descarga pesos: es el piso reproducible y determinista (decoder real/bakeoff se corren aparte en la 4090, ver `docs/GPU_DAY_RUNBOOK.md`).
+Sistema de respuesta a preguntas de derecho colombiano con un modelo abierto de 8B (Qwen3-8B), un corpus jurídico propio de fuentes oficiales y verificación determinista de cada cita contra la evidencia recuperada.
 
 ## Corpus e índice
 
-Pendiente: publicar el corpus enriquecido y el índice vectorial serializado bajo licencia abierta en un enlace de descarga directa (Google Drive/OneDrive/Zenodo) y declarar aquí el enlace, conforme a la sección 9.3 del enunciado. Mientras tanto, `./run.sh --acquire` reconstruye `corpus/` desde las fuentes oficiales listadas en `data/seed_targets.json` y `CORPUS.md`.
+| Recurso | Enlace | Tamaño | Licencia |
+|---|---|---|---|
+| Corpus procesado e índice vectorial (`corpus_KingsCode.zip`) | **PENDIENTE_ENLACE** | ver `sha256` en `dist/` | CC BY 4.0 (procesamiento); textos oficiales públicos |
+
+El comprimido contiene `LICENSE`, `corpus_manifest.json`, `corpus/` (un `.txt` por norma o sentencia) e `indice/` (`chunks.jsonl` con los fragmentos y sus metadatos, `bm25.json`, `dense.npy` + `dense.meta.json` del índice vectorial Qwen3-Embedding-0.6B y el grafo normativo). Se genera con `python tools/package_corpus_entrega.py`. El enlace permanece activo hasta el 2 de noviembre de 2026. El corpus también se reconstruye desde las URL declaradas: `python tools/member_a.py acquire` + `reproduce`.
+
+## Arquitectura
+
+| Componente | Elección | Motivo |
+|---|---|---|
+| Encoder | Qwen/Qwen3-Embedding-0.6B (abierto, revisión fijada), índice vectorial exacto | Multilingüe, reconstruible por script (`tools/member_a.py dense`) |
+| Decoder | Qwen/Qwen3-8B, BF16, temperatura 0, *greedy*, sin *thinking*, prompt v6 | Mejor puntaje medido dentro del límite de 8B |
+| Segmentación | Un fragmento por artículo (o unidad de sentencia) con norma, artículo, jerarquía y URL | El artículo es la unidad de sentido y permite verificar cada cita |
+| Recuperación | BM25 + grafo normativo con router + una consulta por opción (RRF), 8 pasajes | Mejor puntaje por tiempo que el híbrido con reranker (36,93 frente a 36,59; 15,9 frente a 19,1 s/pregunta) |
+| Reordenamiento | Qwen3-Reranker-0.6B implementado, no adoptado | No mejoró el puntaje y cuesta ~3 s/pregunta |
+| Abstención | Evidencia vacía, en conflicto o no vigente (texto libre); nunca en cerradas; fallas de una pregunta → abstención de esa pregunta | Con la regla oficial, abstenerse casi nunca conviene |
+
+Las citas pasan por una reparación y una guarda deterministas con la misma regla de respaldo del evaluador (10 primeros pasajes): **0 % de citas sin respaldo**. Detalle en [`informe/INFORME_TECNICO.pdf`](informe/INFORME_TECNICO.pdf).
+
+## Reproducción
+
+Con GPU (configuración entregada; Windows, un comando que instala el entorno, descarga el corpus y los modelos fijados por revisión, corre y evalúa la muestra):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\kingscode_final.ps1 -Flags "-Recomendada -PromptVersion v6"
+# set ciego: ... -InputFile data	est_992.jsonl -RunName final_992   (reanudable con -Resume)
+```
+
+Sin GPU, en contenedor limpio (piso determinista sobre las preguntas de muestra):
+
+```bash
+pip install -r requirements.txt
+./run.sh                       # o: docker build -t kingscode . && docker run --rm kingscode
+```
+
+## Entrega
+
+- `submissions.jsonl`: 992 respuestas, validadas con `python tools/validate_test_submission.py --test data/test_992.jsonl submissions.jsonl` (usa `scripts/evaluate.py::validate` y `schema/submission.schema.json`).
+- `CORPUS.md` y `corpus_manifest.json`: bitácora e inventario (doc_id, título, fuente, URL, fecha de consulta y áreas).
+- `informe/INFORME_TECNICO.pdf`, interfaz en `interfaz/app.py` y video (enlace abajo).
+- Video: **PENDIENTE_ENLACE_VIDEO**
+
+## Interfaz gráfica
+
+`interfaz/app.py` (Streamlit, identidad visual de Software Colombia) consulta el mismo pipeline de las corridas (`tools/member_b.py::_pipeline`, configuración v6) y muestra la respuesta, las normas citadas y los pasajes recuperados con su fuente:
+
+```powershell
+.venv\Scripts\python.exe -m pip install -r requirements-ui.txt
+.venv\Scripts\python.exe -m streamlit run interfaz/app.py
+```
 
 ## Después de clonar
 
