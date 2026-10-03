@@ -70,7 +70,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--precision", choices=["bf16", "int8", "int4"], default="bf16")
     parser.add_argument("--oom-record", type=Path)
     parser.add_argument("--allow-optional", action="store_true")
-    parser.add_argument("--prompt-version", choices=["v3", "v4", "v6", "v7", "v8"], default="v3",
+    parser.add_argument("--prompt-version", choices=["v3", "v4", "v6", "v7", "v8", "v9"], default="v3",
                         help="batch/verify: v3 default, v4 format fixes, v6 legal reasoning, v7 concise, v8 coverage-calibrated candidate")
     parser.add_argument("--citation-fill", action="store_true",
                         help="batch/verify: complete up to 5 verified citations with top-ranked evidence (semi_open/multiple_choice only)")

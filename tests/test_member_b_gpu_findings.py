@@ -108,6 +108,23 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         self.assertEqual(ATTN_IMPLEMENTATION, "sdpa")
         model.generate.assert_called_once()
 
+    def test_prompt_v9_passes_area_and_subtask_guidance_as_data(self):
+        import json as _json
+        from kingscode.generation.prompts import PROMPT_V6, PROMPT_V9, SUBTASK_GUIDE, build_messages, system_prompt
+        from kingscode.reasoning.contracts import Question, public_question
+        from kingscode.reasoning.decoder import PromptSpec
+        q = public_question({"id": 7, "pregunta": "¿Qué juez decide?", "formato": "semi_open",
+                             "area": "Derecho procesal", "sub_tarea": "Juez", "complejidad": "low"})
+        self.assertEqual((q.area, q.sub_tarea), ("Derecho procesal", "Juez"))
+        user = lambda v, qq: _json.loads(build_messages(qq, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version=v)[1]["content"])
+        u9 = user(PROMPT_V9, q)
+        self.assertEqual(u9["sub_tarea"], "Juez")
+        self.assertEqual(u9["indicacion_subtarea"], SUBTASK_GUIDE["Juez"])
+        self.assertNotIn("indicacion_subtarea", user(PROMPT_V6, q))           # v6 unchanged
+        self.assertNotIn("indicacion_subtarea", user(PROMPT_V9, Question(8, "x", "semi_open")))  # no metadata, no guide
+        self.assertIn("indicacion_subtarea", system_prompt("semi_open", 5, PROMPT_V9))
+        self.assertEqual(len(SUBTASK_GUIDE), 22)                                # statement 4.2 catalog
+
     def test_fit_passages_keeps_all_sources_by_shortening_text_in_prompt_only(self):
         from unittest.mock import patch
         from kingscode.generation.hf_decoder import HFDecoder, _head
@@ -213,7 +230,7 @@ class QwenSmokeRegressionTests(unittest.TestCase):
         mc = system_prompt("multiple_choice", 5, PROMPT_V4)
         self.assertLess(mc.index("justificacion"), mc.index("respuesta_correcta"))
         with self.assertRaises(ValueError):
-            build_messages(Q, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version="grounded-formats-v9")
+            build_messages(Q, [deepcopy(FIXTURES[1])], PromptSpec("semi_open"), version="grounded-formats-v99")
 
     def test_prompt_v6_reasons_without_hedging_and_keeps_v4_fields(self):
         from kingscode.generation.prompts import PROMPT_V4, PROMPT_V6, build_messages, prompt_sha256, system_prompt

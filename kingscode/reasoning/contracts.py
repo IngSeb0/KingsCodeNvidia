@@ -19,6 +19,10 @@ class Question:
     text: str
     format: str
     options: dict[str, str] = field(default_factory=dict)
+    # Organizer-provided input metadata of each question (published catalog, section 4.2 of
+    # the statement). Never labels; only prompt v9 reads them.
+    area: str | None = None
+    sub_tarea: str | None = None
 
     def __post_init__(self):
         if type(self.id) is not int or not isinstance(self.text, str) or self.format not in FORMATS:
@@ -26,6 +30,8 @@ class Question:
         if not isinstance(self.options, dict) or any(k not in "ABCD" or len(k) != 1 or not isinstance(v, str)
                                                     for k, v in self.options.items()):
             raise ValueError("Options must contain only A/B/C/D and plain text")
+        if any(v is not None and not isinstance(v, str) for v in (self.area, self.sub_tarea)):
+            raise ValueError("area/sub_tarea must be text or None")
 
     def public_record(self) -> dict:
         return {"id": self.id, "pregunta": self.text, "formato": self.format, "opciones": dict(self.options)}
@@ -33,7 +39,8 @@ class Question:
 
 def public_question(record: dict) -> Question:
     """Allowlist projection, including nested options; never pass the raw row on."""
-    return Question(record["id"], record["pregunta"], record["formato"], dict(record.get("opciones") or {}))
+    return Question(record["id"], record["pregunta"], record["formato"], dict(record.get("opciones") or {}),
+                    area=record.get("area") or None, sub_tarea=record.get("sub_tarea") or None)
 
 
 def load_questions(path: Path) -> list[Question]:

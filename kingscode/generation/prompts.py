@@ -120,7 +120,37 @@ respuesta debe tener entre 3 y 5 oraciones completas y como máximo 150 palabras
     "open_ended": """Campos, en este orden: abstencion (false), marco_normativo, analisis, jurisprudencia, conclusion (todos strings).
 marco_normativo enuncia las normas aplicables de los pasajes y la regla que aportan, sin repetir su desarrollo en los demás campos. analisis debe tener entre 5 y 8 oraciones completas: hechos jurídicamente relevantes, problema jurídico, regla aplicable con su cita, aplicación a cada requisito o elemento pedido y consecuencia jurídica. Contesta todos los componentes del caso; no reduzcas el análisis a un esquema fijo si la pregunta exige distinguir varias figuras o resolver varios puntos. jurisprudencia cita solo decisiones aportadas que resuelvan el punto y explica su regla; si no hay una decisión aplicable, escribe brevemente "No hay una decisión jurisprudencial aplicable en los pasajes." conclusion responde directamente lo que pide el caso, sin repetir el análisis. Cada campo añade contenido necesario y distinto, sin afirmaciones accesorias ni hechos inventados.""",
 }
-ACTIVE_PROMPT_VERSIONS = {PROMPT_VERSION, PROMPT_V4, PROMPT_V5_OPTION_SUPPORT, PROMPT_V6, PROMPT_V7, PROMPT_V8}
+# v9 (2026-10-03): v6 + the organizer-provided area and sub-task of each question, with one generic
+# instruction per sub-task of the published catalog (statement 4.2). It tells the model WHAT kind of
+# answer the sub-task asks for; it contains no legal content and nothing derived from any answer.
+PROMPT_V9 = "grounded-formats-v9"
+SUBTASK_GUIDE = {
+    "Existencia normativa": "Di si existe la norma y nómbrala con su identidad completa (tipo, número, año y artículo).",
+    "Autoridad competente": "Nombra la autoridad u órgano competente concreto y la norma que le atribuye la competencia.",
+    "Juez": "Nombra la jurisdicción y el juez o corporación que decide (especialidad e instancia) y la norma que lo establece.",
+    "Jerarquía legal": "Ubica la norma o decisión en la jerarquía normativa y di qué efecto tiene esa posición (obligatoriedad, alcance, prevalencia).",
+    "Definición básica": "Da la definición legal con los términos literales de la norma que la contiene.",
+    "Clasificación jurídica básica": "Indica la categoría jurídica a la que pertenece y el criterio que lo determina.",
+    "Elemento esencial": "Enumera los elementos esenciales exigidos por la norma, sin mezclarlos con requisitos accesorios.",
+    "Sentido del fallo": "Di qué decidió la corporación (exequible, inexequible, condicionada; concede, niega, revoca) y la orden principal.",
+    "Reproducción literal": "Reproduce literalmente el texto de la disposición tal como aparece en los pasajes, entre comillas.",
+    "Precedente jurisprudencial": "Identifica la decisión o decisiones (corporación, número y año) y la regla de decisión que fijan.",
+    "Vigencia temporal": "Di si la disposición está vigente, desde cuándo, y qué norma o decisión la modificó, derogó o condicionó.",
+    "Distinción conceptual": "Define cada figura y el criterio que las distingue (sujeto, objeto, requisito, efecto, término o autoridad).",
+    "Requisitos legales": "Enumera los requisitos exigidos por la norma, completos y en su orden.",
+    "Excepciones legales": "Enuncia la regla general y las excepciones que la norma prevé, con su supuesto de aplicación.",
+    "Orden judicial impartida": "Describe la orden concreta que impartió el juez: a quién, qué debe hacer y en qué plazo.",
+    "Conflicto normativo": "Identifica las normas en tensión y resuelve con el criterio aplicable (jerarquía, especialidad, temporalidad o competencia).",
+    "Antecedentes fácticos": "Enumera los hechos relevantes del caso en orden cronológico, sin valoraciones jurídicas.",
+    "Postura procesal": "Expón la posición de cada parte o interviniente y lo que pidió.",
+    "Problema jurídico": "Formula el problema jurídico como pregunta y respóndelo con la regla aplicable.",
+    "Fundamento jurídico central (ratio decidendi)": "Enuncia la razón de la decisión (ratio decidendi) que sostiene el fallo, separada de lo dicho de paso.",
+    "Ponderación de principios y/o derechos": "Nombra los principios o derechos en tensión, el criterio de ponderación y cuál prevalece y por qué.",
+    "Interpretación sistémica": "Relaciona la disposición con las demás normas del sistema que fijan su sentido y di el resultado de esa lectura conjunta.",
+}
+V9_EXTRA = ("La entrada puede traer area y sub_tarea de la pregunta, e indicacion_subtarea: úsalas para enfocar la "
+            "respuesta en lo que la sub-tarea pide, sin dejar de responder la pregunta concreta.")
+ACTIVE_PROMPT_VERSIONS = {PROMPT_V9, PROMPT_VERSION, PROMPT_V4, PROMPT_V5_OPTION_SUPPORT, PROMPT_V6, PROMPT_V7, PROMPT_V8}
 
 MAX_USED_PASSAGES = 5
 ATTRIBUTION_INSTRUCTION = """Si respondes, añade también el campo "pasajes_usados": lista con los passage_id (como máximo {max_used}) de los pasajes de la evidencia en que realmente te basaste. Usa solo passage_id que aparezcan en la evidencia; no inventes identificadores.
@@ -129,6 +159,8 @@ LEGACY_PROMPT_VERSIONS = {"grounded-formats-v1", "grounded-formats-v2"}
 
 
 def system_prompt(fmt: str, max_used: int = MAX_USED_PASSAGES, version: str = PROMPT_VERSION) -> str:
+    if version == PROMPT_V9:
+        return "\n".join([COMMON_V6, V9_EXTRA, FORMAT_INSTRUCTIONS_V6[fmt], ATTRIBUTION_INSTRUCTION.format(max_used=max_used)])
     if version in {PROMPT_V6, PROMPT_V7, PROMPT_V8}:
         common = COMMON_V7 if version == PROMPT_V7 else COMMON_V6
         instructions = (FORMAT_INSTRUCTIONS_V7 if version == PROMPT_V7 else
@@ -170,7 +202,7 @@ def build_messages(question: Question, passages: list[dict], prompt: PromptSpec,
     if prompt.version not in LEGACY_PROMPT_VERSIONS | {PROMPT_VERSION} or version not in ACTIVE_PROMPT_VERSIONS:
         raise ValueError("Unknown prompt version")
     evidence = [{k: p.get(k) for k in ("passage_id", "doc_id", "norm_name", "article", "source_url", "text")} for p in passages]
-    if version in {PROMPT_V6, PROMPT_V7, PROMPT_V8}:
+    if version in {PROMPT_V6, PROMPT_V7, PROMPT_V8, PROMPT_V9}:
         for entry in evidence:
             authority = source_authority(entry.get("source_url"))
             if authority:
@@ -183,9 +215,16 @@ def build_messages(question: Question, passages: list[dict], prompt: PromptSpec,
     # explicitly materializes v2; the dummy's prompt/config remain untouched.
     # Question, options and evidence always travel as JSON data inside the user
     # message; nothing from them is ever placed in the system message.
+    user = {"pregunta": question.text, "opciones": question.options, "evidencia": evidence}
+    if version == PROMPT_V9:
+        for key in ("area", "sub_tarea"):
+            if getattr(question, key, None):
+                user[key] = getattr(question, key)
+        guide = SUBTASK_GUIDE.get(getattr(question, "sub_tarea", None) or "")
+        if guide:
+            user["indicacion_subtarea"] = guide
     return [{"role": "system", "content": system_prompt(question.format, max_used, version)},
-            {"role": "user", "content": json.dumps({"pregunta": question.text, "opciones": question.options,
-                                                        "evidencia": evidence}, ensure_ascii=False, sort_keys=True)}]
+            {"role": "user", "content": json.dumps(user, ensure_ascii=False, sort_keys=True)}]
 
 
 def sentence_count(text: str) -> int:
