@@ -9,9 +9,9 @@ configuración -Recomendada).
 Ejecutar desde la raíz del repositorio, con el corpus ya construido:
     streamlit run interfaz/app.py
 
-Sin GPU/decoder real disponible, usa DummyDecoder (siempre se abstiene) y lo
-declara explícitamente en pantalla: la interfaz nunca simula una respuesta que
-el sistema no produjo.
+Sin CUDA disponible, solo ofrece DummyDecoder (siempre se abstiene) y lo declara
+explícitamente. Si falla la carga de un decoder real, detiene la consulta con
+un error visible: no presenta una abstención de respaldo como respuesta real.
 """
 from __future__ import annotations
 
@@ -54,6 +54,12 @@ div[data-testid="stRadio"] label { color: var(--sc-negro); }
     background: var(--sc-negro); color: white; padding: .5rem 1rem; border-radius: 6px;
     border-left: 6px solid var(--sc-turquesa); margin-bottom: 1rem; font-size: .9rem;
 }
+.kc-status {
+    background: white; border: 1px solid #D5E5E7; border-radius: 8px;
+    padding: .4rem .75rem; min-height: 4.1rem;
+}
+.kc-status-label { color: #52616B; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; }
+.kc-status-value { color: var(--sc-negro); font-size: .98rem; font-weight: 650; overflow-wrap: anywhere; }
 .kc-pasaje {
     border-left: 4px solid var(--sc-azul); background: white; padding: .5rem .9rem;
     margin-bottom: .6rem; border-radius: 0 6px 6px 0; font-size: .88rem;
@@ -72,8 +78,8 @@ st.title("KingsCode · Consulta de derecho colombiano")
 st.caption("Hackathon 2026 · AI Week · Universidad de los Andes · patrocina Software Colombia")
 
 
-# Configuración recomendada (la misma de `kingscode_pc_nueva_diagnostico.ps1 -Recomendada`):
-# BM25 + router, retrieval por opción, prompt v4, citas completadas y 5 menciones verificadas.
+# Perfil de interfaz consistente con la corrida seleccionada: BM25 + router,
+# retrieval por opción, prompt v6, citas completadas y hasta 5 menciones verificadas.
 RECOMMENDED = ["--retrieval-mode", "option", "--retriever-mode", "bm25", "--prompt-version", "v6",
                "--citation-fill", "--cite-mentions", "5"]
 
@@ -97,8 +103,8 @@ def load_pipeline(corpus_dir: str, alias: str, precision: str, k: int, graph_pol
         note = "DummyDecoder: se abstiene siempre (Gate 1B). No hay razonamiento legal real."
     else:
         pipeline.decoder.load()
-        note = f"HFDecoder real: {alias} ({precision}, temperatura 0, prompt v6 de razonamiento juridico, citas verificadas)."
-    return pipeline, note
+        note = f"HFDecoder real: {alias} ({precision}, temperatura 0, prompt v6 de razonamiento jurídico, guardas de cita activas)."
+    return pipeline, note, identity
 
 
 with st.sidebar:
@@ -114,7 +120,7 @@ with st.sidebar:
         try:
             from kingscode.generation.config import load_bakeoff
             enabled = [a for a, c in load_bakeoff()["candidates"].items() if c["enabled"]]
-            # qwen3-8b is the measured configuration (37,46/50 on sample_50): offer it first.
+            # Qwen3-8B is the selected open decoder; keep it first in the demo selector.
             decoder_options += sorted(enabled, key=lambda a: (a != "qwen3-8b", a))
         except Exception as exc:
             st.warning(f"No se pudo leer config/decoder_bakeoff.json: {exc}")
@@ -134,14 +140,36 @@ if not (Path(corpus_dir) / "manifest.json").exists():
     st.stop()
 
 try:
-    pipeline, decoder_note = load_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy)
+    pipeline, decoder_note, identity = load_pipeline(corpus_dir, decoder_alias, precision, k, graph_policy)
 except Exception as exc:
-    st.markdown(f'<div class="kc-banner">No se pudo cargar "{decoder_alias}": {exc}. '
-                f'Usando DummyDecoder (se abstiene siempre).</div>', unsafe_allow_html=True)
-    pipeline, decoder_note = load_pipeline(corpus_dir, "dummy_abstain", "bf16", k, graph_policy)
+    st.error(f'No se pudo cargar el decoder "{decoder_alias}". No se generó respuesta; revise el modelo y la GPU.')
+    with st.expander("Detalle técnico"):
+        st.exception(exc)
+    st.stop()
 
-st.markdown(f'<div class="kc-banner">{decoder_note} · índice congelado: '
-            f'<code>{Path(corpus_dir).name}</code></div>', unsafe_allow_html=True)
+if decoder_alias == "dummy_abstain":
+    st.warning(decoder_note)
+else:
+    st.success(decoder_note)
+
+corpus_sha = str(identity.get("retriever", {}).get("corpus_sha256") or "no disponible")
+decoder_name = str((identity.get("decoder") or [decoder_alias])[0])
+prompt_name = str(identity.get("prompt_version") or "no disponible")
+status_cols = st.columns(5)
+status = [
+    ("Decoder", decoder_name),
+    ("Prompt", prompt_name),
+    ("Recuperación", f"{identity.get('retriever', {}).get('mode', 'bm25').upper()} · {identity.get('retrieval_mode', 'option')}"),
+    ("Evidencia", f"k={identity.get('k', k)} · grafo {identity.get('graph_policy', graph_policy)}"),
+    ("passages.jsonl · SHA-256", corpus_sha[:12]),
+]
+for col, (label, value) in zip(status_cols, status):
+    col.markdown(
+        f'<div class="kc-status"><div class="kc-status-label">{html.escape(label)}</div>'
+        f'<div class="kc-status-value">{html.escape(str(value))}</div></div>',
+        unsafe_allow_html=True,
+    )
+st.caption(f"Ruta del corpus: `{Path(corpus_dir)}` · Configuración B: option + BM25 + prompt v6 + citation-fill.")
 
 formato = st.radio("Formato de la pregunta", list(FORMATS), horizontal=True,
                     format_func={"multiple_choice": "Selección múltiple", "semi_open": "Respuesta breve",
@@ -154,11 +182,26 @@ if formato == "multiple_choice":
         opciones[letra] = cols[i % 2].text_input(f"Opción {letra}")
     opciones = {k: v for k, v in opciones.items() if v.strip()}
 
-if st.button("Responder") and pregunta.strip():
+if st.button("Analizar pregunta", type="primary") and pregunta.strip():
     question = Question(0, pregunta.strip(), formato, opciones)
     with st.spinner("Recuperando evidencia y generando..."):
-        row, trace = pipeline.run(question)
+        try:
+            row, trace = pipeline.run(question)
+            st.session_state["kc_last_result"] = {
+                "question": pregunta.strip(), "format": formato, "row": row, "trace": trace,
+            }
+        except Exception as exc:
+            st.session_state.pop("kc_last_result", None)
+            st.error("La consulta falló; no se generó una respuesta para mostrar.")
+            with st.expander("Detalle técnico"):
+                st.exception(exc)
+
+last_result = st.session_state.get("kc_last_result")
+if last_result:
+    row, trace = last_result["row"], last_result["trace"]
     view = view_model(row, trace)
+    if last_result["question"] != pregunta.strip() or last_result["format"] != formato:
+        st.info(f"Resultado de la consulta anterior: {last_result['question']}")
 
     izq, der = st.columns([3, 2])
     with izq:
@@ -179,13 +222,15 @@ if st.button("Responder") and pregunta.strip():
                 st.markdown(f"**{titulo}**")
                 st.write(row[campo])
 
-        st.markdown("**Normas citadas**")
+        st.markdown("**Normas citadas que aparecen en la evidencia**")
+        st.caption("La coincidencia comprueba presencia de la norma en los pasajes recuperados; no verifica por sí sola que el pasaje sustente semánticamente cada afirmación.")
         if not view["cited_norms"]:
             st.caption("La respuesta no cita ninguna norma.")
         for norm in view["cited_norms"]:
             css = "kc-norma" if norm["supported"] else "kc-norma kc-norma-sin-respaldo"
             label = html.escape(" ".join(str(x) for x in norm["body"] if x))
-            st.markdown(f'<span class="{css}">{label}{"" if norm["supported"] else " · sin respaldo en evidencia"}</span>',
+            suffix = " · presente en evidencia" if norm["supported"] else " · no aparece en evidencia"
+            st.markdown(f'<span class="{css}">{label}{suffix}</span>',
                         unsafe_allow_html=True)
 
     def card(c):
@@ -212,4 +257,4 @@ if st.button("Responder") and pregunta.strip():
         with st.expander("Traza técnica (solo operador)"):
             st.json(debug_trace(trace))
 elif pregunta.strip() == "":
-    st.caption("Escriba una pregunta y presione Responder.")
+    st.caption("Escriba una pregunta y presione Analizar pregunta.")
