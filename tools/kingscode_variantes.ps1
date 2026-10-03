@@ -68,6 +68,9 @@ $Catalogo = [ordered]@{
     "v8_coverage"    = @("-Recomendada", "-PromptVersion", "v8")
     "option_plan"    = @("-Recomendada", "-RetrievalMode", "option_plan")
     "doccap3"        = @("-Recomendada", "-DocCap", "3")
+    "v6_hybrid"      = @("-Recomendada", "-PromptVersion", "v6", "-RetrieverMode", "hybrid")   # encoder denso + BM25 (RRF), sin reranker
+    "v6_doccap3"     = @("-Recomendada", "-PromptVersion", "v6", "-DocCap", "3")
+    "v6_option_plan" = @("-Recomendada", "-PromptVersion", "v6", "-RetrievalMode", "option_plan")
     "ctx16k"         = @("-Recomendada", "-MaxContext", "16384")
     "v6_ctx16k"      = @("-Recomendada", "-PromptVersion", "v6", "-MaxContext", "16384")
 }
