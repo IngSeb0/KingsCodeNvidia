@@ -11,12 +11,16 @@
 # =====================================================================
 param(
     [Parameter(Mandatory = $true)] [string]$Corrida,
+    [switch]$Parcial,   # sube los puntos de control aunque la corrida no haya terminado (no la detiene)
     [string]$Work = "$HOME\KingsCodeGPU\KingsCodeNvidia"
 )
 $ErrorActionPreference = "Continue"
 Set-Location $Work
 $Src = Join-Path $Work "reports\decoder_diagnostic\$Corrida"
-if (-not (Test-Path (Join-Path $Src "batch\submissions.jsonl"))) { throw "STOP: no existe $Src\batch\submissions.jsonl (la corrida no termino)." }
+if ($Parcial) {
+    if (-not (Test-Path (Join-Path $Src "batch\items"))) { throw "STOP: $Src\batch\items no existe todavia." }
+    Write-Host ("Parcial: {0} preguntas con punto de control" -f (Get-ChildItem (Join-Path $Src "batch\items")).Count)
+} elseif (-not (Test-Path (Join-Path $Src "batch\submissions.jsonl"))) { throw "STOP: no existe $Src\batch\submissions.jsonl (la corrida no termino)." }
 $Rama = "entrega-$Corrida"
 $Wt = Join-Path $env:TEMP "kc_resultado_wt"
 if (Test-Path $Wt) { git worktree remove --force $Wt 2>&1 | Out-Null; Remove-Item $Wt -Recurse -Force -ErrorAction SilentlyContinue }

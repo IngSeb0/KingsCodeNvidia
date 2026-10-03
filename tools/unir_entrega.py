@@ -53,8 +53,21 @@ def unir(args):
         formats = set(args.formatos.split(","))
         better = {}
         for path in args.mejora:
-            for r in read(path):
-                better[r["id"]] = r
+            path = Path(path)
+            if path.is_dir():
+                # Corrida sin terminar: los puntos de control por pregunta (items/<id>.json) ya son
+                # filas completas y validadas. Una falla del pipeline (abstencion por error) no
+                # reemplaza a la fila de la base.
+                items = sorted(path.glob("**/items/*.json"))
+                for f in items:
+                    item = json.loads(f.read_text(encoding="utf-8"))
+                    if (item.get("trace") or {}).get("abstention_source") == "pipeline_error":
+                        continue
+                    better[item["row"]["id"]] = item["row"]
+                print(f"{path}: {len(items)} preguntas con punto de control")
+            else:
+                for r in read(path):
+                    better[r["id"]] = r
         want = [i for i in order if fmt[i] in formats]
         lacking = [i for i in want if i not in better]
         if lacking and args.parcial:
