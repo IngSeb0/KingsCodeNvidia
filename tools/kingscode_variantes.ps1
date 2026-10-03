@@ -35,6 +35,8 @@ param(
     [double]$Base = 37.46,   # total sin RAGAS de -Recomendada con el corpus de ESTA maquina (39.02 con el corpus nuevo)
     [string]$Final = "",
     [string]$Work = "$HOME\KingsCodeGPU\KingsCodeNvidia",
+    [ValidateSet("v01+v02", "v01")] [string]$CorpusSet = "v01+v02",
+    [switch]$AllowKnownLocalCorpusDrift,
     [switch]$Pull   # por defecto NO actualiza durante la tanda: todas las variantes usan el mismo commit
 )
 $ErrorActionPreference = "Continue"
@@ -73,7 +75,9 @@ $Catalogo = [ordered]@{
 # invoked as "powershell -File ..." from a script, PowerShell 5.1 redirects the child's streams and
 # the [batch] progress lines (stderr) only appeared at the end (2026-10-02).
 function Invoke-Diagnostico([string[]]$Flags) {
-    $ArgList = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$((Resolve-Path $S).Path)`"", "-Work", "`"$Work`"") + $Flags
+    $ArgList = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$((Resolve-Path $S).Path)`"", "-Work", "`"$Work`"", "-CorpusSet", $CorpusSet)
+    if ($AllowKnownLocalCorpusDrift) { $ArgList += "-AllowKnownLocalCorpusDrift" }
+    $ArgList += $Flags
     $p = Start-Process -FilePath "powershell.exe" -ArgumentList $ArgList -NoNewWindow -Wait -PassThru
     if ($p.ExitCode -ne 0) { Write-Host "La corrida termino con codigo $($p.ExitCode) (se sigue con la siguiente)." -ForegroundColor Yellow }
 }

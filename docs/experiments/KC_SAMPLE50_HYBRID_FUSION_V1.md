@@ -16,13 +16,23 @@ On the RTX 4090, after confirming no other user/process occupies the GPU, run:
 ```powershell
 $Repo = "$HOME\KingsCodeGPU\KingsCodeNvidia"
 Set-Location $Repo
+git pull --ff-only origin main
+$Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$BaselineRun = "hybrid_ref_$Stamp"
 
-# Use the same corpus/model snapshot as the baseline run. If its score is not
-# 37.46, pass the measured same-snapshot score to -Base for the comparison table.
+# Fresh BM25 reference with the same commit and local corpus snapshot.
+& .\tools\kingscode_pc_nueva_diagnostico.ps1 `
+  -Work $Repo -CorpusSet "v01+v02" -AllowKnownLocalCorpusDrift `
+  -Recomendada -RunName $BaselineRun -SkipSmoke -SkipVerify
+$Ref = Get-Content ".\reports\decoder_diagnostic\$BaselineRun\RESUMEN.json" -Raw | ConvertFrom-Json
+$BaseText = ($Ref.automatico_sin_ragas -split "/")[0].Trim()
+$Base = [double]::Parse($BaseText, [Globalization.CultureInfo]::InvariantCulture)
+
+# Same commit and corpus as the reference; both variants reuse the same B profile.
 powershell -ExecutionPolicy Bypass -File .\tools\kingscode_variantes.ps1 `
-  -Work $Repo `
+  -Work $Repo -CorpusSet "v01+v02" -AllowKnownLocalCorpusDrift `
   -Variantes hybrid_recommended_fanout_cache,hybrid_recommended_native_cache `
-  -Base 37.46
+  -Base $Base
 ```
 
 For each run compare `evaluation_official.json`, `batch_report.json` and `RESUMEN.json`: official total and per-format points; `reranker_computed_pairs`, cache hits, `reranker_ms`, `dense_ms`, graph-pass count, generation and retrieval percentiles, peak VRAM and seconds/question. Then run the official baseline and candidate comparison to completion before choosing a winner. Run RAGAS only once on a selected complete run; this pair does not invoke it.
