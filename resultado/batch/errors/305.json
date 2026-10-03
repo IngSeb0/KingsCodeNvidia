@@ -1,0 +1,55 @@
+{
+  "id": 305,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "SubmissionValidationError",
+        "reason": "['respuesta_correcta']: 'ninguna de las anteriores' is not one of ['A', 'B', 'C', 'D']",
+        "usage": {
+          "input_tokens": 5640,
+          "output_tokens": 485,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v6",
+          "prompt_sha256": "af8381c1827ebaa6e5d3cae87b86b1d21bf12eeadfd0bf2903d3234c197c4170",
+          "max_new_tokens": 1024,
+          "sampling_policy": {
+            "strategy": "greedy",
+            "do_sample": false,
+            "temperature": 0.0,
+            "seed": 0
+          },
+          "constrained_json": false,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_trimmed_to_chars": null,
+          "evidence_passages_trimmed": 0,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "num_beams": 1,
+            "max_new_tokens": 1024,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"abstencion\": false,\n  \"justificacion\": \"La duración del derecho sobre el diseño industrial se regula en el Código de Comercio (Decreto 410 de 1971), específicamente en el artículo 553, el cual establece que el término máximo de duración de las patentes de invención no podrá exceder de doce años. Inicialmente se concederá por ocho años, contados desde la fecha de la resolución, pero el titular de la misma tendrá derecho a que se le prorrogue por cuatro años. Para obtener la prórroga deberá acreditar que en Colombia se está explotando la invención o se ha explotado en el último año. La patente de perfeccionamiento caducará con la patente original. Por lo tanto, la duración máxima del derecho sobre el diseño industrial es de doce años.\",\n  \"respuesta_correcta\": \"ninguna de las anteriores\",\n  \"descarte_opciones\": {\n    \"A\": \"La opción A (5 años) no corresponde a la duración máxima del derecho sobre el diseño industrial, ya que el artículo 553 del Código de Comercio establece una duración máxima de doce años.\",\n    \"B\": \"La opción B (20 años) no es correcta, ya que el artículo 553 del Código de Comercio establece una duración máxima de doce años para las patentes de invención, incluyendo el diseño industrial.\",\n    \"C\": \"La opción C (15 años) tampoco es correcta, ya que el artículo 553 del Código de Comercio establece una duración máxima de doce años para las patentes de invención, incluyendo el diseño industrial.\",\n    \"D\": \"La opción D (10 años) no es correcta, ya que el artículo 553 del Código de Comercio establece una duración máxima de doce años para las patentes de invención, incluyendo el diseño industrial.\"\n  },\n  \"pasajes_usados\": [\n    \"codigo_comercio:00560:119b7115aa61\"\n  ]\n}",
+          "generation_ms": 18918.356099980883,
+          "peak_vram_bytes": 18870809600,
+          "peak_reserved_vram_bytes": 19146997760
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 229, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used,\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                                  extract_embedded=self.prompt_version not in {PROMPT_VERSION})\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 380, in parse_response_v3\n    row = _answer_row(value, question, passages, strict_length=False)\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 477, in _answer_row\n    validate_submission(row)\n    ~~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\guards.py\", line 44, in validate_submission\n    raise SubmissionValidationError(\"; \".join(f\"{list(e.path)}: {e.message}\" for e in errors))\nkingscode.reasoning.guards.SubmissionValidationError: ['respuesta_correcta']: 'ninguna de las anteriores' is not one of ['A', 'B', 'C', 'D']\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 164, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 377, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill,\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                         cite_mentions=getattr(self, \"cite_mentions\", 0))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 137, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 233, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": 363,
+  "attempts": [
+    {
+      "attempt": 1,
+      "type": "DecoderFailure",
+      "code": "INVALID_MODEL_OUTPUT",
+      "message": "INVALID_MODEL_OUTPUT",
+      "detail": {
+        "error_type": "ValueError",
+        "reason": "Output must be exactly one JSON object, without prose around it",
+        "usage": {
+          "input_tokens": 4076,
+          "output_tokens": 1024,
+          "json_valid": false,
+          "model": "qwen3-8b",
+          "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+          "prompt_version": "grounded-formats-v6",
+          "prompt_sha256": "af8381c1827ebaa6e5d3cae87b86b1d21bf12eeadfd0bf2903d3234c197c4170",
+          "max_new_tokens": 1024,
+          "sampling_policy": {
+            "strategy": "greedy",
+            "do_sample": false,
+            "temperature": 0.0,
+            "seed": 0
+          },
+          "constrained_json": false,
+          "attn_implementation": "sdpa",
+          "evidence_in_prompt": 8,
+          "evidence_trimmed_to_chars": null,
+          "evidence_passages_trimmed": 0,
+          "evidence_dropped_for_context": [],
+          "effective_generation_config": {
+            "do_sample": false,
+            "num_beams": 1,
+            "max_new_tokens": 1024,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 0,
+            "bos_token_id": 151643,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "pad_token_id": 151643
+          },
+          "raw_response": "{\n  \"abstencion\": false,\n  \"justificacion\": \"Según el artículo 1560 del Código Civil, la obligación alternativa subsiste incluso si una de las cosas alternativamente prometidas no puede ser objeto de la obligación o llega a destruirse. Por otro lado, el artículo 1561 establece que si perecen todas las cosas comprendidas en la obligación alternativa sin culpa del deudor, se extingue la obligación. Si con culpa del deudor, el deudor estará obligado al precio de cualquiera de las cosas que elija, cuando la elección es suya. La opción A menciona la destrucción de una cosa por culpa del deudor, lo cual no extingue la obligación alternativa, sino que impone al deudor la obligación de pagar el precio de la cosa elegida. La opción B, C y D no están reguladas en los artículos mencionados y no responden a la pregunta. Por lo tanto, la opción correcta es la que no extingue la obligación alternativa, es decir, la opción A no es la respuesta correcta, pero la pregunta se enfoca en cuándo se extingue la obligación alternativa, lo cual ocurre cuando perecen todas las cosas sin culpa del deudor, lo cual no está en las opciones. Por lo tanto, la respuesta correcta es la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos, lo cual no está en las opciones, por lo que se elige la opción que no se menciona en los artículos",
+          "generation_ms": 37729.07930001384,
+          "peak_vram_bytes": 18870809600,
+          "peak_reserved_vram_bytes": 19146997760
+        }
+      },
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 360, in parse_response_v3\n    normalized, action = normalize_envelope(raw)\n                         ~~~~~~~~~~~~~~~~~~^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 299, in normalize_envelope\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 229, in generate\n    row, meta = parse_response_v3(raw, question, passages, max_used=max_used,\n                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                                  extract_embedded=self.prompt_version not in {PROMPT_VERSION})\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 364, in parse_response_v3\n    normalized, action = (extract_single_object(raw, tuple(ANSWER_FIELDS[question.format])),\n                          ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\prompts.py\", line 348, in extract_single_object\n    raise ValueError(\"Output must be exactly one JSON object, without prose around it\")\nValueError: Output must be exactly one JSON object, without prose around it\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\batch.py\", line 164, in _attempt\n    row, trace = self.pipeline.run(question)\n                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 377, in run\n    row, trace = _answer(question, passages, self.decoder, max_refs=self.max_refs, citation_fill=self.citation_fill,\n                 ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                         cite_mentions=getattr(self, \"cite_mentions\", 0))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\reasoning\\pipeline.py\", line 137, in _answer\n    row = decoder.generate(question, deepcopy(evidence), PromptSpec(question.format), dict(GENERATION_CONFIG))\n  File \"C:\\Users\\turing\\KingsCodeGPU\\KingsCodeNvidia\\kingscode\\generation\\hf_decoder.py\", line 233, in generate\n    raise DecoderFailure(\"INVALID_MODEL_OUTPUT\", {\"error_type\": type(exc).__name__, \"reason\": str(exc)[:200],\n                                                  \"usage\": dict(self.last_usage)}) from exc\nkingscode.generation.hf_decoder.DecoderFailure: INVALID_MODEL_OUTPUT\n"
+    }
+  ]
+}

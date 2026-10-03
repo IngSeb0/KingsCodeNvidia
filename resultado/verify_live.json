@@ -1,0 +1,27 @@
+﻿{
+  "checked": 3,
+  "all_match": true,
+  "results": [
+    {
+      "id": 1,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    },
+    {
+      "id": 2,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    },
+    {
+      "id": 39,
+      "passages_equal": true,
+      "citations_equal": true,
+      "row_identical": true,
+      "status": "match"
+    }
+  ]
+}
