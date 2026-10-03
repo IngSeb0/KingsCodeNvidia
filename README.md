@@ -9,7 +9,7 @@ Sistema de respuesta a preguntas de derecho colombiano con un modelo abierto de 
 
 | Recurso | Enlace | Licencia |
 |---|---|---|
-| Corpus procesado e índice vectorial (`corpus_KingsCode.zip`) | **PENDIENTE_ENLACE** | CC BY 4.0 (procesamiento); textos oficiales públicos |
+| Corpus procesado e índice vectorial (`corpus_KingsCode.zip`, 105,7 MB, SHA-256 `30522f8a52967221…`) | [Descargar](https://github.com/IngSeb0/KingsCodeNvidia/releases/download/corpus-final/corpus_KingsCode.zip) · [página de la publicación](https://github.com/IngSeb0/KingsCodeNvidia/releases/tag/corpus-final) | CC BY 4.0 (procesamiento); textos oficiales públicos |
 
 El comprimido contiene:
 
@@ -101,7 +101,7 @@ pip install -r requirements.txt
 - `CORPUS.md` y `corpus_manifest.json`: la bitácora y el inventario de fuentes.
 - `informe/INFORME_TECNICO.pdf`: el informe técnico (máximo 3 páginas).
 - `interfaz/`: la interfaz gráfica.
-- Video: **PENDIENTE_ENLACE_VIDEO**
+- Video (4:58): [`video/KingsCode_video.mp4`](video/KingsCode_video.mp4)
 
 ## Interfaz gráfica
 
