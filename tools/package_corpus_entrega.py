@@ -80,7 +80,8 @@ def documents(corpus: Path) -> list[dict]:
 
 def clean_texts(corpus: Path) -> dict[str, Path]:
     found = {}
-    for folder in [corpus / "clean", ROOT / "corpus" / "clean", *sorted((ROOT / "corpora").glob("*/clean"))]:
+    for folder in [corpus / "clean", ROOT / "corpus" / "clean", corpus.parent / "corpus" / "clean",
+                   *sorted((ROOT / "corpora").glob("*/clean")), *sorted((corpus.parent / "corpora").glob("*/clean"))]:
         if folder.is_dir():
             for f in sorted(folder.glob("*.txt")):
                 found.setdefault(f.stem, f)
