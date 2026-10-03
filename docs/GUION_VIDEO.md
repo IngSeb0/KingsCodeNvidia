@@ -1,14 +1,20 @@
 # Guion del video (máximo 5:00) — KingsCode
 
-El enunciado pide: arquitectura, decisiones de corpus y su justificación, funcionamiento de extremo a extremo con los pasajes recuperados, y limitaciones (se valoran por encima de presentarlo como infalible). Grabar la pantalla (Win + G o OBS) con la interfaz abierta.
+El enunciado pide cuatro cosas: la arquitectura, las decisiones de corpus y su justificación, el funcionamiento de extremo a extremo con los pasajes recuperados, y las limitaciones. Las limitaciones se valoran por encima de presentar el sistema como infalible.
+
+Para grabar: pantalla completa con Win + G o con OBS. Abrir antes la interfaz (`streamlit run interfaz/app.py`), el README y el informe en otras pestañas. Hablar sin leer: las frases de la tabla son guía.
 
 | Tiempo | Pantalla | Qué decir |
 |---|---|---|
-| 0:00–0:30 | Título del repo / interfaz | "Los modelos más grandes citan normas erróneas o inexistentes en casi la mitad de los casos. Construimos un sistema con un modelo abierto de 8B que solo cita lo que puede probar." |
-| 0:30–1:30 | Diagrama del README (Arquitectura) | Recorrido: pregunta → normalización (una consulta por opción en cerradas) → BM25 sobre artículos + grafo normativo → 8 pasajes → Qwen3-8B (temperatura 0, prompt de razonamiento jurídico) → reparación y guarda de citas con la regla oficial → JSON. Encoder Qwen3-Embedding-0.6B para el índice vectorial; elegimos BM25 porque el híbrido no mejoró el puntaje y era más lento. |
-| 1:30–2:30 | `CORPUS.md` y `corpus_manifest.json` | 172+ documentos oficiales (Función Pública, Corte Constitucional, Corte Suprema, SENA, CAN), un fragmento por artículo con norma, artículo, URL, fecha y hash. Se amplió por análisis de fallas de la muestra (Ley 472 de 1998, sentencias de unificación), no por intuición. |
-| 2:30–3:45 | Interfaz: hacer una pregunta en vivo | Escribir una pregunta (p. ej. "¿Cuál es el término para contestar la demanda en el proceso verbal sumario?"), pulsar Responder, mostrar la respuesta, las normas citadas y los pasajes recuperados con su fuente. Señalar que cada norma citada aparece en un pasaje. |
-| 3:45–4:30 | Tabla de resultados del informe | 26,63 → 38,08/50 sin RAGAS en la muestra (39,02 con el corpus ampliado), una variable por corrida; 0 % de citas sin respaldo; ~16 s por pregunta; reproducible en dos computadores. |
-| 4:30–5:00 | Sección Limitaciones del informe | BM25 no encuentra la norma cuando la pregunta no la nombra; falta jurisprudencia del Consejo de Estado; contexto de 8.192 tokens; vigencia no certificada artículo por artículo; decisiones tomadas sobre 50 preguntas. |
+| 0:00–0:25 | Interfaz con el logo de Software Colombia | "Somos KingsCode. Construimos un asistente de derecho colombiano con un modelo abierto de 8 mil millones de parámetros que solo cita normas que puede probar con el texto oficial." |
+| 0:25–1:30 | README, diagrama de Arquitectura | "La pregunta se normaliza y buscamos en un corpus propio, partido por artículo. En selección múltiple hacemos una búsqueda por cada opción. En preguntas abiertas combinamos BM25 con búsqueda semántica usando Qwen3-Embedding. Un grafo normativo trae las normas que modifican o derogan. Qwen3-8B, a temperatura cero, recibe 8 pasajes y responde en el JSON oficial. Una guarda determinista elimina cualquier cita que no esté en los pasajes: 0 % de citas sin respaldo." |
+| 1:30–2:20 | `CORPUS.md` y `corpus_manifest.json` | "170 normas y sentencias de fuentes oficiales: Función Pública, Corte Constitucional, Corte Suprema, SENA. 26.665 fragmentos, uno por artículo, con URL, fecha y hash. Partimos por artículo porque en derecho la unidad de cita es el artículo: cada pasaje ya trae la norma que se cita. Ampliamos el corpus por análisis de fallas, no por intuición." |
+| 2:20–3:40 | Interfaz: pregunta en vivo | Cargar un id de la muestra, o escribir el caso de datos de salud ("¿Puede el Gobierno acceder a la base de datos de pacientes con esclerosis múltiple para justificar una licencia obligatoria?"). Pulsar Responder y mostrar la respuesta, las normas citadas y los pasajes con su fuente. "Cada norma citada aparece en un pasaje recuperado." |
+| 3:40–4:20 | Tabla de resultados (README o informe) | "Medimos una variable por corrida: de 26,6 a 39 sobre 50 en la muestra, sin RAGAS. Las 992 preguntas corrieron en tres RTX 4090 de forma determinista: regenerar una pregunta da las mismas normas y los mismos pasajes." |
+| 4:20–5:00 | Sección Limitaciones del informe | "En la prueba con el jurado vimos el límite de BM25: en un caso largo sumaba palabras como 'VIH' y 'medicamento' y no encontraba la Ley 1581 de datos sensibles. Por eso activamos la búsqueda semántica en texto libre. Otras limitaciones: poca jurisprudencia del Consejo de Estado, vigencia no certificada artículo por artículo, contexto de 8 mil tokens y decisiones tomadas sobre 50 preguntas." |
 
-Subir el video a OneDrive/Drive con "Cualquier persona con el vínculo" y pegar el enlace en el README (`PENDIENTE_ENLACE_VIDEO`).
+Para publicarlo:
+1. Exportar en MP4.
+2. Subirlo a OneDrive con "Cualquier persona con el vínculo".
+3. Probar el enlace en una ventana privada.
+4. Pegarlo en el README, en lugar de `PENDIENTE_ENLACE_VIDEO`.
