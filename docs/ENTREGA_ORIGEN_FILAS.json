@@ -1,0 +1,4967 @@
+{
+ "submissions_sha256": "a19d3172354be8165c3347cd93974ea1df5d0ba1d6ab5f8c6a03a3087d461303",
+ "corpus_passages_sha256": "58135a0cf92c502115415756835807870cd47c2af55ff7bd7771d897555ca6f8",
+ "nota": "Cada fila es completa y proviene de una sola corrida. Para la verificacion en vivo, regenerar el id en el PC y con la configuracion indicados.",
+ "filas": {
+  "1": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "2": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "3": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "4": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "5": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "6": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "7": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "8": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "9": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "10": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "11": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "12": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "13": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "14": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "15": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "16": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "17": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "19": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "20": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "21": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "22": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "23": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "25": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "26": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "27": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "28": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "29": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "30": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "31": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "32": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "33": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "34": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "35": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "36": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "37": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "38": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "39": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "40": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "41": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "42": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "43": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "44": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "45": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "46": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "47": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "48": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "49": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "50": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "52": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "53": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "54": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "55": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "56": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "57": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "59": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "61": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "62": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "63": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "64": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "65": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "66": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "67": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "68": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "69": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "70": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "71": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "72": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "73": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "74": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "75": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "76": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "77": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "78": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "80": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "81": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "82": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "83": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "84": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "85": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "86": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "87": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "88": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "89": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "90": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "91": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "92": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "93": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "94": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "95": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "96": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "97": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "98": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "99": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "100": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "101": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "102": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "103": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "104": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "105": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "106": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "107": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "108": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "109": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "110": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "111": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "112": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "113": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "114": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "115": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "116": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "117": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "118": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "119": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "120": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "121": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "122": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "123": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "124": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "125": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "126": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "127": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "129": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "130": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "131": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "132": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "133": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "134": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "135": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "136": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "137": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "138": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "139": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "141": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "143": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "144": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "145": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "146": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "147": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "148": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "149": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "150": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "151": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "152": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "153": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "154": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "155": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "156": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "157": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "158": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "159": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "160": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "161": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "162": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "163": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "164": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "165": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "166": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "167": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "169": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "170": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "171": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "172": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "173": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "174": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "175": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "176": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "177": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "178": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "179": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "180": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "181": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "182": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "183": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "184": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "185": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "186": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "187": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "188": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "189": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "191": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "192": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "193": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "194": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "195": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "196": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "197": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "198": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "199": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "200": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "201": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "202": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "203": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "204": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "205": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "206": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "207": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "208": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "209": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "210": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "211": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "212": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "213": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "214": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "215": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "216": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "217": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "219": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "220": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "221": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "222": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "223": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "224": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "225": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "226": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "227": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "228": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "229": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "230": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "231": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "232": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "233": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "234": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "235": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "236": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "237": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "238": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "240": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "241": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "242": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "243": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "244": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "245": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "246": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "248": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "249": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "250": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "251": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "252": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "254": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "255": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "256": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "257": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "258": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "259": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "260": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "261": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "262": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "263": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "264": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "265": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "266": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "267": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "268": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "269": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "270": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "271": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "273": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "274": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "275": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "276": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "277": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "278": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "279": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "281": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "282": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "283": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "284": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "285": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "286": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "287": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "288": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "291": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "292": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "293": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "294": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "295": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "296": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "297": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "298": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "299": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "300": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "301": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "302": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "303": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "304": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "305": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "306": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "307": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "310": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "311": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "312": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "314": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "316": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "317": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "318": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "319": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "320": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "321": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "322": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "324": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "326": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "327": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "328": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "329": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "330": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "331": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "332": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "333": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "334": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "335": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "336": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "337": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "338": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "339": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "340": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "341": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "342": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "343": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "344": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "346": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "347": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "348": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "350": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "351": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "353": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "354": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "355": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "356": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "357": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "359": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "360": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "361": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "362": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "363": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "364": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "365": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "366": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "367": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "368": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "369": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "370": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "371": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "372": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "373": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "374": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "375": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "376": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "377": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "378": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "379": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "380": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "381": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "382": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "383": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "384": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "385": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "386": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "387": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "388": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "389": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "390": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "391": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "392": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "393": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "394": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "395": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "396": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "397": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "398": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "399": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "400": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "401": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "402": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "403": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "404": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "405": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "406": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "407": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "408": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "409": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "410": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "411": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "412": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "413": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "414": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "415": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "416": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "417": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "418": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "419": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "420": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "421": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "422": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "423": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "424": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "425": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "426": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "427": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "428": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "429": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "430": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "431": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "432": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "433": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "434": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "435": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "436": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "437": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "438": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "439": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "440": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "441": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "443": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "444": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "445": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "446": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "447": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "448": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "449": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "450": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "451": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "452": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "454": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "455": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "456": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "457": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "458": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "459": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "460": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "461": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "462": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "463": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "464": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "465": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "466": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "467": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "468": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "469": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "470": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "471": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "473": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "474": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "476": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "477": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "478": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "479": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "481": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "482": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "484": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "486": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "488": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "489": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "491": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "492": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "493": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "494": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "495": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "496": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "497": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "498": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "499": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "500": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "501": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "502": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "505": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "506": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "507": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "508": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "509": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "510": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "511": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "512": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "514": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "515": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "516": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "517": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "518": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "519": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "520": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "521": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "522": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "523": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "524": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "525": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "526": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "527": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "529": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "530": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "531": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "532": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "533": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "534": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "535": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "536": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "537": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "538": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "539": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "540": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "541": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "542": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "543": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "544": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "545": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "546": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "547": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "548": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "549": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "550": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "551": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "552": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "553": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "554": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "555": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "556": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "557": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "558": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "559": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "560": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "561": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "562": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "564": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "565": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "566": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "567": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "568": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "569": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "570": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "571": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "572": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "573": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "574": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "575": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "576": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "577": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "578": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "579": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "580": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "581": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "582": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "583": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "584": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "585": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "586": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "587": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "588": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "590": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "591": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "592": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "593": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "594": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "595": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "596": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "597": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "598": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "599": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "601": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "602": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "603": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "604": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "605": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "606": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "607": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "608": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "609": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "610": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "611": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "612": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "613": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "614": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "615": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "616": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "618": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "619": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "620": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "621": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "622": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "623": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "624": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "625": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "626": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "627": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "628": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "629": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "630": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "631": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "632": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "633": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "634": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "635": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "636": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "637": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "638": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "640": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "641": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "642": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "643": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "644": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "645": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "646": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "648": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "649": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "650": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "651": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "652": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "653": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "654": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "655": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "656": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "657": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "658": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "659": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "660": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "662": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "663": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "664": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "665": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "666": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "667": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "668": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "669": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "670": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "672": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "673": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "675": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "676": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "677": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "678": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "680": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "681": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "682": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "683": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "684": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "685": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "686": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "687": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "688": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "689": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "690": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "691": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "692": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "694": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "695": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "696": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "698": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "699": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "700": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "701": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "702": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "703": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "704": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "705": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "706": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "707": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "708": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "709": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "710": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "711": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "712": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "713": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "714": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "715": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "716": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "717": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "718": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "719": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "720": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "721": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "722": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "723": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "724": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "725": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "726": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "728": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "729": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "730": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "732": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "734": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "735": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "736": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "738": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "740": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "741": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "742": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "743": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "744": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "745": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "749": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "750": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "752": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "754": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "755": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "756": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "757": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "758": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "759": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "760": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "761": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "762": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "794": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "795": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "796": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "797": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "799": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "801": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "802": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "803": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "804": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "805": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "806": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "807": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "808": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "809": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "810": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "811": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "812": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "814": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "815": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "816": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "817": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "818": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "819": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "820": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "821": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "822": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "823": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "824": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "825": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "826": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "827": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "828": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "829": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "830": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "831": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "832": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "833": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "834": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "835": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "836": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "837": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "838": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "839": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "840": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "841": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "842": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "843": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "844": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "845": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "846": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "847": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "848": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "849": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "850": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "851": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "852": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "853": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "854": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "855": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "856": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "860": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "862": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "863": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "864": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "866": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "867": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "868": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "869": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "870": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "871": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "872": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "874": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "875": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "876": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "877": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "878": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "880": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "881": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "882": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "883": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "884": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "885": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "886": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "887": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "888": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "889": {
+   "corrida": "mejora_p3",
+   "pc": "GPU-1 (turing, ISC419)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "890": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "891": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "892": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "893": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "894": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "895": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "896": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "897": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "898": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "899": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "901": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "902": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "903": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "904": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "905": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "906": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "907": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "908": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "909": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "910": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "911": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "912": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "913": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "914": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "915": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "916": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "917": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "918": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "920": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "921": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "922": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "923": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "924": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "925": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "929": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "930": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "931": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "932": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "933": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "934": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "935": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "937": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "938": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "940": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "941": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "942": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "943": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "944": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "945": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "947": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "948": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "949": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "950": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "951": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "953": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "954": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "955": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "956": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "957": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "958": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "959": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "961": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "962": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "963": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "964": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "965": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "966": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "967": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "968": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "969": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "970": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "971": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "972": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "973": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "974": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "975": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "976": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "977": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "978": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "979": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "980": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "981": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "982": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "983": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "984": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "985": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "986": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "987": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "988": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "989": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "990": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "992": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "993": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "994": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "995": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "996": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "997": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "998": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "999": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1000": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1001": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1002": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1003": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1004": {
+   "corrida": "final_p1",
+   "pc": "GPU-2 (turing, ISC420)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1006": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1007": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1008": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1009": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1010": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1011": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1012": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1013": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1014": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1016": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1017": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1018": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1019": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1020": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1021": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1022": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1023": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1024": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1025": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1026": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1027": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1028": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1029": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1030": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1031": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1032": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1033": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1034": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1035": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1036": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1037": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1038": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1039": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1040": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1041": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1042": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1043": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1044": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1045": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1046": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1047": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1048": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1049": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1050": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1051": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1052": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1053": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1054": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1055": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1056": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1057": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1058": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1059": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1060": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1061": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1062": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1063": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1064": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1066": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1067": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1068": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1069": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1070": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1071": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1072": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1074": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1075": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1076": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1077": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1078": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1079": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1080": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1081": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1082": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1084": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1085": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1086": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1087": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1088": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1090": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1091": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1092": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1094": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1095": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1096": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1097": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1098": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1099": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1100": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1101": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1102": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1103": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1104": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1105": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1106": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1107": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1108": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1109": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1110": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1111": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1112": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1113": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  },
+  "1114": {
+   "corrida": "mejora_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6 -RetrieverMode hybrid -HybridFormats semi_open,open_ended"
+  },
+  "1115": {
+   "corrida": "final_p2",
+   "pc": "GPU-3 (ea.hernandezs1)",
+   "config": "-Recomendada -PromptVersion v6"
+  }
+ }
+}

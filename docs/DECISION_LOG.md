@@ -968,3 +968,16 @@ Detalle en `docs/ANALISIS_CORRIDAS_2026-10-01.md`.
 - No se adopta v0.3: EC@8 delta −0,0167 (IC95 −0,0417..0), Recall@10 +0,0167 (IC95 0..0,0417), MRR@10 −0,00036 (IC95 −0,00447..0,00340); ninguna mejora pareada en áreas administrativas, procesales o tributarias. Gate `NOT_PASSED`; no se usó GPU. Benchmark v1 no tiene casos de Consejo de Estado ni gold jurisprudencial, por lo que la nueva cobertura de autoridad es útil como inventario, pero su recuperación no está probada por este benchmark.
 - El desglose está en `reports/corpus_v03_source_breakdown.json/.md`. Los 120 gold DEV se asignan a documentos normativos; no hay estrato jurisprudencial, ni preguntas semánticas/generalistas (`n=0`), y la autoridad está limitada a las fuentes de esos gold. Las métricas de subgrupo son descriptivas, no un gate alternativo.
 - Se mantiene el candidato como expansión diagnóstica que requiere una mejor evaluación independiente de autoridades añadidas. `tools/run_corpus_v03_sample50_comparison.ps1` debe detenerse con este gate. No se selecciona corpus para ejecutar el set ciego.
+
+## 2026-10-03 (14:40) — Entrega final: base BM25 + mejora semántica parcial en texto libre
+
+- Base: `final_p1` (GPU-2) + `final_p2` (GPU-3), `-Recomendada -PromptVersion v6`, corpus `passages.jsonl` 58135a0c…, 992 filas, 0 problemas.
+- Causa de la mejora: en la prueba con el jurado, un caso largo de datos de salud recuperó sentencias de salud por coincidencia de palabras y no la Ley 1581 de 2012, que está en el corpus.
+- Mejora: `--hybrid-formats semi_open,open_ended` (BM25 + Qwen3-Embedding por RRF solo en texto libre; selección múltiple sin cambios).
+- Muestra con esa configuración: **38,84/50** sin RAGAS (cerradas 13,33, citas 17,14, abstención 8,37, 0 sin respaldo), frente a 38,08 de v6 BM25 en el corpus anterior. Ese 38,08 es la única medición de v6 con BM25; no se midió v6 con BM25 en este corpus. Con v4 en este corpus se obtuvo 39,02.
+- Por tiempo, la mejora corrió en GPU-3 (234/234) y GPU-1 (65/234); GPU-2 no arrancó.
+- Regla de unión (`tools/unir_entrega.py --parcial`):
+  - Se toma cada fila de texto libre que la mejora completó.
+  - Las fallas del pipeline (id 179) no reemplazan a la base.
+  - Resultado: 298 filas reemplazadas, 64 abstenciones (antes 78), 0 problemas con el validador y el esquema oficiales.
+- El origen de cada fila (corrida, PC, configuración) queda en `docs/ENTREGA_ORIGEN_FILAS.json` para la verificación en vivo.

@@ -50,7 +50,7 @@ Configuración final: Qwen3-8B + BM25 + grafo + consultas por opción, prompt v6
 | Abstención calibrada | 8,02 | 10 |
 | **Total automático sin RAGAS** | **38,08** | **50** |
 
-Una variable por corrida: 26,63 → 30,41 → 35,18 → 36,93 → 37,46 (v4) → **38,08 (v6)**; con el corpus ampliado del integrante A, v4 llegó a 39,02. La entrega de 992 se generó en dos RTX 4090 con v6 y ese corpus (`passages.jsonl` 58135a0c…); las preguntas de texto libre se regeneraron con búsqueda semántica en tres GPU cuando la corrida completa estuvo a tiempo. RAGAS (juez oficial, una medición): correctness 0,4275 (referencia 0,451).
+Una variable por corrida: 26,63 → 30,41 → 35,18 → 36,93 → 37,46 (v4) → **38,08 (v6)**; con el corpus ampliado del integrante A, v4 llegó a 39,02. La entrega de 992 se generó en dos RTX 4090 con v6 y ese corpus (`passages.jsonl` 58135a0c…); 298 de las 702 preguntas de texto libre se regeneraron con búsqueda semántica (38,84/50 en la muestra con esa configuración); el resto conserva BM25. RAGAS (juez oficial, una medición): correctness 0,4275 (referencia 0,451).
 
 Errores más frecuentes (taxonomía por área y sub-tarea, `tools/analyze_taxonomy.py`): (1) normas del fundamento que la pregunta no nombra y la recuperación léxica no encuentra (3 de 41); (2) cerradas que exigen un dato no contenido en la evidencia (por ejemplo, el salario mínimo para la cuantía); (3) respuestas que discutían la evidencia en vez de responder (8 de 50 con v4; v6 lo corrige).
 

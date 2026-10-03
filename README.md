@@ -95,6 +95,7 @@ pip install -r requirements.txt
 
 - `submissions.jsonl`: las 992 respuestas.
   - Generadas con Qwen3-8B, prompt v6 y el corpus de `passages.jsonl` con SHA-256 `58135a0c…`.
+  - 298 de las 702 preguntas de texto libre se regeneraron con búsqueda semántica (BM25 + Qwen3-Embedding); las demás usan BM25. Cada fila viene completa de una sola corrida, y [`docs/ENTREGA_ORIGEN_FILAS.json`](docs/ENTREGA_ORIGEN_FILAS.json) indica cuál, para la verificación en vivo.
   - Validadas con `python tools/validate_test_submission.py --test data/test_992.jsonl submissions.jsonl`, que usa `scripts/evaluate.py::validate` y `schema/submission.schema.json`.
   - 0 problemas.
 - `CORPUS.md` y `corpus_manifest.json`: la bitácora y el inventario de fuentes.
