@@ -624,13 +624,25 @@
   "corpus_v03_candidate_work": {
     "branch": "codex/corpus-first-final-improvement-20261003",
     "starting_origin_main_sha": "30ef38c792c33feb7dc6d87358ab749b007e8725",
-    "status": "candidate_built; independent_c0_c1_pending",
+    "status": "candidate_built; independent_c0_c1_not_passed",
     "candidate_runtime_artifact_set_sha256": "019b7b3a2c6e719cd70dd082ef61e63042f1dee3113b551f1028bcd14b964b91",
     "baseline_counts": {"documents": 163, "passages": 26558, "indexable_passages": 26060},
     "candidate_counts": {"documents": 175, "passages": 27164, "indexable_passages": 26666},
-    "independent_retrieval_gate": "pending; no GPU sample_50 run until C1 passes",
+    "independent_retrieval_gate": {
+      "status": "NOT_PASSED",
+      "report": "reports/corpus_v03_independent_retrieval_comparison.json",
+      "paired_comparison": "reports/benchmark/corpus_v03_c1/paired_comparison.json",
+      "dev_questions": 120,
+      "evidence_completeness_at_8_delta": -0.016666666666666666,
+      "evidence_completeness_at_8_ci95": [-0.041666666666666664, 0.0],
+      "recall_at_10_delta": 0.016666666666666666,
+      "recall_at_10_ci95": [0.0, 0.041666666666666664],
+      "mrr_at_10_delta": -0.00036044973544973534,
+      "mrr_at_10_ci95": [-0.0044675925925925924, 0.0034027777777777776],
+      "sample_50_authorized_by_gate": false
+    },
     "gpu_sample_50": "not_run; no RTX 4090 available in this Codex host",
     "blind_992": "not used for acquisition, tuning, or evaluation",
-    "next_exact_action": "Run same-commit R0/BM25 on Member-A v1 DEV using v0.1 and corpus_v03_candidate, then paired comparison and tools/gate_corpus_expansion.py"
+    "next_exact_action": "Do not freeze corpus_v03_candidate or run sample_50; obtain independent retrieval gold covering the added authorities or address the measured procedural EC@8 loss before proposing another candidate"
   }
 }

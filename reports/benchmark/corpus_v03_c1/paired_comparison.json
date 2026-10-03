@@ -1,0 +1,200 @@
+{
+  "version": "benchmark-comparison-v1",
+  "benchmark": {
+    "manifest_sha256": "326a405748dd20f641d5cf4103ceaafb6a19f07b43db54d95f472a2b439e3071",
+    "manifest": {
+      "version": "kingscode-ir-v1",
+      "generated_at": "2026-09-28T18:23:36.775832+00:00",
+      "generation": {
+        "kind": "deterministic_template_over_verified_corpus_metadata",
+        "closed_model_used": false,
+        "cases_per_area": 20,
+        "target_total": 200
+      },
+      "corpus": {
+        "version": "corpus-v0.1",
+        "passages.jsonl": "3b2b7a7beae2abe0abd14480be887a86ad933902c9735a21e02719a12daac3c0",
+        "graph/nodes.jsonl": "7c8af359cb1ac8de13872e01d2d0faf18218d24e1e2af326529f4a11c0a39aaa",
+        "graph/edges.jsonl": "6002fdcdbb4fb673761cb2dbe949db2502306809f2179e4133d8f40c286ff634",
+        "bm25_sha256": "aa6b40c5e70f88513a7cde7e9ca96a15d1d40088c538668087700b9b46de005b"
+      },
+      "schema_sha256": "01a2d1ff1f23453d3104e620c5a919d39d4dc65f9e77939510734d3ec92bea9e",
+      "splits": {
+        "dev": {
+          "questions": 120,
+          "question_sha256": "a207bc0c72c4aac92534f61f7162db7e94708a766133d791fce4a32905e7fa22",
+          "gold_sha256": "98747f955fed138160246d2066e5a84852f54f8e73868d05cfa4e6256674b0af"
+        },
+        "validation": {
+          "questions": 40,
+          "question_sha256": "a196b4b409acf2105afdbdb5ef71bf3e6154f2f9ac0eb269c039ea8d077ef1df",
+          "gold_sha256": "e42f9d17f442975351f14d62b698f12819eafe470e438d3c6fbf9c7bbda69f75"
+        },
+        "holdout": {
+          "questions": 40,
+          "question_sha256": "102b0ad813360083b891bb590a5af3485549cd6e167d12f2208f444780a8d9c9",
+          "gold_sha256": "6f1bbae3c68d2233a6eecd63c3b3e9dc45e8016312507402cdea40cce8a314d6"
+        }
+      },
+      "coverage": {
+        "cases_by_area": {
+          "Derecho administrativo": 20,
+          "Derecho civil": 20,
+          "Derecho comercial y sociedades": 20,
+          "Derecho constitucional": 20,
+          "Derecho de familia": 20,
+          "Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual]": 20,
+          "Derecho laboral": 20,
+          "Derecho penal": 20,
+          "Derecho procesal": 20,
+          "Derecho tributario": 20
+        },
+        "cases_by_tag": {
+          "EXPLICIT": 200,
+          "DISTRACTOR": 200,
+          "MULTI_EVIDENCE": 40,
+          "GRAPH": 6
+        },
+        "human_review_queue": 20
+      },
+      "holdout_policy": {
+        "protected": true,
+        "allowed_purposes": [
+          "predeclared_baseline",
+          "post_selection_confirmation"
+        ],
+        "official_50": "separate external milestone; never benchmark development data"
+      },
+      "gold_input_separation": "questions contain no gold/evaluation fields; gold is scored only after rankings are captured"
+    }
+  },
+  "baseline": {
+    "variant": "R0",
+    "directory": "C:\\Users\\Acer\\.codex\\worktrees\\corpus-first-final-improvement\\KingsCode_v0.5_agent_ready\\reports\\benchmark\\corpus_v03_c1\\c0\\20261003T172351479356Z-dev",
+    "metrics": {
+      "Recall@1": 0.1625,
+      "Recall@3": 0.3,
+      "Recall@5": 0.4375,
+      "Recall@8": 0.6041666666666666,
+      "Recall@10": 0.65,
+      "MRR@10": 0.3064616402116402,
+      "MAP@10": 0.29333333333333333,
+      "nDCG@10": 0.3858594847420427,
+      "Document Recall@10": 1.0,
+      "Document Mismatch Rate": 0.025,
+      "Passage Recall@10": 0.65,
+      "Evidence Completeness@8": 0.5333333333333333,
+      "Evidence Completeness@10": 0.5916666666666667,
+      "Span Recall": 0.65,
+      "Span Precision": 0.08333333333333333,
+      "retrieved_passages": 10.0,
+      "retrieved_characters": 6350.241666666667,
+      "retrieved_tokens": 630.9416666666667,
+      "unique_documents": 1.6583333333333334,
+      "duplicate_fragment_count": 0.0,
+      "questions": 120,
+      "latency_p50_ms": 65.28255005832762,
+      "latency_p95_ms": 86.31229994352907
+    }
+  },
+  "candidate": {
+    "variant": "R0",
+    "directory": "C:\\Users\\Acer\\.codex\\worktrees\\corpus-first-final-improvement\\KingsCode_v0.5_agent_ready\\reports\\benchmark\\corpus_v03_c1\\c1\\20261003T172421004290Z-dev",
+    "metrics": {
+      "Recall@1": 0.1625,
+      "Recall@3": 0.29583333333333334,
+      "Recall@5": 0.44583333333333336,
+      "Recall@8": 0.5916666666666667,
+      "Recall@10": 0.6666666666666666,
+      "MRR@10": 0.30610119047619044,
+      "MAP@10": 0.29345238095238096,
+      "nDCG@10": 0.3893674062546167,
+      "Document Recall@10": 1.0,
+      "Document Mismatch Rate": 0.025,
+      "Passage Recall@10": 0.6666666666666666,
+      "Evidence Completeness@8": 0.5166666666666667,
+      "Evidence Completeness@10": 0.6083333333333333,
+      "Span Recall": 0.6666666666666666,
+      "Span Precision": 0.085,
+      "retrieved_passages": 10.0,
+      "retrieved_characters": 6339.233333333334,
+      "retrieved_tokens": 630.025,
+      "unique_documents": 1.5833333333333333,
+      "duplicate_fragment_count": 0.0,
+      "questions": 120,
+      "latency_p50_ms": 64.93234995286912,
+      "latency_p95_ms": 80.65299992449582
+    }
+  },
+  "corpus_comparison": {
+    "enabled": true,
+    "baseline_corpus": {
+      "version": "corpus-v0.1",
+      "hashes": {
+        "passages.jsonl": "3b2b7a7beae2abe0abd14480be887a86ad933902c9735a21e02719a12daac3c0",
+        "graph/nodes.jsonl": "7c8af359cb1ac8de13872e01d2d0faf18218d24e1e2af326529f4a11c0a39aaa",
+        "graph/edges.jsonl": "6002fdcdbb4fb673761cb2dbe949db2502306809f2179e4133d8f40c286ff634"
+      },
+      "bm25_sha256": "aa6b40c5e70f88513a7cde7e9ca96a15d1d40088c538668087700b9b46de005b"
+    },
+    "candidate_corpus": {
+      "version": "corpus-v0.1+v0.2-initial-combined+2-additions",
+      "hashes": {
+        "passages.jsonl": "69e60632dc22c51e218d45cbc90cf52f2b55c71367c597768f5b0aff6a00c030",
+        "graph/nodes.jsonl": "0205c7ee6d85af869ad40cb60940757472d2f250dd5dad90b2747527f8ecf0fc",
+        "graph/edges.jsonl": "ad80a17039fecc9b8ecc107d812df082ab2101b5585c46c06547bbf03ba80f7b"
+      },
+      "bm25_sha256": "547c2de1568d72e0b7fdbd44bdc24320c4cf69efde37e83b0c7a224b991edaf0"
+    },
+    "candidate_extension_validation": {
+      "status": "verified_append_only_extension",
+      "baseline_version": "corpus-v0.1",
+      "baseline_passages_sha256": "3b2b7a7beae2abe0abd14480be887a86ad933902c9735a21e02719a12daac3c0",
+      "baseline_manifest_sha256": "b6c9b022812c7fabb05731a6f36e379ce5e40ad84a12b047781f3c412be23feb",
+      "candidate_passages_sha256": "69e60632dc22c51e218d45cbc90cf52f2b55c71367c597768f5b0aff6a00c030",
+      "candidate_bm25_sha256": "547c2de1568d72e0b7fdbd44bdc24320c4cf69efde37e83b0c7a224b991edaf0",
+      "baseline_passage_prefix_preserved": true,
+      "candidate_document_count": 175,
+      "candidate_indexed_passages": 26666
+    }
+  },
+  "bootstrap": {
+    "Evidence Completeness@8": {
+      "estimate_baseline": 0.5333333333333333,
+      "estimate_candidate": 0.5166666666666667,
+      "delta": -0.016666666666666666,
+      "ci_95": [
+        -0.041666666666666664,
+        0.0
+      ],
+      "bootstrap_seed": 0,
+      "resamples": 10000,
+      "paired_questions": 120
+    },
+    "Recall@10": {
+      "estimate_baseline": 0.65,
+      "estimate_candidate": 0.6666666666666666,
+      "delta": 0.016666666666666666,
+      "ci_95": [
+        0.0,
+        0.041666666666666664
+      ],
+      "bootstrap_seed": 0,
+      "resamples": 10000,
+      "paired_questions": 120
+    },
+    "MRR@10": {
+      "estimate_baseline": 0.3064616402116402,
+      "estimate_candidate": 0.30610119047619044,
+      "delta": -0.00036044973544973534,
+      "ci_95": [
+        -0.0044675925925925924,
+        0.0034027777777777776
+      ],
+      "bootstrap_seed": 0,
+      "resamples": 10000,
+      "paired_questions": 120
+    }
+  },
+  "note": "If a confidence interval includes zero, the paired difference is inconclusive."
+}

@@ -2,6 +2,7 @@
 param(
     [string]$Work = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
     [string]$IndependentGateReport = "reports\corpus_v03_independent_retrieval_comparison.json",
+    [switch]$AllowCorpusGateNotPassed,
     [switch]$AllowBusyGpu,
     [switch]$SkipSmoke
 )
@@ -10,7 +11,7 @@ $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 $Repo = (Resolve-Path -LiteralPath $Work).Path
 Set-Location $Repo
-$ExpectedBranch = "codex/corpus-first-final-improvement-20261003"
+$ExpectedBranch = "main"
 $Branch = (& git branch --show-current).Trim()
 if ($Branch -ne $ExpectedBranch) { throw "STOP: checkout $ExpectedBranch first (current: $Branch)." }
 $Commit = (& git rev-parse HEAD).Trim()
@@ -20,7 +21,12 @@ if ($Dirty.Count -gt 0) { throw "STOP: tracked source tree is dirty; commit or r
 $GatePath = Join-Path $Repo $IndependentGateReport
 if (-not (Test-Path -LiteralPath $GatePath)) { throw "STOP: independent C1 report missing: $GatePath" }
 $Gate = Get-Content -LiteralPath $GatePath -Raw | ConvertFrom-Json
-if ($Gate.status -ne "PASS") { throw "STOP: C1 independent retrieval gate is $($Gate.status); no sample_50 GPU time should be spent." }
+if ($Gate.status -ne "PASS" -and -not $AllowCorpusGateNotPassed) {
+    throw "STOP: C1 independent retrieval gate is $($Gate.status). For the explicitly requested exploratory hybrid sample_50 comparison, rerun with -AllowCorpusGateNotPassed. This does not qualify the corpus for freeze."
+}
+if ($Gate.status -ne "PASS") {
+    Write-Warning "C1=$($Gate.status). Continuing only as an exploratory hybrid comparison; this corpus is not eligible for competitive freeze."
+}
 
 $CorpusDir = Join-Path $Repo "corpus_v03_candidate"
 $ManifestPath = Join-Path $CorpusDir "manifest.json"
@@ -40,21 +46,23 @@ if ($ActualBm25 -ne $ExpectedCorpus.bm25_sha256 -or $CorpusManifest.status -ne "
 $Stamp = Get-Date -Format "yyyyMMdd_HHmmss"
 $CommonArgs = @(
     "-Work", $Repo, "-CorpusSet", "v01+v02+v03", "-InputFile", "data\sample_50.jsonl",
-    "-NoPull", "-Recomendada", "-PromptVersion", "v6", "-RetrieverMode", "bm25",
+    "-NoPull", "-Recomendada", "-PromptVersion", "v6",
     "-RetrievalMode", "option", "-K", "8", "-CandidateK", "30", "-GraphBudget", "10"
 )
 if ($AllowBusyGpu) { $CommonArgs += "-AllowBusyGpu" }
 if ($SkipSmoke) { $CommonArgs += "-SkipSmoke" }
 $Runs = @(
-    @{ Name = "corpus_v03_v6_control_$Stamp"; Fit = $false },
-    @{ Name = "corpus_v03_v6_fit_$Stamp"; Fit = $true }
+    @{ Name = "corpus_v03_v6_bm25_$Stamp"; Retriever = "bm25"; Rerank = $false; ExactLocator = $false; NativeOptionFusion = $false },
+    @{ Name = "corpus_v03_v6_hybrid_full_$Stamp"; Retriever = "hybrid"; Rerank = $true; ExactLocator = $true; NativeOptionFusion = $true }
 )
 $Python = Join-Path $Repo ".venv\Scripts\python.exe"
 if (-not (Test-Path -LiteralPath $Python)) { throw "STOP: crea/verifica .venv antes de la corrida." }
 $Results = @()
 foreach ($Profile in $Runs) {
-    $Args = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".\tools\kingscode_pc_nueva_diagnostico.ps1") + $CommonArgs + @("-RunName", $Profile.Name)
-    if ($Profile.Fit) { $Args += "-FitPassages" }
+    $Args = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ".\tools\kingscode_pc_nueva_diagnostico.ps1") + $CommonArgs + @("-RetrieverMode", $Profile.Retriever, "-RunName", $Profile.Name)
+    if ($Profile.Rerank) { $Args += "-Rerank" }
+    if ($Profile.ExactLocator) { $Args += "-ExactLocator" }
+    if ($Profile.NativeOptionFusion) { $Args += "-NativeOptionFusion" }
     & powershell @Args
     if ($LASTEXITCODE -ne 0) { throw "STOP: falló $($Profile.Name); los artefactos de la corrida se conservaron." }
     foreach ($Property in $ExpectedCorpus.hashes.PSObject.Properties) {
@@ -78,7 +86,9 @@ foreach ($Profile in $Runs) {
     & $Python tools\validate_test_submission.py --test data\sample_50.jsonl $BatchPath | Out-Null
     if ($LASTEXITCODE -ne 0) { throw "STOP: schema/ID validation failed for $($Profile.Name)." }
     $Results += [ordered]@{
-        run = $Profile.Name; fit_passages = $Profile.Fit; summary = $Summary; official = $Evaluation
+        run = $Profile.Name; retriever = $Profile.Retriever; rerank = $Profile.Rerank
+        exact_locator = $Profile.ExactLocator; native_option_fusion = $Profile.NativeOptionFusion
+        summary = $Summary; official = $Evaluation
         rows = $Rows.Count; unique_ids = $UniqueIds.Count
         submission_sha256 = (Get-FileHash -LiteralPath $BatchPath -Algorithm SHA256).Hash.ToLower()
         timing_ms = [ordered]@{ retrieval_p50 = $Summary.diagnostics.retrieval_ms_p50; retrieval_p95 = $Summary.diagnostics.retrieval_ms_p95
@@ -117,13 +127,14 @@ $ProxyGate = [double]$Proxy[1].token_f1_mean -ge ([double]$Proxy[0].token_f1_mea
              [double]$Proxy[1].bleu4_mean -ge ([double]$Proxy[0].bleu4_mean - 0.03)
 $Eligible = $ScoreGate -and $ClosedGate -and $CitationGate -and $RuntimeGate -and $StructureGate -and $ProxyGate
 $Comparison = [ordered]@{
-    status = $(if ($Eligible) { "FIT_PASSAGES_ELIGIBLE_FOR_REVIEW" } else { "FIT_PASSAGES_NOT_ADOPTED" })
+    status = $(if ($Eligible) { "HYBRID_ELIGIBLE_FOR_REVIEW" } else { "HYBRID_NOT_ADOPTED" })
     branch = $Branch; commit = $Commit; sample_sha256 = (Get-FileHash -LiteralPath "data\sample_50.jsonl" -Algorithm SHA256).Hash.ToLower()
     model_lock_sha256 = (Get-FileHash -LiteralPath "config\models.lock.json" -Algorithm SHA256).Hash.ToLower()
     candidate_corpus = $ExpectedCorpus; independent_c1_report_sha256 = (Get-FileHash -LiteralPath $GatePath -Algorithm SHA256).Hash.ToLower()
     runs = $Results; local_proxy = $Proxy; citation_alignment = $Alignment
     gates = [ordered]@{ score_strictly_higher = $ScoreGate; closed_not_lower = $ClosedGate; citations_no_material_regression = $CitationGate
                        projected_runtime_le_5h = $RuntimeGate; schema_ids_fallbacks = $StructureGate; lexical_proxy_not_collapsed = $ProxyGate }
+    experiment = "v6 BM25 control vs v6 hybrid + rerank + exact locator + native option fusion; same candidate corpus and sample_50"
     ragas = "not run; requires separate explicit approval after a single complete candidate wins"
 }
 $ComparisonPath = Join-Path $Repo "reports\corpus_v03_sample50_comparison_$Stamp.json"

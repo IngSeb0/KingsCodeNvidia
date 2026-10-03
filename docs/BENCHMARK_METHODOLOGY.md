@@ -73,3 +73,17 @@ Gold relevance is established from independent external primary evidence, not fr
 Absence of required gold evidence from the frozen corpus is reported as corpus_missing and is not converted into a retrieval ranking failure. PARTIAL and MISSING coverage are excluded from pure ranking metric denominators; PARTIAL is reported as corpus_missing until a complete minimum evidence set is represented. AMBIGUOUS coverage is reported separately and excluded from ranking metrics.
 
 Retriever-ranking metrics are reported on the subset for which the frozen corpus contains sufficient gold evidence, while corpus coverage metrics are reported across all accepted gold. Every metric reports its denominator: ranking metrics use COMPLETE coverage only; missing/partial/complete/ambiguous rates use all accepted gold. If no gold has been accepted, both populations have n=0 and rates are N/A. Gold evidence provenance and acquired primary source bytes are kept separate from the competitive corpus; source acquisition does not authorize corpus modification.
+
+## C0/C1 result for the v0.3 diagnostic candidate (2026-10-03)
+
+The same-commit R0/BM25 DEV comparison used all 120 benchmark cases and passed
+the append-only v0.1 passage-prefix check. Its paired gate was
+`NOT_PASSED`: Evidence Completeness@8 delta −0.0167 (95% CI −0.0417..0),
+Recall@10 +0.0167 (0..0.0417), MRR@10 −0.00036 (−0.00447..0.00340). No
+administrative, procedural, or tax target area showed a demonstrated positive
+paired gain, so no sample_50 GPU comparison was started. Benchmark v1 has no
+gold cases for the newly added Council of State judgments; this comparison
+does not assess their direct retrievability. Full metrics and source/authority
+subgroups are in `reports/corpus_v03_independent_retrieval_comparison.json`,
+`reports/benchmark/corpus_v03_c1/paired_comparison.json`, and
+`reports/corpus_v03_source_breakdown.md`.

@@ -1,0 +1,767 @@
+{
+  "version": "corpus-v03-source-breakdown-v1",
+  "status": "descriptive_breakdown; adoption_decision_uses_paired_gate",
+  "git": {
+    "commit": "65f4fe133d6a28c8463a7689dad7b1c3dfc0aa91",
+    "branch": "codex/corpus-first-final-improvement-20261003"
+  },
+  "benchmark_manifest_sha256": "326a405748dd20f641d5cf4103ceaafb6a19f07b43db54d95f472a2b439e3071",
+  "baseline_corpus": {
+    "version": "corpus-v0.1",
+    "hashes": {
+      "passages.jsonl": "3b2b7a7beae2abe0abd14480be887a86ad933902c9735a21e02719a12daac3c0",
+      "graph/nodes.jsonl": "7c8af359cb1ac8de13872e01d2d0faf18218d24e1e2af326529f4a11c0a39aaa",
+      "graph/edges.jsonl": "6002fdcdbb4fb673761cb2dbe949db2502306809f2179e4133d8f40c286ff634"
+    },
+    "bm25_sha256": "aa6b40c5e70f88513a7cde7e9ca96a15d1d40088c538668087700b9b46de005b"
+  },
+  "candidate_corpus": {
+    "version": "corpus-v0.1+v0.2-initial-combined+2-additions",
+    "hashes": {
+      "passages.jsonl": "69e60632dc22c51e218d45cbc90cf52f2b55c71367c597768f5b0aff6a00c030",
+      "graph/nodes.jsonl": "0205c7ee6d85af869ad40cb60940757472d2f250dd5dad90b2747527f8ecf0fc",
+      "graph/edges.jsonl": "ad80a17039fecc9b8ecc107d812df082ab2101b5585c46c06547bbf03ba80f7b"
+    },
+    "bm25_sha256": "547c2de1568d72e0b7fdbd44bdc24320c4cf69efde37e83b0c7a224b991edaf0"
+  },
+  "question_count": 120,
+  "explicit_vs_semantic_general_counts": {
+    "explicit": 120
+  },
+  "source_type_mapping": {
+    "decision": "jurisprudence",
+    "law/decree/code/constitution": "normative"
+  },
+  "dimensions": {
+    "area": {
+      "Derecho administrativo": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.25,
+          "Recall@3": 0.5416666666666666,
+          "Recall@5": 0.625,
+          "Recall@8": 0.7083333333333334,
+          "Recall@10": 0.75,
+          "MRR@10": 0.4409722222222222,
+          "nDCG@10": 0.5143014530550526,
+          "Evidence Completeness@8": 0.5833333333333334,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0,
+          "retrieved_characters": 5410.166666666667,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 1,
+            "ranking_failure": 3,
+            "success": 8
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 67.24383332766593
+        },
+        "candidate": {
+          "Recall@1": 0.25,
+          "Recall@3": 0.5,
+          "Recall@5": 0.625,
+          "Recall@8": 0.7083333333333334,
+          "Recall@10": 0.75,
+          "MRR@10": 0.4201388888888889,
+          "nDCG@10": 0.4998485174399196,
+          "Evidence Completeness@8": 0.5833333333333334,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0,
+          "retrieved_characters": 5417.25,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 1,
+            "ranking_failure": 3,
+            "success": 8
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 66.42309168819338
+        }
+      },
+      "Derecho civil": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.08333333333333333,
+          "Recall@3": 0.16666666666666666,
+          "Recall@5": 0.16666666666666666,
+          "Recall@8": 0.25,
+          "Recall@10": 0.3333333333333333,
+          "MRR@10": 0.13333333333333333,
+          "nDCG@10": 0.1787726677854925,
+          "Evidence Completeness@8": 0.25,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0833333333333333,
+          "retrieved_characters": 4321.833333333333,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 5,
+            "ranking_failure": 3,
+            "success": 4
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 68.39784166853254
+        },
+        "candidate": {
+          "Recall@1": 0.08333333333333333,
+          "Recall@3": 0.16666666666666666,
+          "Recall@5": 0.25,
+          "Recall@8": 0.25,
+          "Recall@10": 0.5,
+          "MRR@10": 0.1537037037037037,
+          "nDCG@10": 0.23050103796119153,
+          "Evidence Completeness@8": 0.25,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0833333333333333,
+          "retrieved_characters": 4355.583333333333,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 5,
+            "ranking_failure": 1,
+            "success": 6
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 68.24095834357043
+        }
+      },
+      "Derecho comercial y sociedades": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.25,
+          "Recall@3": 0.3333333333333333,
+          "Recall@5": 0.5833333333333334,
+          "Recall@8": 0.875,
+          "Recall@10": 0.9166666666666666,
+          "MRR@10": 0.3952380952380952,
+          "nDCG@10": 0.5300267614685024,
+          "Evidence Completeness@8": 0.8333333333333334,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.75,
+          "retrieved_characters": 7203.916666666667,
+          "questions": 12,
+          "failure_counts": {
+            "ranking_failure": 1,
+            "success": 11
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 76.44526666263118
+        },
+        "candidate": {
+          "Recall@1": 0.25,
+          "Recall@3": 0.3333333333333333,
+          "Recall@5": 0.5833333333333334,
+          "Recall@8": 0.8333333333333334,
+          "Recall@10": 0.9166666666666666,
+          "MRR@10": 0.39325396825396824,
+          "nDCG@10": 0.5281204492962207,
+          "Evidence Completeness@8": 0.75,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.75,
+          "retrieved_characters": 7203.916666666667,
+          "questions": 12,
+          "failure_counts": {
+            "ranking_failure": 1,
+            "success": 11
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 66.99141667922959
+        }
+      },
+      "Derecho constitucional": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.0,
+          "Recall@3": 0.08333333333333333,
+          "Recall@5": 0.08333333333333333,
+          "Recall@8": 0.20833333333333334,
+          "Recall@10": 0.3333333333333333,
+          "MRR@10": 0.08505291005291005,
+          "nDCG@10": 0.13841165051424867,
+          "Evidence Completeness@8": 0.16666666666666666,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 2.6666666666666665,
+          "retrieved_characters": 9121.75,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 5,
+            "ranking_failure": 4,
+            "success": 3
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 73.0506499724773
+        },
+        "candidate": {
+          "Recall@1": 0.0,
+          "Recall@3": 0.08333333333333333,
+          "Recall@5": 0.08333333333333333,
+          "Recall@8": 0.20833333333333334,
+          "Recall@10": 0.3333333333333333,
+          "MRR@10": 0.08505291005291005,
+          "nDCG@10": 0.13841165051424867,
+          "Evidence Completeness@8": 0.16666666666666666,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 2.6666666666666665,
+          "retrieved_characters": 9103.75,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 5,
+            "ranking_failure": 4,
+            "success": 3
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 55.60047498632533
+        }
+      },
+      "Derecho de familia": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.16666666666666666,
+          "Recall@3": 0.5416666666666666,
+          "Recall@5": 0.6666666666666666,
+          "Recall@8": 0.7083333333333334,
+          "Recall@10": 0.75,
+          "MRR@10": 0.4097222222222222,
+          "nDCG@10": 0.5052883229845317,
+          "Evidence Completeness@8": 0.6666666666666666,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0,
+          "retrieved_characters": 4446.25,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 3,
+            "success": 9
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 65.09502501770233
+        },
+        "candidate": {
+          "Recall@1": 0.16666666666666666,
+          "Recall@3": 0.5416666666666666,
+          "Recall@5": 0.6666666666666666,
+          "Recall@8": 0.7083333333333334,
+          "Recall@10": 0.75,
+          "MRR@10": 0.4097222222222222,
+          "nDCG@10": 0.5052883229845317,
+          "Evidence Completeness@8": 0.6666666666666666,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0,
+          "retrieved_characters": 4446.25,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 3,
+            "success": 9
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 64.63983334833756
+        }
+      },
+      "Derecho de los mercados [competencia, consumidor, datos personales y propiedad intelectual]": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.08333333333333333,
+          "Recall@3": 0.125,
+          "Recall@5": 0.16666666666666666,
+          "Recall@8": 0.4166666666666667,
+          "Recall@10": 0.5,
+          "MRR@10": 0.17847222222222223,
+          "nDCG@10": 0.24734945690027393,
+          "Evidence Completeness@8": 0.3333333333333333,
+          "Document Recall@1": 0.9166666666666666,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.08333333333333333,
+          "unique_documents": 1.8333333333333333,
+          "retrieved_characters": 7018.666666666667,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 5,
+            "ranking_failure": 2,
+            "success": 5
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 61.87107499378423
+        },
+        "candidate": {
+          "Recall@1": 0.08333333333333333,
+          "Recall@3": 0.125,
+          "Recall@5": 0.16666666666666666,
+          "Recall@8": 0.4166666666666667,
+          "Recall@10": 0.5,
+          "MRR@10": 0.17847222222222223,
+          "nDCG@10": 0.24734945690027393,
+          "Evidence Completeness@8": 0.3333333333333333,
+          "Document Recall@1": 0.9166666666666666,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.08333333333333333,
+          "unique_documents": 1.5833333333333333,
+          "retrieved_characters": 6982.5,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 5,
+            "ranking_failure": 2,
+            "success": 5
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 75.822116661584
+        }
+      },
+      "Derecho laboral": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.08333333333333333,
+          "Recall@3": 0.20833333333333334,
+          "Recall@5": 0.625,
+          "Recall@8": 0.75,
+          "Recall@10": 0.75,
+          "MRR@10": 0.2659722222222222,
+          "nDCG@10": 0.38149642650019705,
+          "Evidence Completeness@8": 0.6666666666666666,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0,
+          "retrieved_characters": 4211.25,
+          "questions": 12,
+          "failure_counts": {
+            "ranking_failure": 4,
+            "success": 8
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 60.05725834984332
+        },
+        "candidate": {
+          "Recall@1": 0.08333333333333333,
+          "Recall@3": 0.20833333333333334,
+          "Recall@5": 0.625,
+          "Recall@8": 0.75,
+          "Recall@10": 0.75,
+          "MRR@10": 0.2659722222222222,
+          "nDCG@10": 0.3824094259977983,
+          "Evidence Completeness@8": 0.6666666666666666,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0,
+          "retrieved_characters": 4211.25,
+          "questions": 12,
+          "failure_counts": {
+            "ranking_failure": 4,
+            "success": 8
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 62.96459165362952
+        }
+      },
+      "Derecho penal": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.4166666666666667,
+          "Recall@3": 0.5,
+          "Recall@5": 0.6666666666666666,
+          "Recall@8": 0.7083333333333334,
+          "Recall@10": 0.75,
+          "MRR@10": 0.5444444444444444,
+          "nDCG@10": 0.5831144625304207,
+          "Evidence Completeness@8": 0.5833333333333334,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 2.0833333333333335,
+          "retrieved_characters": 7196.166666666667,
+          "questions": 12,
+          "failure_counts": {
+            "ranking_failure": 4,
+            "success": 8
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 67.88268333184533
+        },
+        "candidate": {
+          "Recall@1": 0.4166666666666667,
+          "Recall@3": 0.5,
+          "Recall@5": 0.6666666666666666,
+          "Recall@8": 0.7083333333333334,
+          "Recall@10": 0.75,
+          "MRR@10": 0.5444444444444444,
+          "nDCG@10": 0.5831144625304207,
+          "Evidence Completeness@8": 0.5833333333333334,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.9166666666666667,
+          "retrieved_characters": 7131.666666666667,
+          "questions": 12,
+          "failure_counts": {
+            "ranking_failure": 4,
+            "success": 8
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 66.20078331131178
+        }
+      },
+      "Derecho procesal": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.08333333333333333,
+          "Recall@3": 0.08333333333333333,
+          "Recall@5": 0.20833333333333334,
+          "Recall@8": 0.6666666666666666,
+          "Recall@10": 0.6666666666666666,
+          "MRR@10": 0.19890873015873015,
+          "nDCG@10": 0.3053551894309503,
+          "Evidence Completeness@8": 0.5833333333333334,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 2.1666666666666665,
+          "retrieved_characters": 7718.666666666667,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 2,
+            "ranking_failure": 3,
+            "success": 7
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 66.73914165973353
+        },
+        "candidate": {
+          "Recall@1": 0.08333333333333333,
+          "Recall@3": 0.08333333333333333,
+          "Recall@5": 0.20833333333333334,
+          "Recall@8": 0.5833333333333334,
+          "Recall@10": 0.6666666666666666,
+          "MRR@10": 0.19775132275132273,
+          "nDCG@10": 0.3041522826708047,
+          "Evidence Completeness@8": 0.5,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 2.0833333333333335,
+          "retrieved_characters": 7780.083333333333,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 2,
+            "ranking_failure": 3,
+            "success": 7
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 63.71744998614304
+        }
+      },
+      "Derecho tributario": {
+        "questions": 12,
+        "baseline": {
+          "Recall@1": 0.20833333333333334,
+          "Recall@3": 0.4166666666666667,
+          "Recall@5": 0.5833333333333334,
+          "Recall@8": 0.75,
+          "Recall@10": 0.75,
+          "MRR@10": 0.4125,
+          "nDCG@10": 0.47447845625075685,
+          "Evidence Completeness@8": 0.6666666666666666,
+          "Document Recall@1": 0.8333333333333334,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.16666666666666666,
+          "unique_documents": 2.0,
+          "retrieved_characters": 6853.75,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 1,
+            "ranking_failure": 3,
+            "success": 8
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 66.44710835341054
+        },
+        "candidate": {
+          "Recall@1": 0.20833333333333334,
+          "Recall@3": 0.4166666666666667,
+          "Recall@5": 0.5833333333333334,
+          "Recall@8": 0.75,
+          "Recall@10": 0.75,
+          "MRR@10": 0.4125,
+          "nDCG@10": 0.47447845625075685,
+          "Evidence Completeness@8": 0.6666666666666666,
+          "Document Recall@1": 0.8333333333333334,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.16666666666666666,
+          "unique_documents": 1.75,
+          "retrieved_characters": 6760.083333333333,
+          "questions": 12,
+          "failure_counts": {
+            "correct_document_wrong_passage": 1,
+            "ranking_failure": 3,
+            "success": 8
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 63.09504999080673
+        }
+      }
+    },
+    "source_type": {
+      "normative": {
+        "questions": 120,
+        "baseline": {
+          "Recall@1": 0.1625,
+          "Recall@3": 0.3,
+          "Recall@5": 0.4375,
+          "Recall@8": 0.6041666666666666,
+          "Recall@10": 0.65,
+          "MRR@10": 0.3064616402116402,
+          "nDCG@10": 0.3858594847420427,
+          "Evidence Completeness@8": 0.5333333333333333,
+          "Document Recall@1": 0.975,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.025,
+          "unique_documents": 1.6583333333333334,
+          "retrieved_characters": 6350.241666666667,
+          "questions": 120,
+          "failure_counts": {
+            "correct_document_wrong_passage": 22,
+            "ranking_failure": 27,
+            "success": 71
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 67.32298833376262
+        },
+        "candidate": {
+          "Recall@1": 0.1625,
+          "Recall@3": 0.29583333333333334,
+          "Recall@5": 0.44583333333333336,
+          "Recall@8": 0.5916666666666667,
+          "Recall@10": 0.6666666666666666,
+          "MRR@10": 0.3061011904761905,
+          "nDCG@10": 0.3893674062546167,
+          "Evidence Completeness@8": 0.5166666666666667,
+          "Document Recall@1": 0.975,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.025,
+          "unique_documents": 1.5833333333333333,
+          "retrieved_characters": 6339.233333333334,
+          "questions": 120,
+          "failure_counts": {
+            "correct_document_wrong_passage": 22,
+            "ranking_failure": 25,
+            "success": 73
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 65.36957666491314
+        }
+      }
+    },
+    "authority": {
+      "Función Pública": {
+        "questions": 96,
+        "baseline": {
+          "Recall@1": 0.171875,
+          "Recall@3": 0.2864583333333333,
+          "Recall@5": 0.4427083333333333,
+          "Recall@8": 0.6354166666666666,
+          "Recall@10": 0.6770833333333334,
+          "MRR@10": 0.3151951058201058,
+          "nDCG@10": 0.3968167320813003,
+          "Evidence Completeness@8": 0.5520833333333334,
+          "Document Recall@1": 0.96875,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.03125,
+          "unique_documents": 1.8125,
+          "retrieved_characters": 6841.791666666667,
+          "questions": 96,
+          "failure_counts": {
+            "correct_document_wrong_passage": 14,
+            "ranking_failure": 24,
+            "success": 58
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 67.46712708142393
+        },
+        "candidate": {
+          "Recall@1": 0.171875,
+          "Recall@3": 0.28125,
+          "Recall@5": 0.4427083333333333,
+          "Recall@8": 0.6197916666666666,
+          "Recall@10": 0.6770833333333334,
+          "MRR@10": 0.31219824735449736,
+          "nDCG@10": 0.39473558770005546,
+          "Evidence Completeness@8": 0.53125,
+          "Document Recall@1": 0.96875,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.03125,
+          "unique_documents": 1.71875,
+          "retrieved_characters": 6823.8125,
+          "questions": 96,
+          "failure_counts": {
+            "correct_document_wrong_passage": 14,
+            "ranking_failure": 24,
+            "success": 58
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 65.10187186965292
+        }
+      },
+      "SENA": {
+        "questions": 24,
+        "baseline": {
+          "Recall@1": 0.125,
+          "Recall@3": 0.3541666666666667,
+          "Recall@5": 0.4166666666666667,
+          "Recall@8": 0.4791666666666667,
+          "Recall@10": 0.5416666666666666,
+          "MRR@10": 0.27152777777777776,
+          "nDCG@10": 0.3420304953850121,
+          "Evidence Completeness@8": 0.4583333333333333,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0416666666666667,
+          "retrieved_characters": 4384.041666666667,
+          "questions": 24,
+          "failure_counts": {
+            "correct_document_wrong_passage": 8,
+            "ranking_failure": 3,
+            "success": 13
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 66.74643334311743
+        },
+        "candidate": {
+          "Recall@1": 0.125,
+          "Recall@3": 0.3541666666666667,
+          "Recall@5": 0.4583333333333333,
+          "Recall@8": 0.4791666666666667,
+          "Recall@10": 0.625,
+          "MRR@10": 0.28171296296296294,
+          "nDCG@10": 0.36789468047286167,
+          "Evidence Completeness@8": 0.4583333333333333,
+          "Document Recall@1": 1.0,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.0,
+          "unique_documents": 1.0416666666666667,
+          "retrieved_characters": 4400.916666666667,
+          "questions": 24,
+          "failure_counts": {
+            "correct_document_wrong_passage": 8,
+            "ranking_failure": 1,
+            "success": 15
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 66.440395845954
+        }
+      }
+    },
+    "reference_class": {
+      "explicit": {
+        "questions": 120,
+        "baseline": {
+          "Recall@1": 0.1625,
+          "Recall@3": 0.3,
+          "Recall@5": 0.4375,
+          "Recall@8": 0.6041666666666666,
+          "Recall@10": 0.65,
+          "MRR@10": 0.3064616402116402,
+          "nDCG@10": 0.3858594847420427,
+          "Evidence Completeness@8": 0.5333333333333333,
+          "Document Recall@1": 0.975,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.025,
+          "unique_documents": 1.6583333333333334,
+          "retrieved_characters": 6350.241666666667,
+          "questions": 120,
+          "failure_counts": {
+            "correct_document_wrong_passage": 22,
+            "ranking_failure": 27,
+            "success": 71
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 67.32298833376262
+        },
+        "candidate": {
+          "Recall@1": 0.1625,
+          "Recall@3": 0.29583333333333334,
+          "Recall@5": 0.44583333333333336,
+          "Recall@8": 0.5916666666666667,
+          "Recall@10": 0.6666666666666666,
+          "MRR@10": 0.3061011904761905,
+          "nDCG@10": 0.3893674062546167,
+          "Evidence Completeness@8": 0.5166666666666667,
+          "Document Recall@1": 0.975,
+          "Document Recall@10": 1.0,
+          "Document Mismatch Rate": 0.025,
+          "unique_documents": 1.5833333333333333,
+          "retrieved_characters": 6339.233333333334,
+          "questions": 120,
+          "failure_counts": {
+            "correct_document_wrong_passage": 22,
+            "ranking_failure": 25,
+            "success": 73
+          },
+          "empty_retrievals": 0,
+          "latency_mean_ms": 65.36957666491314
+        }
+      }
+    }
+  },
+  "overall_paired_bootstrap": {
+    "Evidence Completeness@8": {
+      "estimate_baseline": 0.5333333333333333,
+      "estimate_candidate": 0.5166666666666667,
+      "delta": -0.016666666666666666,
+      "ci_95": [
+        -0.041666666666666664,
+        0.0
+      ],
+      "bootstrap_seed": 0,
+      "resamples": 10000,
+      "paired_questions": 120
+    },
+    "Recall@10": {
+      "estimate_baseline": 0.65,
+      "estimate_candidate": 0.6666666666666666,
+      "delta": 0.016666666666666666,
+      "ci_95": [
+        0.0,
+        0.041666666666666664
+      ],
+      "bootstrap_seed": 0,
+      "resamples": 10000,
+      "paired_questions": 120
+    },
+    "MRR@10": {
+      "estimate_baseline": 0.3064616402116402,
+      "estimate_candidate": 0.30610119047619044,
+      "delta": -0.00036044973544973534,
+      "ci_95": [
+        -0.0044675925925925924,
+        0.0034027777777777776
+      ],
+      "bootstrap_seed": 0,
+      "resamples": 10000,
+      "paired_questions": 120
+    }
+  },
+  "limitations": [
+    "The independent v1 benchmark has no semantic/general-reference questions; that subgroup is N=0.",
+    "The DEV gold resolves only against v0.1 documents; the added Council of State sources have no gold cases here.",
+    "Authority/source-type subgroup values are descriptive; the paired overall and area gate determines adoption.",
+    "No blind 992 rows or labels are inputs to this report."
+  ]
+}
